@@ -1,0 +1,51 @@
+2023-07-18 17:41:30 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-18 17:41:30 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-18 17:41:30 info: Congratulations, your extension "Embold" is now active!
+2023-07-18 17:42:01 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-18 17:42:01 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-18 17:42:01 info: Congratulations, your extension "Embold" is now active!
+2023-07-18 17:53:53 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app.py
+2023-07-18 17:53:53 error: SQLITE_ERROR: no such table: issues
+2023-07-18 19:16:33 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app%20copy.ipynb
+2023-07-18 19:16:33 error: SQLITE_ERROR: no such table: issues
+2023-07-18 19:17:27 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/gradio%20components/gradio_components.py
+2023-07-18 19:17:27 error: SQLITE_ERROR: no such table: issues
+2023-07-18 19:17:41 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/gradio%20components
+2023-07-18 19:17:41 error: SQLITE_ERROR: no such table: issues
+2023-07-18 19:30:43 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app%20copy.ipynb
+2023-07-18 19:30:43 error: SQLITE_ERROR: no such table: issues
+2023-07-19 11:43:33 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-19 11:43:33 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-19 11:43:33 info: Congratulations, your extension "Embold" is now active!
+2023-07-19 12:28:31 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-19 12:28:31 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-19 12:28:31 info: Congratulations, your extension "Embold" is now active!
+2023-07-19 17:26:34 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/player.cpython-311.pyc.2165777804336
+2023-07-19 17:26:34 error: SQLITE_ERROR: no such table: issues
+2023-07-19 17:34:06 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app_2%20copy.ipynb
+2023-07-19 17:34:06 error: SQLITE_ERROR: no such table: issues
+2023-07-21 17:22:53 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/ai_adventure_academy/core/NPC
+2023-07-21 17:22:53 error: SQLITE_ERROR: no such table: issues
+2023-07-21 17:23:18 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/ai_adventure_academy/core/nemesis
+2023-07-21 17:23:18 error: SQLITE_ERROR: no such table: issues
+2023-07-21 17:49:02 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/ai_adventure_academy/core/arch_nemesis
+2023-07-21 17:49:02 error: SQLITE_ERROR: no such table: issues
+2023-07-21 17:49:03 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/ai_adventure_academy/core/best_friend
+2023-07-21 17:49:03 error: SQLITE_ERROR: no such table: issues
+2023-07-21 17:54:43 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/ai_adventure_academy/core/npc/memory
+2023-07-21 17:54:43 error: SQLITE_ERROR: no such table: issues
+2023-07-23 10:53:14 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 10:53:14 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 10:53:14 info: Congratulations, your extension "Embold" is now active!
+2023-07-23 13:18:50 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/openai.py
+2023-07-23 13:18:50 error: SQLITE_ERROR: no such table: issues
+2023-07-23 13:26:56 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 13:26:56 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 13:26:56 info: Congratulations, your extension "Embold" is now active!
+2023-07-23 14:17:01 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app_3%20copy.ipynb
+2023-07-23 14:17:01 error: SQLITE_ERROR: no such table: issues
+2023-07-23 14:22:55 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 14:22:55 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 14:22:55 info: Congratulations, your extension "Embold" is now active!
+2023-07-23 14:24:05 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/json.py
+2023-07-23 14:24:05 error: SQLITE_ERROR: no such table: issues
