@@ -1,29 +1,59 @@
 class Stats:
-    def __init__(self, model="gpt-3.5-turbo"):
-        self.model = model
-        self.messages = []
+    def __init__(self, items):
+        self.day = "Monday"
+        self.time = 60
+        self.items = items
+        self.relationships = {
+            "Acquaintances": {
+                "count": 0,
+                "info": "",
+            },
+            "Friends": {
+                "count": 0,
+                "info": "",
+            },
+            "Best Friend": {
+                "count": 0,
+                "info": "",
+            },
+            "Enemies": {
+                "count": 0,
+                "info": "",
+            },
+            "Arch Nemesis": {
+                "count": 0,
+                "info": "",
+            }
+        }
 
-    def update(self, role, content):
-        self.messages.append({"role": role, "content": content})
+    def set_day(self, day):
+        self.day = day
+    
+    def set_time(self, time):
+        self.time = time
+    
+    def subtract_time(self, time):
+        self.time -= time
 
-    def clear_messages(self):
-        self.messages = []
+    def format_day_time(self):
+        return f"{self.day} --- {self.time} minutes remaining"
+    
+    def format_items(self):
+        return "\r".join(self.items)
 
-    def generate_response(self):
-        response = openai.ChatCompletion.create(
-            model=self.model,
-            messages=self.messages
-        )
-        return response['choices'][0]['message']['content']
+    def format_relationships(self):
+        return "\r".join([f"{data['count']} {rank}{' --- ' + data['info'] if data['info'] else ''}" for rank, data in self.relationships.items()])
 
-def extract_stats(response):
-    # extract stats from model response
-    return 0
+    def format_stats(self):
+        return [self.format_day_time(), self.format_items(), self.format_relationships()]
+    
+    def to_string(self):
+        formatted_stats = self.format_stats()
+        return f"Day:{formatted_stats[0]}\n\nItems:\n{formatted_stats[1]}\n\nFriends:\n{formatted_stats[2]}"
+    
+    def update(self, arguments_json):
+        self.subtract_time(int(arguments_json['Time']))
+        self.items = arguments_json['Items']
+        self.relationships = arguments_json['Relationships']
 
-def update_stats(stats):
-    # update stats in interface
-    return 0
-
-def increment_turn():
-    # increment turn
-    return 0
+stats = Stats([])

@@ -49,3 +49,74 @@
 2023-07-23 14:22:55 info: Congratulations, your extension "Embold" is now active!
 2023-07-23 14:24:05 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/json.py
 2023-07-23 14:24:05 error: SQLITE_ERROR: no such table: issues
+2023-07-23 16:56:10 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 16:56:10 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-23 16:56:10 info: Congratulations, your extension "Embold" is now active!
+2023-07-24 11:01:00 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/.git/index.lock
+2023-07-24 11:01:00 error: SQLITE_ERROR: no such table: issues
+2023-07-25 08:39:57 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-25 08:39:57 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-25 08:39:57 info: Congratulations, your extension "Embold" is now active!
+2023-07-25 11:35:54 info: tempDirectory:c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-25 11:35:54 info: Extraction complete for source: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\resources\embold-scanner-archive.zip, destination: c:\Users\pikipupiba\.vscode\extensions\embold-vscode.embold-0.1.5\temp
+2023-07-25 11:35:54 info: Congratulations, your extension "Embold" is now active!
+2023-07-25 12:44:53 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/session.js
+2023-07-25 12:44:53 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:16:53 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/bee.json
+2023-07-25 13:16:53 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:17:04 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/yee.json
+2023-07-25 13:17:04 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:36:15 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/default.json
+2023-07-25 13:36:15 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:39:28 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/sessions/default.json
+2023-07-25 13:39:28 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:52:38 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/default.json
+2023-07-25 13:52:38 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:57:07 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/session.json
+2023-07-25 13:57:07 error: SQLITE_ERROR: no such table: issues
+2023-07-25 13:57:25 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/surprise.py
+2023-07-25 13:57:25 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:02:17 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/sessions/default2.json
+2023-07-25 14:02:17 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:02:21 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/sessions/beep.json
+2023-07-25 14:02:21 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:02:45 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app_2.ipynb
+2023-07-25 14:02:45 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:03:00 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app_3.ipynb
+2023-07-25 14:03:00 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:03:39 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/beep.json
+2023-07-25 14:03:39 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:03:44 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/asdf.json
+2023-07-25 14:03:44 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:03:58 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app_4.ipynb
+2023-07-25 14:03:58 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:04:04 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app.ipynb
+2023-07-25 14:04:04 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:04:10 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/app.py
+2023-07-25 14:04:10 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:04:24 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/gradio_components.py
+2023-07-25 14:04:24 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:04:34 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/interface.py
+2023-07-25 14:04:34 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:05:11 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/player.py
+2023-07-25 14:05:11 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:15:37 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/messages.py
+2023-07-25 14:15:37 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:16:02 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/suggestions.ipynb
+2023-07-25 14:16:02 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:16:43 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/system_message.py
+2023-07-25 14:16:43 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:39:51 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/gm.cpython-311.pyc.1707620819536
+2023-07-25 14:39:51 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:46:34 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/openai_bah.py
+2023-07-25 14:46:34 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:54:39 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/story_function.py.99387bbe01fdf0f6de311791b108231f.tmp
+2023-07-25 14:54:39 error: SQLITE_ERROR: no such table: issues
+2023-07-25 14:54:55 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/story_function.py.99387bbe01fdf0f6de311791b108231f.tmp
+2023-07-25 14:54:55 error: SQLITE_ERROR: no such table: issues
+2023-07-25 15:07:28 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/player.cpython-311.pyc.2105547035568
+2023-07-25 15:07:28 error: SQLITE_ERROR: no such table: issues
+2023-07-25 15:30:47 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/stats.cpython-311.pyc.2680221796784
+2023-07-25 15:30:47 error: SQLITE_ERROR: no such table: issues
+2023-07-25 15:48:11 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/openai_helpers.cpython-311.pyc.2424221181616
+2023-07-25 15:48:11 error: SQLITE_ERROR: no such table: issues
