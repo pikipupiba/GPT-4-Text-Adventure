@@ -1,4 +1,4 @@
-import os, json
+import os, json, time
 import openai
 from story_function import *
 from stats import *
@@ -6,13 +6,19 @@ from stats import *
 # set Open AI API Key
 api_key = os.getenv('OPENAI_API_KEY')
 # print(api_key)
-assert api_key is not None, "API Key not set in environment"
+assert api_key is not None and len(api_key) > 0, "API Key not set or invalid"
 
 openai.api_key = api_key
 
-def submit_message(player_message, gm_message, story):
-    messages = build_messages(player_message, gm_message, story)
+start_time = 0
 
+def submit_message(player_message, gm_message, story, total_tokens):
+
+    global start_time
+    if start_time == 0:
+        start_time = time.time()
+        
+    messages = build_messages(player_message, gm_message, story)
     # make a call to open ai
     response = openai.ChatCompletion.create(
         model="gpt-4",
@@ -20,10 +26,10 @@ def submit_message(player_message, gm_message, story):
         n=1,
         messages=messages,
         functions=story_function,
-        function_call={"name": "get_story_chunks"},
+        function_call={"name": "continue_adventure"},
     )
 
-    print(response)
+    # print(response)
 
     # parse JSON output from AI model
     arguments_json = json.loads(response.choices[0]["message"]["function_call"]["arguments"])
@@ -33,11 +39,15 @@ def submit_message(player_message, gm_message, story):
     # update stats
     stats.update(arguments_json)
 
-    return [story+"\n\n\n"+arguments_json['Story'], stats.format_day_time(), stats.format_items(), stats.format_relationships()]
+    if total_tokens == "": total_tokens="0"
+
+    tokens_per_minute = (int(total_tokens)+response.usage.total_tokens)/(time.time()-start_time)*60
+
+    return [story+"\n\n\n"+arguments_json['Story'], stats.format_day_time(), stats.format_items(), stats.format_relationships(), response.usage.total_tokens, response.usage.total_tokens+int(total_tokens), tokens_per_minute]
 
 def build_system_message(gm_message, story):
     # build system message from GM input
-    return gm_message + "\r\n\n" + "STORY:/n" + story + "\n" + "CURRENT STATS:/n" + stats.to_string()
+    return gm_message + "\n\n" + "STORY:\n" + story + "\n\n" + "CURRENT STATS:\n" + stats.to_string()
 
 def build_messages(player_message, gm_message, story):
     # submit system message + story + stats + action to model

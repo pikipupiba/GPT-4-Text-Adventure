@@ -1,6 +1,9 @@
 class Stats:
     def __init__(self, items):
+        self.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        self.day_number = 0
         self.day = "Monday"
+        self.new_day = True
         self.time = 60
         self.items = items
         self.relationships = {
@@ -39,21 +42,35 @@ class Stats:
         return f"{self.day} --- {self.time} minutes remaining"
     
     def format_items(self):
-        return "\r".join(self.items)
+        return "\n".join(self.items)
 
     def format_relationships(self):
-        return "\r".join([f"{data['count']} {rank}{' --- ' + data['info'] if data['info'] else ''}" for rank, data in self.relationships.items()])
+        return "\n".join([f"{data['count']} {rank}{' --- ' + data['info'] if data['info'] else ''}" for rank, data in self.relationships.items()])
 
     def format_stats(self):
         return [self.format_day_time(), self.format_items(), self.format_relationships()]
     
     def to_string(self):
         formatted_stats = self.format_stats()
-        return f"Day:{formatted_stats[0]}\n\nItems:\n{formatted_stats[1]}\n\nFriends:\n{formatted_stats[2]}"
-    
+        return f"Start of a new day: {str(self.new_day)}\nDay: {formatted_stats[0]}\nItems:\n{formatted_stats[1]}\nFriends:\n{formatted_stats[2]}"
+
     def update(self, arguments_json):
-        self.subtract_time(int(arguments_json['Time']))
-        self.items = arguments_json['Items']
-        self.relationships = arguments_json['Relationships']
+        self.subtract_time(int(arguments_json.get('Time', 0)))
+        self.items = arguments_json.get('Items', self.items)
+
+        updated_relationships = arguments_json.get('Relationships')
+        if updated_relationships:
+            self.relationships.update(updated_relationships)
+
+        if self.time <= 0:
+            self.day_number += 1
+            self.time = 60
+            self.new_day = True
+            if self.day_number < len(self.days):
+                self.day = self.days[self.day_number]
+            else:
+                self.day = "Unknown"
+        else:
+            self.new_day = False
 
 stats = Stats([])

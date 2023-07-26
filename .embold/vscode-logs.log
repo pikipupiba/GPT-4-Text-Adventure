@@ -120,3 +120,7 @@
 2023-07-25 15:30:47 error: SQLITE_ERROR: no such table: issues
 2023-07-25 15:48:11 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/openai_helpers.cpython-311.pyc.2424221181616
 2023-07-25 15:48:11 error: SQLITE_ERROR: no such table: issues
+2023-07-25 16:07:26 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/.git/index.lock
+2023-07-25 16:07:26 error: SQLITE_ERROR: no such table: issues
+2023-07-25 23:28:48 info: file:///h%3A/GitHub/GPT-4%20Text%20Adventure/__pycache__/openai_helpers.cpython-311.pyc.1789947457584
+2023-07-25 23:28:48 error: SQLITE_ERROR: no such table: issues

@@ -1,22 +1,22 @@
 story_function=[
     {
-        "name": "get_story_chunks",
-        "description": "ingest all aspects of the story",
+        "name": "continue_adventure",
+        "description": "Ingest the player's action and update the story, time, relationships, and items.",
         "required": ["Story", "Time", "Friends", "Items"],
         "parameters": {
             "type": "object",
             "properties": {
                 "Story": {
                     "type": "string",
-                    "description": "Continue the story.",
+                    "description": "Continue the narrative in an interesting and humorous way. Elaborate on details. When a new day begins, summarize the previous day's events and set the scene for the new day.",
                 },
                 "Time": {
                     "type": "number",
-                    "description": "What is an accurate estimate of how long the previous action took in minutes.",
+                    "description": "What is an accurate estimate of how long this action took in minutes.",
                 },
                 "Relationships": {
                     "type": "object",
-                    "description": "Update friends based on previous user action.",
+                    "description": "Update relationships based on previous user action. If there are no changes, output the same as the input.",
                     "required": ["Acquaintances", "Friends", "Best Friend", "Enemies", "Arch Nemesis"],
                     "properties": {
                         "Acquaintances": {
@@ -25,11 +25,11 @@ story_function=[
                             "properties": {
                                 "count": {
                                     "type": "number",
-                                    "description": "The number of acquaintances"
+                                    "description": "The total number of acquaintances"
                                 },
                                 "info": {
                                     "type": "string",
-                                    "description": "important info about changes to the acquaintances"
+                                    "description": "important info about changes to the acquaintances this turn"
                                 }
                             }
                         },
@@ -39,11 +39,11 @@ story_function=[
                             "properties": {
                                 "count": {
                                     "type": "number",
-                                    "description": "The number of friends"
+                                    "description": "The total number of friends"
                                 },
                                 "info": {
                                     "type": "string",
-                                    "description": "important info about changes to the friends"
+                                    "description": "important info about changes to the friends this turn"
                                 }
                             }
                         },
@@ -57,7 +57,7 @@ story_function=[
                                 },
                                 "info": {
                                     "type": "string",
-                                    "description": "important info about changes to the best friend"
+                                    "description": "important info about changes to the best friend this turn"
                                 }
                             }
                         },
@@ -67,11 +67,11 @@ story_function=[
                             "properties": {
                                 "count": {
                                     "type": "number",
-                                    "description": "The number of enemies"
+                                    "description": "The total number of enemies"
                                 },
                                 "info": {
                                     "type": "string",
-                                    "description": "important info about changes to the enemies"
+                                    "description": "important info about changes to the enemies this turn"
                                 }
                             }
                         },
@@ -85,7 +85,7 @@ story_function=[
                                 },
                                 "info": {
                                     "type": "string",
-                                    "description": "important info about changes to the arch nemesis"
+                                    "description": "important info about changes to the arch nemesis this turn"
                                 }
                             }
                         }
@@ -93,7 +93,7 @@ story_function=[
                 },
                 "Items": {
                     "type": "array",
-                    "description": "Items remaining after previous user action.",
+                    "description": "Items remaining after previous user action. Only remove items if they are used up or given away and cannot be used again.",
                     "items": {
                         "type": "string",
                     },
