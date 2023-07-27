@@ -17,5 +17,6 @@ with gr.Blocks() as player_area:
             day_box = gr.Textbox(lines=1, label="Game Time", interactive=False)
             items_box = gr.Textbox(lines=5, label="Items", interactive=False)
             friends_box = gr.Textbox(lines=10, label="Friend Stats", interactive=False)
+            dice_box = gr.Textbox(lines=1, label="Dice", interactive=True)
 
-    submit.click(fn=submit_message, inputs=[input_box, gm_message, story_box, total_tokens], outputs=[story_box, day_box, items_box, friends_box, last_tokens, total_tokens, tokens_per_minute])
+    submit.click(fn=submit_message, inputs=[input_box, gm_message, story_box, total_tokens, dice_box], outputs=[story_box, day_box, items_box, friends_box, last_tokens, total_tokens, tokens_per_minute])

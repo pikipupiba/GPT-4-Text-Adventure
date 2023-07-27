@@ -1,6 +1,6 @@
 import os, json, time
 import openai
-from story_function import *
+from .story_function import *
 from stats import *
 
 # set Open AI API Key
@@ -12,17 +12,17 @@ openai.api_key = api_key
 
 start_time = 0
 
-def submit_message(player_message, gm_message, story, total_tokens):
+def submit_message(player_message, gm_message, story, total_tokens, dice_rolls):
 
     global start_time
     if start_time == 0:
         start_time = time.time()
         
-    messages = build_messages(player_message, gm_message, story)
+    messages = build_messages(player_message, gm_message, story, dice_rolls)
     # make a call to open ai
     response = openai.ChatCompletion.create(
         model="gpt-4",
-        max_tokens=4000,
+        max_tokens=3000,
         n=1,
         messages=messages,
         functions=story_function,
@@ -43,20 +43,20 @@ def submit_message(player_message, gm_message, story, total_tokens):
 
     tokens_per_minute = (int(total_tokens)+response.usage.total_tokens)/(time.time()-start_time)*60
 
-    return [story+"\n\n\n"+arguments_json['Story'], stats.format_day_time(), stats.format_items(), stats.format_relationships(), response.usage.total_tokens, response.usage.total_tokens+int(total_tokens), tokens_per_minute]
+    return [story+"\n----------------------------------------------\n"+arguments_json['Story'], stats.format_day_time(), stats.format_items(), stats.format_relationships(), response.usage.total_tokens, response.usage.total_tokens+int(total_tokens), tokens_per_minute]
 
-def build_system_message(gm_message, story):
+def build_system_message(gm_message, dice_rolls):
     # build system message from GM input
-    return gm_message + "\n\n" + "STORY:\n" + story + "\n\n" + "CURRENT STATS:\n" + stats.to_string()
+    return gm_message + "\n\n" + "CURRENT STATS:\n" + stats.to_string() + "\n\n" + "CURRENT DICE ROLLS: " + dice_rolls
 
-def build_messages(player_message, gm_message, story):
+def build_messages(player_message, gm_message, story, dice_rolls):
     # submit system message + story + stats + action to model
 
-    system_message = build_system_message(gm_message, story)
+    system_message = build_system_message(gm_message, dice_rolls)
 
     messages = [
         {"role": "system", "content": system_message},
-        # {"role": "assistant", "content": story},
+        {"role": "assistant", "content": story},
         {"role": "user", "content": player_message},
     ]
 
