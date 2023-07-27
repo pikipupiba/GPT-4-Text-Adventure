@@ -1,6 +1,6 @@
 import os, json, time
 import openai
-from .story_function import *
+from story_function import *
 from stats import *
 
 # set Open AI API Key
