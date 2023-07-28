@@ -9,6 +9,7 @@ api_key = os.getenv('OPENAI_API_KEY')
 assert api_key is not None and len(api_key) > 0, "API Key not set or invalid"
 
 openai.api_key = api_key
+openai.organization = "org-ziA2BQ1zJxVrlYV5I6mcTUwN"
 
 start_time = 0
 

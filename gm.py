@@ -2,7 +2,7 @@ import gradio as gr
 from session import *
 
 def build_gm_message(engine, scenario, npc, environment, rules):
-    return f"System:\r\n{engine}\r\n\r\nScenario:\r\n{scenario}\r\n\r\nNPC:\r\n{npc}\r\n\r\nEnvironment:\r\n{environment}\r\n\r\nRules:\r\n{rules}"
+    return f"{engine}\n\n{scenario}\n\n{npc}\n\n{environment}\n\n{rules}"
 
 with gr.Blocks() as game_master_area:
     with gr.Row():

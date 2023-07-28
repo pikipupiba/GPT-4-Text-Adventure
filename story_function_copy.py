@@ -2,7 +2,7 @@ story_function=[
     {
         "name": "continue_adventure",
         "description": "Ingest the player's action and update the story, time, relationships, and items.",
-        "required": ["Story", "Time", "Relationships", "Items"],
+        "required": ["Story", "Time", "Friends", "Items"],
         "parameters": {
             "type": "object",
             "properties": {
@@ -93,7 +93,7 @@ story_function=[
                 },
                 "Items": {
                     "type": "array",
-                    "description": "Items remaining after previous user action. Only remove items if they are used up or given away and cannot be used again.",
+                    "description": "Items remaining after player action. Only remove items if they are used up or given away and cannot be used again.",
                     "items": {
                         "type": "string",
                     },
