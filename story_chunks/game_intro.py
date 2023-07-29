@@ -1,4 +1,6 @@
-game_intro = {}n2
+game_intro = {
+
+}
 
 game_intro.update({
     "0":
@@ -9,3 +11,4 @@ game_intro.update({
     "1":
     ""
     })
+
