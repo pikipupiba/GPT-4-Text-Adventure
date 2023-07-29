@@ -26,6 +26,7 @@ class ChatToken:
             "total_tokens": self.total_tokens + other.total_tokens})
 
 class ChatTokenCounter:
+
     def __init__(self, model:str):
         self.model = model
         self.token_history = []

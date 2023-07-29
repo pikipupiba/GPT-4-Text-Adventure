@@ -5,13 +5,21 @@ from loguru import logger
 
 logger.level("msg",22)
 
-
 # set Open AI API Key
 api_key = os.getenv('OPENAI_API_KEY')
-# print(api_key)
 assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
-
 openai.api_key = api_key
+
+AVAILABLE_MODELS = [
+    "gpt-4",
+    "gpt-4-0314",
+    "gpt-4-32k",
+    "gpt-4-32k-0314",
+    "gpt-3.5-turbo",
+    "gpt-3.5-turbo-0301",
+    "text-davinci-003",
+    "code-davinci-002",
+]
 
 class GPTBot:
 
@@ -49,6 +57,22 @@ class GPTBot:
 
 
         self.log()
+
+    def send_message(self, message, history):
+
+        if history is None: history = []
+
+        self.response_object = openai.ChatCompletion.create(
+            model = self.model,
+            messages = [{"role": "user", "content": message}]
+        )
+        self.response = self.response_object.choices[0].message.content
+        self.tokens.add(ChatToken(usage = self.response_object.usage))
+
+        # logger.info(f"~~------------------~~ {self.name}  ~~-------------------~~")
+        # self.log_tokens()
+
+        return self.response
         
 
     def log_tokens(self):
