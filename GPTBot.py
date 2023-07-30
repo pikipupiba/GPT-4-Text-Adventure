@@ -1,5 +1,9 @@
+# TODO:
+# 1. integrate system message into predict function
+# 2. 
+
 import openai
-import os,json,uuid
+import os,json,uuid,random
 from ChatToken import *
 from loguru import logger
 
@@ -58,23 +62,44 @@ class GPTBot:
 
         self.log()
 
-    def send_message(self, message, history):
+    def predict(self, history):
 
-        if history is None: history = []
+        # logger.info("!!!PREDICTING!!!")
 
-        self.response_object = openai.ChatCompletion.create(
-            model = self.model,
-            messages = [{"role": "user", "content": message}]
+        # array of dice rolls from 1-20
+        dice_rolls = [random.randint(1,20) for i in range(10)]
+
+        history_openai_format = []
+        for human, assistant in history:
+            if human != None: history_openai_format.append({"role": "user", "content": human })
+            if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
+
+
+        response = openai.ChatCompletion.create(
+            model=self.model,
+            messages= history_openai_format,         
+            temperature=1.0,
+            stream=True
         )
-        self.response = self.response_object.choices[0].message.content
-        self.tokens.add(ChatToken(usage = self.response_object.usage))
 
-        # logger.info(f"~~------------------~~ {self.name}  ~~-------------------~~")
-        # self.log_tokens()
-
-        return self.response
+        # logger.info("!!!STREAMING RESULT!!!")
         
+        history[-1][1] = ""
+        for chunk in response:
+            if len(chunk['choices'][0]['delta']) != 0:
+                history[-1][1] += chunk['choices'][0]['delta']['content']
+                yield history
 
+        self.response = history[-1][1]
+
+        # Calculate streaming token usage
+        usage = self.tokens.add_from_stream(self.model, history_openai_format, self.response)
+
+        logger.info(f"~~------------------~~ {self.name}  ~~-------------------~~")
+        self.log_tokens()
+
+        # yield self.response
+        
     def log_tokens(self):
         self.tokens.print(self.name)
 
@@ -89,6 +114,14 @@ class GPTBot:
 
         logger.info(f"~~----------------~~ TOKEN TOTALS  ~~-----------------~~")
         total.print("total")
+
+    def get_tokens(self):
+
+        output = self.tokens
+
+        output.token_history = output.token_history[::-1]
+
+        return output
 
     def log(self):
         pass
