@@ -4,7 +4,7 @@
 
 import openai
 import os,json,uuid,random
-from ChatToken import *
+from TokenTracker import *
 from loguru import logger
 
 logger.level("msg",22)
@@ -17,10 +17,14 @@ openai.api_key = api_key
 AVAILABLE_MODELS = [
     "gpt-4",
     "gpt-4-0314",
+    "gpt-4-0613",
     "gpt-4-32k",
     "gpt-4-32k-0314",
+    "gpt-4-32k-0613",
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-0301",
+    "gpt-3.5-turbo-0613",
+    "gpt-3.5-turbo-16k-0613",
     "text-davinci-003",
     "code-davinci-002",
 ]
@@ -122,12 +126,3 @@ class GPTBot:
         output.token_history = output.token_history[::-1]
 
         return output
-
-    def log(self):
-        pass
-        # name = self.response_object.id
-        # msg_name = f'{self.response_object.id}_messages'
-        # with open(f'log/{name}.txt','w') as f:
-        #     f.write(json.dumps(self.response_object.__dict__))
-        # with open(f'log/{msg_name}.txt','w') as f:
-        #     f.write(json.dumps(self.messages))

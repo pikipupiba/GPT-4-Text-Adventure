@@ -54,12 +54,7 @@ def load_current_system_message():
 
     return system_message
 
-prev_history = []
 def save_current_chat_history(history):
-    # global prev_history
-    # if history == prev_history:
-    #     return
-    # prev_history = history
     logger.info("Saving CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
