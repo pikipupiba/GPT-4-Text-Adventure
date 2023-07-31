@@ -28,13 +28,14 @@ with player_tab:
             # HISTORY
             with gr.Row() as history_area:
                 chatbot = gr.Chatbot(value=load_current_chat_history)
+                ai_chatbot = gr.Chatbot(value=load_current_chat_history_inverted, visible=False)
             # USER INPUT
             with gr.Group():
-                with gr.Row() as message_area:
+                with gr.Row() as user_area:
                     model = gr.Dropdown(
                         choices=["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"],
                         label="Model",
-                        value="gpt-3.5-turbo-0613",
+                        value="gpt-4-0613",
                         scale=1,
                         )
                     player_message = gr.Textbox(lines=1, label="Player Message", interactive=True, scale=20)
@@ -44,6 +45,20 @@ with player_tab:
                         retry = gr.Button(value="Retry", size="sm")
                         undo = gr.Button(value="Undo", size="sm")
                         clear = gr.ClearButton([chatbot, player_message], size="sm")
+            with gr.Group():
+                with gr.Row() as ai_area:
+                    ai_model = gr.Dropdown(
+                        choices=["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"],
+                        label="AI Model",
+                        value="gpt-3.5-turbo-0613",
+                        scale=1,
+                        )
+                    ai_message = gr.Textbox(lines=1, label="AI Player Message", interactive=False, scale=20)
+                    ai_submit = gr.Button(value="Do it!", scale=1, size="sm")
+                    # with gr.Column(scale=1, variant="compact"):
+                    with gr.Group():
+                        ai_retry = gr.Button(value="AI Retry", size="sm")
+                        ai_generate = gr.Button(value="Generate", size="sm")
         # STATS
         with gr.Column(scale=1, variant="compact") as stats_area:
             with gr.Group():
@@ -59,12 +74,18 @@ with player_tab:
                 token_jsons.append(gr.JSON(label=f"{model_name} Tokens", interactive=False))
     
     # PLAYER TAB FUNCTIONS
-
     submits = []
     submits.append(submit.click(
         fn=lambda msg,history: ["", history + [[msg, None]]], 
         inputs=[player_message, chatbot],
         outputs=[player_message, chatbot],
+        queue=False
+        ))
+    
+    submits.append(ai_submit.click(
+        fn=lambda msg,history: ["", history + [[msg, None]]], 
+        inputs=[ai_message, chatbot],
+        outputs=[ai_message, chatbot],
         queue=False
         ))
 
@@ -92,7 +113,7 @@ with player_tab:
         save_history = predict.then(
             fn=save_current_chat_history,
             inputs=[chatbot],
-            outputs=[],
+            outputs=[ai_chatbot],
             queue=False
             )
         get_tokens = predict.then(
@@ -108,3 +129,23 @@ with player_tab:
         outputs=[chatbot],
         queue=False
         )
+        
+    ai_generate.click(
+        fn=llm.predict,
+        inputs=[ai_model, system_message_2 ,ai_chatbot],
+        outputs=[ai_chatbot],
+        queue=True
+        ).then(
+            fn=lambda history: history[-1][1],
+            inputs=[ai_chatbot],
+            outputs=[ai_message],
+            queue=False
+            )
+    
+    # for token_json in token_jsons:
+    #     token_json.change(
+    #         fn=lambda x: print("Changin' here boss..."),
+    #         inputs=[],
+    #         outputs=[],
+    #         queue=False
+    #         )

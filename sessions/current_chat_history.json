@@ -14,5 +14,29 @@
     [
         "why oh why",
         "I apologize if you're feeling frustrated. Let's simplify things for you. I'll choose 5 items for you based on what I think could help you make friends during recess. Here are your items:\n\n1. A stack of Comic Books\n2. A Bag of Marbles\n3. A Rubber Duck\n4. A Pack of Bubble Gum\n5. A Limited-edition Action Figure\n\nNow that you have your items, it's time to head out to the playground. What would you like to do first? Remember, your goal is to make the most friends by solving playground issues."
+    ],
+    [
+        "wow",
+        null
+    ],
+    [
+        "wow",
+        "Great! Are you ready to head out to the playground?"
+    ],
+    [
+        "maybe",
+        "That's completely fine! Remember, you're here on a mission to make as many friends as possible by solving problems on the playground. If you're feeling a bit unsure, how about we start by attempting to address a problem? From where you're standing, you notice a group of kids by the slide who seem to be arguing. What would you like to do? You can observe them from afar, approach them to ask what's wrong or, if you feel like it, do something completely different!"
+    ],
+    [
+        "Here's what I suggest you do: Approach the group of kids by the slide and kindly ask if everything is alright. Offer to listen to their concerns and try to mediate the situation if needed. Show empathy and understanding towards each person involved. Remember, your goal is to be a friend and help resolve conflicts. Good luck!",
+        "That's a great suggestion! You take careful steps towards the group of kids, your heart tapping a nervous beat against your chest, but a determined look on your face.\n\nYou arrive at the slide where the kids are arguing and interrupt them politely, \"Hey, is everything alright here? Can I help somehow?\" You make sure to keep your tone kind and open.\n\nNow while getting involved, we need to perform a Diplomacy Check to see how well your intervention goes as this is an interpersonal challenge. This type of interaction check will be a roll against your Charisma score. Roll a virtual 20-sided die (D20) for me and add your Charisma modifier (let's say it's +2 for now).\n\nIf your total equals or beats a 15, your intervention is taken positively and you've started your journey towards making a new friend! If it's lower, well, we'll see what happens."
+    ],
+    [
+        "18",
+        "With a total score of 20 (18 + 2 Charisma modifier), your intervention is impressively effective! The arguing kids turn towards you and their faces melt from scowls to curious gazes.\n\nOne of them, a fiery redhead named Jamie, pipes up, \"We are arguing about the slide rules, some kids saying you can only go down head first while others oppose for safety. You seem nice. Maybe you can help us solve this?\"\n\nYou've made a significant impression and the first step towards making a new group of friends! So, what are your thoughts about the slide situation? You've got 50 minutes of recess left. \n\nAlso, here's a quick look at your stats:\n- Friends: Jamie (Acquaintance)\n- Enemies: None \n- Arch Nemesis: None \n- Items: Comic Books, Bag of Marbles, Rubber Duck, Bubble Gum, Action Figure\n- Time left: 50 minutes"
+    ],
+    [
+        "Let's hear your decision regarding the slide rules! Do you believe that:\nA) Kids should only go down headfirst for fun\nB) Prioritize safety and have everyone slide down feet first\nC) Propose a different solution altogether?\n\nTake your time. Remember, your decision could potentially gain or lose you some friends.",
+        "Oh, appears I misunderstood your last input! My apologies, you're right - you're the one making decisions here. \n\nSo, how would you like to resolve the slide rules disagreement? You can support going down head first, prioritize safety by supporting feet first sliding or propose a different solution altogether. Let's see how you choose to navigate this situation."
     ]
 ]

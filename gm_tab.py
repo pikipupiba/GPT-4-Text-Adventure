@@ -33,6 +33,13 @@ with gr.Blocks() as gm_tab:
                         interactive=True,
                         scale=1,
                         value=load_current_system_message)
+    
+    system_message_2 = gr.Textbox(
+                        lines=40,
+                        label="System",
+                        interactive=True,
+                        scale=1,
+                        value="You are playing a game. Follow the rules.")
 
     # GM TAB FUNCTIONS
     save.click(

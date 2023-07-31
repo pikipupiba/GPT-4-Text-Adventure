@@ -68,6 +68,11 @@ def save_current_chat_history(history):
             f.write(json.dumps(history, indent=4))
     except IOError as e:
         print(f"Error: {e}")
+    
+    # Invert the history
+    history = [[item[1], item[0]] for item in history]
+
+    return history
 
 def load_current_chat_history():
     logger.info("Loading CHAT HISTORY!")
@@ -87,5 +92,29 @@ def load_current_chat_history():
     except IOError as e:
         history = []
         print(f"Error: {e}")
+
+    return history
+
+def load_current_chat_history_inverted():
+    logger.info("Loading CHAT HISTORY!")
+
+    # Check if the "sessions" directory exists
+    if not os.path.exists("sessions"):
+        os.makedirs("sessions")
+
+    chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
+
+    try:
+        with open(chat_history_file_path, "r") as f:
+            history = json.load(f)
+    except FileNotFoundError:
+        history = []
+        print(f"Error: File '{chat_history_file_path}' not found")
+    except IOError as e:
+        history = []
+        print(f"Error: {e}")
+
+    # Invert the history
+    history = [[item[1], item[0]] for item in history]
 
     return history
