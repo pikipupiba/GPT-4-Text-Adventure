@@ -1,86 +1,18 @@
 [
     [
-        "bah",
-        "I'm sorry, could you please provide more context or elaborate? What action would you like to take or what information do you need?"
-    ],
-    [
-        "no",
-        "Alright, if you have any other requests or need any information about our playground-themed Dungeons and Dragons 5th edition game, feel free to ask at any time. We are here to build an exciting adventure together."
-    ],
-    [
-        "wow",
-        "I'm glad you're enthusiastic! Are you ready to start our playground-themed, Dungeons and Dragons 5th edition game? Or do you have any other questions or actions you'd like to take?"
+        "let us begin",
+        "Alright! Let's get ready for an exciting week at the AI Adventure Academy. You're standing outside the classroom door, the bell just finishing its echoing clang down the halls signifying the start of your daily hour of recess. The hallways smell of fresh crayons and eraser dust, while the outside air is ripe with the crisp scent of late-summer foliage.\n\nYou've got a playground ahead with endless adventure waiting. But first things first. What 5 items from this list will you bring with you? \n\n1. A stack of Comic Books\n2. A Bag of Marbles\n3. An Ouija board\n4. A fancy Pair of Sneakers\n5. A Rubber Duck\n6. A Magic 8-Ball\n7. An Old Map of the School\n8. A Homemade Slingshot\n9. A Pack of Bubble Gum\n10. A Limited-edition Action Figure\n\nTake your time choosing. Remember, each item can help you gain friends through various methods such as entertainment, solving problems or even trading. Once you've selected your items, our adventure can truly begin."
     ],
     [
         "bah",
-        "It seems you're having a hard time communicating. If you need to ask about the game or want to make a move, please let me know! Always here and happy to help."
+        "Sorry, I don't understand what \"bah\" means in this context. Could you please clarify or choose 5 items from the list provided?"
     ],
     [
-        "thingy boo",
-        "I'm sorry, I didn't quite catch that. If you're ready to start the game or if you need any more information, please let me know! Let's begin our adventure in the recess world of AI Adventure Academy."
+        "nooo@!",
+        "I see, it appears there might be some confusion or frustration. Would you like me to explain the steps again or assist you in another way? Your goal is to choose 5 items from the list that you think would be most helpful for making friends during recess at the AI Adventure Academy."
     ],
     [
-        "bah",
-        "I'm sorry but I didn't catch your intent. If you'd like to start the game or have any questions about the setup, please let me know! We can go ahead with our amazing adventure at the playground."
-    ],
-    [
-        "omg we are doing it",
-        "My apologies! If you'd like to provide a clear, descriptive action or intent, I'd be more than happy to help progress the game forward!"
-    ],
-    [
-        "ok, sir",
-        "Fantastic! Let's get started on your adventure at the AI Adventure Academy.\n\nThe school bell rings, signaling the start of recess. Kids scatter across the playground, racing to their favorite hangouts. You stand near the school building, backpack filled with your five chosen items: a yo-yo, a rubber duck, a comic book, a pack of bubblegum, and an Ouija board.\n\nAs you take in the playground, you spot a few characters. There's Billy, the playground bully, by the tetherball pole. Mia, the shy girl who loves to read, is tucked away under the big oak tree. A group of sports enthusiasts play kickball on the field. And near a hollow in a tree, you spot a pair of glowing eyes - the playground's resident raccoon.\n\nLet's determine your starting friend count.\n\nFriend Count: \n- Acquaintances: 10\n- Friends: 0\n- Best Friends: 0\n\nYour goal is to navigate the playground politics, solve some issues, battle bullies, make friends, and avoid enemies.\n\nWhat is your first move?\n\nElapsed Recess Time: 0 minutes\nRemaining Recess Time: 60 minutes"
-    ],
-    [
-        "wow",
-        "I'm glad you're excited! Now, what would you like to do first in our playground world? Do you want to interact with the students, explore the playground, or perhaps try to venture near the tree and discover more about our friendly raccoon? Remember, your adventure and the choices you make will lead you to make more friends or enemies. The choice is yours."
-    ],
-    [
-        "wow",
-        "Your enthusiasm is infectious! Now, how about we get started with the adventure? Would you like to make a move on the playground? Or perhaps you have some questions you need answers to before you decide? Either way, I'm here to help guide you through it. Let me know what you decide to do!"
-    ],
-    [
-        "okkkkk",
-        "Great! So what's your first action going to be on this playground adventure, friend? Remember, the people you interact with and your actions will determine how many friends you make, your allies and enemies, and how the story unfolds. You can interact with Billy, the playground bully, approach Mia, the shy girl under the tree, join the sports enthusiasts, or investigate the curious raccoon in the tree. You also have the items in your backpack at your disposal. Let's see what happens next! Remember, the clock is ticking on your recess time!"
-    ],
-    [
-        "poop",
-        "Hmm, it sounds like maybe you're not quite ready to dive into the adventure? That's alright! When you feel ready to make your move, let me know and we'll continue with your recess expedition in AI Adventure Academy. Whether it's chatting with Billy, joining the game of kickball, or checking out that raccoon, there's plenty of exciting options waiting for you. Just drop me a line when you're ready to get started!"
-    ],
-    [
-        "wooooow",
-        "I'm glad you're excited! Since you're ready to get started, let's jump right into the adventure at the AI Adventure Academy playground.\n\nAs you survey the playground, what specific action would you like to take? Do you want to approach one of the characters I mentioned earlier or do you have something else in mind? Let me know, and we'll continue our adventure from there! Remember, your choices will shape your friend count and the outcome of the game."
-    ],
-    [
-        "okkkkk",
-        "Fantastic, we're ready to start. So what's your first action going to be on the playground? You can interact with any of the kids or the raccoon, or use an item from your backpack. Each action you take can help you gain friends, but remember to use your time wisely as it\u2019s already ticking. Looking forward to hearing what you decide to do!"
-    ],
-    [
-        "neither",
-        "Alright, it seems you would prefer not to interact with anyone or use any items from your backpack at the moment. That's perfectly fine! Is there something specific you would like to do or explore on the playground? Remember, you have limited recess time, so make your choices count. Let me know what you have in mind and we'll continue with the adventure!"
-    ],
-    [
-        "",
-        "I apologize if there was a misunderstanding. If you're not ready to decide on a specific action or explore the playground just yet, that's perfectly fine. Take your time and let me know whenever you're ready to proceed. In the meantime, feel free to ask any questions or share any ideas you may have for your adventure at the AI Adventure Academy playground."
-    ],
-    [
-        "bah",
-        "I apologize if I'm not understanding what you're trying to communicate. Please let me know if there's anything specific you'd like to do or any questions you have about the game. I'm here to help and make this playground adventure enjoyable for you!"
-    ],
-    [
-        "wee",
-        "Alright, \"wee\" often indicates enthusiasm or excitement, which is great! Now, let's turn that energy into some playground fun. Would you like to run into the field, challenge Billy to a game of tetherball, join the sports enthusiasts for kickball, approach Mia, or investigate the raccoon? Don't forget about the items in your backpack, which could help in certain situations. Let me know your choice, and we'll continue the adventure!"
-    ],
-    [
-        "lee",
-        "I'm sorry, but I'm having trouble understanding your response. If you can provide more information or clarify your intent, I'll be happy to assist you with your next move in the game."
-    ],
-    [
-        "weeaboo nee maw",
-        "Apologies for any confusion earlier. Based on your words, it seems you're interested in anime or Japanese culture. However, in the context of our playground-themed D&D game, I'm not quite sure how to proceed. If you can provide more specific intent or action, I'll be happy to continue our game. For instance, you could decide to approach one of the students or interact with the environment in a way that reflects your interest. Let me know your decision."
-    ],
-    [
-        "bah",
-        null
+        "why oh why",
+        "I apologize if you're feeling frustrated. Let's simplify things for you. I'll choose 5 items for you based on what I think could help you make friends during recess. Here are your items:\n\n1. A stack of Comic Books\n2. A Bag of Marbles\n3. A Rubber Duck\n4. A Pack of Bubble Gum\n5. A Limited-edition Action Figure\n\nNow that you have your items, it's time to head out to the playground. What would you like to do first? Remember, your goal is to make the most friends by solving playground issues."
     ]
 ]

@@ -29,11 +29,20 @@ class LLM:
         "code-davinci-002",
     ]
 
-    def __init__(self, model:str):
-        self.model = model
-        self.token_tracker = TokenTracker(self.model)
+    models = []
+    token_trackers = {}
 
-    def predict(self, system_message, history):
+    def __init__(self, models:list):
+        LLM.models = models
+
+        for model in models:
+            if model not in LLM.AVAILABLE_MODELS:
+                raise NotImplementedError(f"num_tokens_from_messages() is not implemented for model {model}.")
+                continue
+            LLM.token_trackers[model] = TokenTracker(model)
+
+
+    def predict(self, model, system_message, history):
         # array of dice rolls from 1-20
         dice_rolls = [random.randint(1,20) for i in range(10)]
 
@@ -44,7 +53,7 @@ class LLM:
             if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
 
         response = openai.ChatCompletion.create(
-            model=self.model,
+            model=model,
             messages= history_openai_format,         
             temperature=1.0,
             stream=True
@@ -54,15 +63,14 @@ class LLM:
 
         for chunk in response:
             if len(chunk['choices'][0]['delta']) != 0:
-                model = chunk['model']
                 history[-1][1] += chunk['choices'][0]['delta']['content']
                 yield history
 
         # Calculate streaming token usage
-        self.token_tracker.add_from_stream(model, history_openai_format, history[-1][1])
+        LLM.token_trackers[model].add_from_stream(model, history_openai_format, history[-1][1])
 
-        logger.info(f"~~------------------~~ {self.model}  ~~-------------------~~")
-        self.token_tracker.print()
+        logger.info(f"~~------------------~~ {model}  ~~-------------------~~")
+        LLM.token_trackers[model].print()
 
         # yield self.response
 

@@ -9,21 +9,22 @@ from session import *
 with gr.Blocks() as gm_tab:
 
     # SAVE/LOAD SESSION
-    with gr.Row().style(equal_height=True):
-        file_name = gr.Textbox(
-                        value="current_system_message",
-                        lines=1,
-                        show_label=False,
-                        interactive=True,
-                        scale=8,
-                        )
-        save = gr.Button(value="Save", scale=1, size="sm")
-        load = gr.Button(value="Load", scale=1, size="sm")
-        mode = gr.Radio(
-                choices=["Overwrite", "Prepend", "Append"],
-                show_label=False,
-                value="Overwrite",
-                scale=3)
+    with gr.Group(): #.style(equal_height=True):
+        with gr.Row():
+            file_name = gr.Textbox(
+                            value="current_system_message",
+                            lines=1,
+                            show_label=False,
+                            interactive=True,
+                            scale=7,
+                            )
+            save = gr.Button(value="Save", scale=1, size="sm")
+            load = gr.Button(value="Load", scale=1, size="sm")
+            mode = gr.Radio(
+                    choices=["Overwrite", "Prepend", "Append"],
+                    show_label=False,
+                    value="Overwrite",
+                    scale=3)
         
     # SYSTEM MESSAGE
     system_message = gr.Textbox(
