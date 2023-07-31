@@ -90,6 +90,7 @@ class TokenTracker:
         self.model = model
         self.TPM = 0
         self.total_tokens = LLMToken(0,0,0)
+        self.cost = {"prompt":0, "completion":0, "total":0}
         self.last_tokens = LLMToken(0,0,0)
         self.start_time = time.time()
         TokenTracker.trackers[model] = self
@@ -109,6 +110,30 @@ class TokenTracker:
 
         self.last_tokens = LLMToken(prompt, completion, total)
         self.add(self.last_tokens)
+
+        self.calculate_cost(model)
+        
+    def calculate_cost(self, model:str):
+        cost = {}
+        if model == "gpt-3.5-turbo-0613":
+            cost["prompt"] = 0.0000015
+            cost["completion"] = 0.000002
+        elif model == "gpt-3.5-turbo-16k-0613":
+            cost["prompt"] = 0.000003
+            cost["completion"] = 0.000004
+        elif model == "gpt-4-0613":
+            cost["prompt"] = 0.00003
+            cost["completion"] = 0.00006
+        elif model == "gpt-4-32k-0613":
+            cost["prompt"] = 0.00006
+            cost["completion"] = 0.00012
+        
+        prompt = self.total_tokens.prompt
+        completion = self.total_tokens.completion
+
+        self.cost["prompt"] = prompt * cost["prompt"]
+        self.cost["completion"] = completion * cost["completion"]
+        self.cost["total"] = self.cost["prompt"] + self.cost["completion"]
     
     def log_all_token_trackers():
         logger.info("----------------------------------------------------------")
@@ -127,6 +152,9 @@ class TokenTracker:
 
         total = self.total_tokens
         logger.info(f"TOTAL P:{total.prompt} | C:{total.completion} | T:{total.total}")
+
+        cost = self.cost
+        logger.info(f"COST  P:{round(cost['prompt'], 4)} | C:{round(cost['completion'], 4)} | T:{round(cost['total'], 4)}")
     
     # def to_json(self):
     #     return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

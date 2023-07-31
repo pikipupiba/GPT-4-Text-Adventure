@@ -1,8 +1,6 @@
 # TODO:
 # 1. populate stats section from response
 # 2. sliders to control HOW risky, loud, etc. the action is
-# 3. populate tokens section from response
-# 4. dropdown to select model
 
 import gradio as gr
 from gm_tab import *
@@ -45,6 +43,7 @@ with player_tab:
                         retry = gr.Button(value="Retry", size="sm")
                         undo = gr.Button(value="Undo", size="sm")
                         clear = gr.ClearButton([chatbot, player_message], size="sm")
+            # AI INPUT
             with gr.Group():
                 with gr.Row() as ai_area:
                     ai_model = gr.Dropdown(
@@ -61,6 +60,7 @@ with player_tab:
                         ai_generate = gr.Button(value="Generate", size="sm")
         # STATS
         with gr.Column(scale=1, variant="compact") as stats_area:
+            team_name = gr.Textbox(lines=1, label="Team Name", interactive=True)
             with gr.Group():
                 day_box = gr.Textbox(lines=1, label="Game Time", interactive=False)
                 items_box = gr.Textbox(lines=5, label="Items", interactive=False)
@@ -74,6 +74,13 @@ with player_tab:
                 token_jsons.append(gr.JSON(label=f"{model_name} Tokens", interactive=False))
     
     # PLAYER TAB FUNCTIONS
+    team_name.submit(
+        fn=load_current_chat_history,
+        inputs=[team_name],
+        outputs=[chatbot],
+        queue=False
+    )
+
     submits = []
     submits.append(submit.click(
         fn=lambda msg,history: ["", history + [[msg, None]]], 
@@ -112,7 +119,7 @@ with player_tab:
             )
         save_history = predict.then(
             fn=save_current_chat_history,
-            inputs=[chatbot],
+            inputs=[team_name, chatbot],
             outputs=[ai_chatbot],
             queue=False
             )

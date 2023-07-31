@@ -25,3 +25,17 @@ Rules:
 Before the game begins, the player must choose 5 items to bring with them from a list of 10 items that include an Ouija board and a rubber duck somewhere random in the list.
 Recess lasts for 1 hour each day and each action taken eats into this time. Keep track of how much time is left each day.
 Output the stats in the same format each time.
+Get dice rolls from the following list, one at a time in order:
+1
+5
+10
+25
+15
+7
+6
+5
+4
+10
+11
+12
+13

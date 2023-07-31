@@ -62,14 +62,15 @@ class LLM:
         history[-1][1] = ""
 
         for chunk in response:
+            real_model = chunk['model']
             if len(chunk['choices'][0]['delta']) != 0:
                 history[-1][1] += chunk['choices'][0]['delta']['content']
                 yield history
 
         # Calculate streaming token usage
-        LLM.token_trackers[model].add_from_stream(model, history_openai_format, history[-1][1])
+        LLM.token_trackers[real_model].add_from_stream(real_model, history_openai_format, history[-1][1])
 
-        logger.info(f"~~------------------~~ {model}  ~~-------------------~~")
+        # logger.info(f"~~--------~~ {model} ~~--------~~")
         LLM.token_trackers[model].print()
 
         # yield self.response

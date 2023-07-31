@@ -54,7 +54,7 @@ def load_current_system_message():
 
     return system_message
 
-def save_current_chat_history(history):
+def save_current_chat_history(team_name, history):
     logger.info("Saving CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
@@ -62,9 +62,12 @@ def save_current_chat_history(history):
         os.makedirs("sessions")
         
     chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
+    team_history_file_path = os.path.join("sessions", f"{team_name}.json")
 
     try:
         with open(chat_history_file_path, "w") as f:
+            f.write(json.dumps(history, indent=4))
+        with open(team_history_file_path, "w") as f:
             f.write(json.dumps(history, indent=4))
     except IOError as e:
         print(f"Error: {e}")
@@ -74,14 +77,17 @@ def save_current_chat_history(history):
 
     return history
 
-def load_current_chat_history():
+def load_current_chat_history(team_name=""):
     logger.info("Loading CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
         os.makedirs("sessions")
 
-    chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
+    if team_name == "":
+        chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
+    else:
+        chat_history_file_path = os.path.join("sessions", f"{team_name}.json")
 
     try:
         with open(chat_history_file_path, "r") as f:
