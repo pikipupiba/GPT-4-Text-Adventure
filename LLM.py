@@ -1,6 +1,7 @@
 import openai
-import os,json,uuid,random
+import os,json,random
 from TokenTracker import *
+from helpers import *
 from loguru import logger
 
 # set Open AI API Key
@@ -9,25 +10,6 @@ assert api_key is not None and len(api_key) > 0, "API Key not set in environment
 openai.api_key = api_key
 
 import os,json,uuid,random
-
-def extract_json_objects(text, decoder=json.JSONDecoder()):
-    """Find JSON objects in text, and yield the decoded JSON data
-
-    Does not attempt to look for JSON arrays, text, or other JSON types outside
-    of a parent JSON object.
-
-    """
-    pos = 0
-    while True:
-        match = text.find('{', pos)
-        if match == -1:
-            break
-        try:
-            result, index = decoder.raw_decode(text[match:])
-            yield result
-            pos = match + index
-        except ValueError:
-            pos = match + 1
 
 day_name = ""
 time_left = ""
@@ -70,8 +52,8 @@ def parse_stats(json_grab={}):
         relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
 
     return day, items, relationships
-        
-        
+
+
 
 class LLM:
 
