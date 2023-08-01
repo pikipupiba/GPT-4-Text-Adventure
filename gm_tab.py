@@ -34,12 +34,13 @@ with gr.Blocks() as gm_tab:
                         scale=1,
                         value=load_current_system_message)
     
-    system_message_2 = gr.Textbox(
+    example_history = gr.Code(
                         lines=40,
-                        label="System",
+                        label="Example History",
                         interactive=True,
                         scale=1,
-                        value="You are playing a game. Follow the rules.")
+                        value=load_current_example_history,
+                        language="json")
 
     # GM TAB FUNCTIONS
     save.click(
@@ -57,6 +58,13 @@ with gr.Blocks() as gm_tab:
     system_message.change(
         fn=save_current_system_message,
         inputs=[system_message],
+        outputs=[],
+        queue=False
+        )
+    
+    example_history.change(
+        fn=save_current_example_history,
+        inputs=[example_history],
         outputs=[],
         queue=False
         )

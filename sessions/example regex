@@ -1,0 +1,6 @@
+<!-- --- new paragraph w/ empty line --- -->
+Find: \n\s*\n\s*
+Replace: \\n\\n
+
+Find: 
+Replace: 

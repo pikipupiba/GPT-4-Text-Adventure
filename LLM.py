@@ -12,6 +12,65 @@ api_key = os.getenv('OPENAI_API_KEY')
 assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
 openai.api_key = api_key
 
+import os,json,uuid,random
+
+def extract_json_objects(text, decoder=json.JSONDecoder()):
+    """Find JSON objects in text, and yield the decoded JSON data
+
+    Does not attempt to look for JSON arrays, text, or other JSON types outside
+    of a parent JSON object.
+
+    """
+    pos = 0
+    while True:
+        match = text.find('{', pos)
+        if match == -1:
+            break
+        try:
+            result, index = decoder.raw_decode(text[match:])
+            yield result
+            pos = match + index
+        except ValueError:
+            pos = match + 1
+
+day_name = ""
+time_left = ""
+items_array = []
+r_array = []
+
+def parse_stats(history):
+        # parse stats from chatbot
+        global day_name
+        global time_left
+        global items_array
+        global r_array
+        found=False
+        message = history[-1][1]
+        for result in extract_json_objects(message):
+            found=True
+            print(result)
+            if "Stats_Schema" in result:
+                day_name = result["Stats_Schema"][0][0]
+                time_left = result["Stats_Schema"][0][1]
+                items_array = result["Stats_Schema"][1]
+                r_array = result["Stats_Schema"][2]
+
+                day = f'{day_name} --- {time_left} minutes left'
+                items = ""
+                for item in items_array:
+                    items += f'{item[0]} ({item[1]})\n'
+                relationships = ""
+                relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
+                relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
+                relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
+                relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
+                relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
+
+        if not found:
+            return "", "", ""
+        
+        return day, items, relationships
+
 class LLM:
 
     AVAILABLE_MODELS = [
@@ -42,13 +101,24 @@ class LLM:
             LLM.token_trackers[model] = TokenTracker(model)
 
 
-    def predict(self, model, system_message, history):
+    def predict(self, model, system_message, example_history, history):
         # array of dice rolls from 1-20
         dice_rolls = [random.randint(1,20) for i in range(10)]
 
         history_openai_format = []
         history_openai_format.append({"role": "system", "content": system_message})
-        for human, assistant in history:
+
+        if not example_history or isinstance(example_history, str):
+            example_history_json = []
+        else:
+            try:
+                example_history_json = json.loads(example_history)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"Failed to decode example history: {e}")
+
+        complete_history = example_history_json + history
+
+        for human, assistant in complete_history:
             if human != None: history_openai_format.append({"role": "user", "content": human })
             if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
 
@@ -62,9 +132,9 @@ class LLM:
         history[-1][1] = ""
 
         for chunk in response:
-            real_model = chunk['model']
-            if len(chunk['choices'][0]['delta']) != 0:
-                history[-1][1] += chunk['choices'][0]['delta']['content']
+            real_model = chunk["model"]
+            if len(chunk["choices"][0]["delta"]) != 0:
+                history[-1][1] += chunk["choices"][0]["delta"]["content"]
                 yield history
 
         # Calculate streaming token usage
