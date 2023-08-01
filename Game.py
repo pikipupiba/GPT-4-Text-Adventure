@@ -53,17 +53,40 @@ def parse_stats(json_grab={}):
 
     return day, items, relationships
 
+combat_schema={
+    "Combat_Schema":
+    ["{strCharacter}","{strAction}","{strDcReason}","{intDC}","{intRoll}"]
+}
+
+stats_schema={
+    "Stats_Schema":
+    [
+        ["{strDayName}","{intMinsLeft}"],
+        [
+            ["{strItemName}","{strItemStatus}"]
+        ],
+        [
+            ["{intAcquaintanceCount}","{strAcquaintanceChange}","{strAcquaintanceReason}"],
+            ["{intFriendCount}","{strFriendChange}","{strFriendReason}"],
+            ["{intEnemyCount}","{strEnemyChange}","{strEnemyReason}"],
+            ["{strBestFriendName}","{strBestFriendStatus}"],
+            ["{strArchNemesisName}","{strArchNemesisStatus}"]
+        ]
+    ]
+}
 
 
-class LLM:
+
+class Game:
 
     AVAILABLE_MODELS = [
         "gpt-4",
         "gpt-4-0314",
         "gpt-4-0613",
-        "gpt-4-32k",
-        "gpt-4-32k-0314",
-        "gpt-4-32k-0613",
+        # GPT-4 32k models are not currently available
+        # "gpt-4-32k",
+        # "gpt-4-32k-0314",
+        # "gpt-4-32k-0613",
         "gpt-3.5-turbo",
         "gpt-3.5-turbo-0301",
         "gpt-3.5-turbo-0613",
@@ -72,40 +95,57 @@ class LLM:
         "code-davinci-002",
     ]
 
-    models = []
-    token_trackers = {}
+    # Initialize a new Game object for each active game.
+    def __init__(self, models:list=[], prev_game_state:dict=None):
+        if not prev_game_state is None:
+            self.state = prev_game_state
+            self.models = prev_game_state["models"]
+        else:
+            self.models = models
 
-    def __init__(self, models:list):
-        LLM.models = models
-
+        # Create a token tracker for each model
+        self.token_trackers = []
         for model in models:
-            if model not in LLM.AVAILABLE_MODELS:
+            if model not in Game.AVAILABLE_MODELS:
                 raise NotImplementedError(f"num_tokens_from_messages() is not implemented for model {model}.")
                 continue
-            LLM.token_trackers[model] = TokenTracker(model)
+            self.token_trackers.append(TokenTracker(model))
 
 
     def predict(self, model, system_message, example_history, history):
-        # array of dice rolls from 1-20
-        dice_rolls = [random.randint(1,20) for i in range(10)]
-
+        
         history_openai_format = []
-        history_openai_format.append({"role": "system", "content": system_message + "/n/n" + stats_schema})
+        
+        # Append strings to system message
+        dice_string = generate_dice_string()
+        combat_schema_string = json.dumps(combat_schema)
+        stats_schema_string = json.dumps(stats_schema)
 
+        complete_system_message = f'{system_message}\n\n{combat_schema_string}\n{stats_schema_string}\n\n{dice_string}'
+        
+        # Append system message to history
+        history_openai_format.append({"role": "system", "content": f'{system_message}\n\n{stats_schema}'})
+
+        # Check for example history
+        # Example history helps the model understand the desired flow of the conversation
         if not example_history or isinstance(example_history, str):
             example_history_json = []
         else:
+            # Example history is input as a string
             try:
                 example_history_json = json.loads(example_history)
             except json.JSONDecodeError as e:
                 raise ValueError(f"Failed to decode example history: {e}")
 
+        # Append history to example history
         complete_history = example_history_json + history
 
+        # Convert history to OpenAI format
         for human, assistant in complete_history:
             if human != None: history_openai_format.append({"role": "user", "content": human })
             if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
 
+        # OpenAI API call
         response = openai.ChatCompletion.create(
             model=model,
             messages= history_openai_format,         
@@ -143,12 +183,10 @@ class LLM:
                         yield history
 
         # Calculate streaming token usage
-        LLM.token_trackers[real_model].add_from_stream(real_model, history_openai_format, history[-1][1])
+        self.token_trackers[real_model].add_from_stream(real_model, history_openai_format, history[-1][1])
 
         # logger.info(f"~~--------~~ {model} ~~--------~~")
-        LLM.token_trackers[model].print()
-
-        # yield self.response
+        self.token_trackers[model].print()
 
     def get_tokens(self):
         return self.token_tracker

@@ -18,7 +18,7 @@ turn[0]=Introduce the game then make the player must choose 5 items from [8 rand
 "End of Recess"=Continue the narrative all the way to the following day when the recess bell rings.
 
 Output the schemas on a single line. All items are required. Be descriptive and accurate.
-{"Combat_Schema": ["{character_name}","{action}","{dc_reason}","{DC}","{roll}"]}
+{"Combat_Schema":["{character_name}","{action}","{dc_reason}","{DC}","{roll}"]}
 {"Stats_Schema":[["{dayName}","{minsLeft}"],[["{itemName}","{itemStatus}"]],[["{acquaintanceCount}","{acquaintanceChange}","{acquaintanceReason}"],["{friendCount}","{friendChange}","{friendReason}"],["{enemyCount}","{enemyChange}","{enemyReason}"],["{bestFriendName}","{bestFriendStatus}"],["{archNemesisName}","{archNemesisStatus}"]]]}
 
 DICE=[20,25,30,35,40]

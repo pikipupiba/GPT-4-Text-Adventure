@@ -1,4 +1,16 @@
-import json
+import json,random
+
+def generate_dice_string(num_dice=10):
+    dice_string = "DICE_ROLLS:["
+    
+    for i in range(num_dice):
+        dice_string += str(random.randint(1,20))
+        if i != 9:
+            dice_string += ","
+        else:
+            dice_string += "]"
+
+    return dice_string
 
 def extract_json_objects(text, decoder=json.JSONDecoder()):
     """Find JSON objects in text, and yield the decoded JSON data

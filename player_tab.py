@@ -5,7 +5,6 @@
 # 2. sliders for character stats
 # 3. emojis to indicate emotions
 # 4. auto send next day message
-# 5. clear all boxes on clear
 # 6. define end of game
 # 7. make an unlocked system message
 # 8. try to make the story more interesting
@@ -17,7 +16,7 @@
 
 import gradio as gr
 from gm_tab import *
-from LLM import *
+from Game import *
 from TokenTracker import *
 from session import *
 
@@ -28,7 +27,7 @@ use_models = [
 ]
 
 # LLM MODELS
-llm = LLM(use_models)
+llm = Game(use_models)
 
 # PLAYER TAB
 with gr.Blocks() as player_tab:
