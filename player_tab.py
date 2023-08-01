@@ -1,6 +1,17 @@
 # TODO:
-# 1. populate stats section from response
-# 2. sliders to control HOW risky, loud, etc. the action is
+# 0. AWS BABY!!!
+# 1. state to save raw chat history
+# 2. sliders for character stats
+# 3. emojis to indicate emotions
+# 4. auto send next day message
+# 5. clear all boxes on clear
+# 6. define end of game
+# 7. make an unlocked system message
+# 8. try to make the story more interesting
+#    - add more characters with more agency
+#    - special events/plot twists (on friday)
+#       - timeout, thunderstorm (inside that day), get sick, field trip
+# 9. fix dice rolls
 
 import gradio as gr
 from gm_tab import *

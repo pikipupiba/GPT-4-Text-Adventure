@@ -1,7 +1,3 @@
-# TODO:
-# 1. integrate system message into predict function
-# 2. 
-
 import openai
 import os,json,uuid,random
 from TokenTracker import *
@@ -37,39 +33,45 @@ day_name = ""
 time_left = ""
 items_array = []
 r_array = []
+day = ""
+items = ""
+relationships = ""
+stats_schema = ""
 
-def parse_stats(history):
-        # parse stats from chatbot
-        global day_name
-        global time_left
-        global items_array
-        global r_array
-        found=False
-        message = history[-1][1]
-        for result in extract_json_objects(message):
-            found=True
-            print(result)
-            if "Stats_Schema" in result:
-                day_name = result["Stats_Schema"][0][0]
-                time_left = result["Stats_Schema"][0][1]
-                items_array = result["Stats_Schema"][1]
-                r_array = result["Stats_Schema"][2]
+def parse_stats(json_grab={}):
+    # parse stats from chatbot
+    global day_name
+    global time_left
+    global items_array
+    global r_array
+    global stats_schema
 
-                day = f'{day_name} --- {time_left} minutes left'
-                items = ""
-                for item in items_array:
-                    items += f'{item[0]} ({item[1]})\n'
-                relationships = ""
-                relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
-                relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
-                relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
-                relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
-                relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
+    global day
+    global items
+    global relationships
+    
+    if "Stats_Schema" in json_grab:
+        print("Found Stats_Schema")
+        stats_schema = json.dumps(json_grab)
+        day_name = json_grab["Stats_Schema"][0][0]
+        time_left = json_grab["Stats_Schema"][0][1]
+        items_array = json_grab["Stats_Schema"][1]
+        r_array = json_grab["Stats_Schema"][2]
 
-        if not found:
-            return "", "", ""
+        day = f'{day_name} --- {time_left} minutes left'
+        items = ""
+        for item in items_array:
+            items += f'{item[0]} ({item[1]})\n'
+        relationships = ""
+        relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
+        relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
+        relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
+        relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
+        relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
+
+    return day, items, relationships
         
-        return day, items, relationships
+        
 
 class LLM:
 
@@ -106,7 +108,7 @@ class LLM:
         dice_rolls = [random.randint(1,20) for i in range(10)]
 
         history_openai_format = []
-        history_openai_format.append({"role": "system", "content": system_message})
+        history_openai_format.append({"role": "system", "content": system_message + "/n/n" + stats_schema})
 
         if not example_history or isinstance(example_history, str):
             example_history_json = []
@@ -131,11 +133,32 @@ class LLM:
         
         history[-1][1] = ""
 
+        found_json_array=[]
+        inside_json=False
+        json_string=""
         for chunk in response:
             real_model = chunk["model"]
             if len(chunk["choices"][0]["delta"]) != 0:
-                history[-1][1] += chunk["choices"][0]["delta"]["content"]
-                yield history
+                if inside_json:
+                    
+                    json_string += chunk["choices"][0]["delta"]["content"]
+                    try:
+                        found_json_array.append(json.loads(json_string))
+                        parse_stats(found_json_array[-1])
+                        print(found_json_array[-1])
+                        inside_json=False
+                        json_string=""
+                    except json.JSONDecodeError:
+                        continue
+                else:
+                    if chunk["choices"][0]["delta"]["content"] == "{\"":
+                        inside_json=True
+                        json_string += chunk["choices"][0]["delta"]["content"]
+                        history[-1][1] += "\n---\n"
+                        yield history
+                    else:
+                        history[-1][1] += chunk["choices"][0]["delta"]["content"]
+                        yield history
 
         # Calculate streaming token usage
         LLM.token_trackers[real_model].add_from_stream(real_model, history_openai_format, history[-1][1])

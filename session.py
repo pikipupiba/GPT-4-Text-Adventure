@@ -11,7 +11,6 @@ def save_session(file_name, system_message):
     except IOError as e:
         print(f"Error: {e}")
 
-
 def load_session(file_name, system_message, mode):
     logger.info(f"Loading '{file_name}.txt' SYSTEM message!")
     session_file_path = os.path.join("sessions", f"{file_name}.txt")
@@ -32,7 +31,7 @@ def load_session(file_name, system_message, mode):
     return system_message
 
 def save_current_system_message(system_message):
-    logger.info("Saving CURRENT SYSTEM message!")
+    # logger.info("Saving CURRENT SYSTEM message!")
     session_file_path = os.path.join("sessions", "current_system_message.txt")
 
     try:
@@ -43,7 +42,7 @@ def save_current_system_message(system_message):
 
 
 def load_current_system_message():
-    logger.info("Loading CURRENT SYSTEM message!")
+    # logger.info("Loading CURRENT SYSTEM message!")
     session_file_path = os.path.join("sessions", "current_system_message.txt")
 
     try:
@@ -55,7 +54,7 @@ def load_current_system_message():
     return system_message
 
 def save_current_example_history(example_history):
-    logger.info("Saving CURRENT EXAMPLE HISTORY!")
+    # logger.info("Saving CURRENT EXAMPLE HISTORY!")
     session_file_path = os.path.join("sessions", "current_example_history.json")
 
     try:
@@ -65,7 +64,7 @@ def save_current_example_history(example_history):
         print(f"Error: {e}")
 
 def load_current_example_history():
-    logger.info("Loading CURRENT EXAMPLE HISTORY!")
+    # logger.info("Loading CURRENT EXAMPLE HISTORY!")
     session_file_path = os.path.join("sessions", "current_example_history.json")
 
     try:
@@ -80,7 +79,7 @@ def load_current_example_history():
     return example_history
 
 def save_current_chat_history(team_name, history):
-    logger.info("Saving CHAT HISTORY!")
+    # logger.info("Saving CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
@@ -103,7 +102,7 @@ def save_current_chat_history(team_name, history):
     return history
 
 def load_current_chat_history(team_name=""):
-    logger.info("Loading CHAT HISTORY!")
+    # logger.info("Loading CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
@@ -179,7 +178,7 @@ def save_game_state(team_name, chatbot, day_box, items_box, friends_box):
     return game_state
 
 def load_game_state(team_name=""):
-    logger.info("Loading GAME STATE!")
+    logger.info(f"Loading GAME STATE {team_name}!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
