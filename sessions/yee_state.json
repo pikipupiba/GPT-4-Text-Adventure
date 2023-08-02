@@ -1,0 +1,12 @@
+{
+    "team_name": "yee",
+    "day_box": "",
+    "items_box": "",
+    "friends_box": "",
+    "chatbot": [
+        [
+            null,
+            "As the bell rings, signaling the start of recess, your classmates excitedly rush out of the wooden classroom door and flood the playground with cheerful voices and laughter. Monkeys bars, swings, and slides gleam under the afternoon sun.\n\nTo the far side, tucked behind a leafy oak tree, you see the Recess Supervisor. She slurps her coffee, eyes squinting in the sunlight, occasionally throwing a glance towards the playful pandemonium. It doesn\u2019t seem like she\u2019s overly concerned with enforcing rules unless absolutely necessary.\n\nThe assortment of children is a mix of friends, best friends, acquaintances, enemies, and that one arch nemesis you know you need to steer clear of. Most of them are too busy running for the swings or lining up at the basketball court to pay you any mind.\n\nAnd then, from the corner of your eye, something catches your attention \u2013 a quick, furry movement among the rustling leaves. A flash of black and white, a curious snuffle, and then pair of bright eyes peering at you. A raccoon, right here on the playground!\n\nBefore going to recess, you had the chance to pick 5 items from the list: a rubber duck, playing cards, a small bag of chips, colored pencils, a sparkling necklace, a handy stopwatch, the latest comic book, an Ouija board, a frisbee, and some bubble gum. Let's see how they might come in handy. What do you choose to do?\n\nSTATS: {\"day\": \"Monday --- 60 minutes remaining\", \"items\": \"rubber duck, playing cards, colored pencils, Ouija board, frisbee\" , \"friends\": \"Acquaintances: 0\\nFriends: 0\\nBest Friend: None\", \"enemies\": \"Enemies: 0\\nArch Nemesis: None\"}"
+        ]
+    ]
+}
