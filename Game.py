@@ -171,7 +171,7 @@ class Game:
                     if content == "{\"":
                         inside_json=True
                         json_string += content
-                        self.history[-1][1] += "\n---\n"
+                        self.history[-1][1] += "\n\n---\n"
                     # Send response chunks to the chatbot
                     else:
                         # print(content)
