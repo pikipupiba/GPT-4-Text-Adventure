@@ -4,26 +4,6 @@ from story_chunks import *
 from loguru import logger
 
 import gradio as gr
-<<<<<<< HEAD
-import openai
-from openai_helpers import *
-from gm import *
-from player import *
-
-
-openai.organization = "org-ziA2BQ1zJxVrlYV5I6mcTUwN"
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-user = openai.ChatMessageRoleUser
-messages = []
-
-# Initialize messages with system message and example turns.
-
-# 
-
-
-game_area = gr.TabbedInterface([player_area, game_master_area], ["Player", "Game Master"]).launch()
-=======
 from gm_tab import *
 from player_tab import *
 
@@ -47,4 +27,3 @@ game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"])
 if __name__ == "__main__":
     game_area.queue()
     game_area.launch(inbrowser=True, show_error=True, share=True)
->>>>>>> simpler-method
