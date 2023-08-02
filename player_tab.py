@@ -13,6 +13,7 @@
 #       - timeout, thunderstorm (inside that day), get sick, field trip
 # 9. fix dice rolls
 # 10. add session functionality
+# 11. Dropdown to select team name from saved sessions
 
 import gradio as gr
 from gm_tab import *
@@ -26,19 +27,18 @@ use_models = [
     "gpt-3.5-turbo-16k-0613"
 ]
 
-# LLM MODELS
-llm = Game(use_models)
+# Game instance
+game = Game(models=use_models)
 
 # PLAYER TAB
 with gr.Blocks() as player_tab:
-    game_state = gr.State(value=load_game_state)
     # STORY AREA
     with gr.Row(variant="compact") as story_area:
         # CHAT AREA
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
             with gr.Row() as history_area:
-                chatbot = gr.Chatbot(value=load_current_chat_history, height=600)
+                chatbot = gr.Chatbot(height=600)
             # USER INPUT
             with gr.Group():
                 with gr.Row() as user_area:
@@ -63,7 +63,7 @@ with gr.Blocks() as player_tab:
             with gr.Group():
                 with gr.Row():
                     team_name = gr.Textbox(lines=1, label="Team Name", interactive=True)
-                    load_team_state = gr.Button(value="Load", size="sm")
+                    load_team_state = gr.Button(value="Load Team State", size="sm")
             # STATS
             with gr.Group():
                 day_box = gr.Textbox(lines=1, label="Game Time", interactive=False)
@@ -75,7 +75,7 @@ with gr.Blocks() as player_tab:
         with gr.Row():
             token_jsons = []
             for model_name,tracker in TokenTracker.trackers.items():
-                token_jsons.append(gr.JSON(label=f"{model_name} Tokens", interactive=False))
+                token_jsons.append(gr.JSON(label=f"{model_name} Token Tracker", interactive=False))
         game_state_json = gr.JSON(label="Game State")
 
 
@@ -106,9 +106,9 @@ with gr.Blocks() as player_tab:
         # Click "Retry" button
         retry.click(
             # Remove the last assistant message from the history
-            fn=lambda history: history[:-1] + [[history[-1][0], None]],
-            inputs=[chatbot],
-            outputs=[chatbot],
+            fn=game.retry,
+            inputs=[game_state_json],
+            outputs=[game_state_json, chatbot],
             queue=False
         )
     ]
@@ -117,38 +117,32 @@ with gr.Blocks() as player_tab:
     for item in submits:
         # Generate the assistant message
         predict = item.then(
-            fn=llm.predict,
+            fn=game.predict,
             inputs=[model,system_message,example_history,chatbot],
             outputs=[chatbot],
             queue=True
         )
         
         # Display stats that were parsed from the assistant message
-        parse_stats_please = predict.then(
-            fn=parse_stats,
-            inputs=[chatbot],
+        render_stats = predict.then(
+            fn=game.render_stats,
+            inputs=[],
             outputs=[day_box, items_box, friends_box],
             queue=False
         )
 
         # Save the game state after populating the stats boxes
-        save_state = parse_stats_please.then(
-            fn=save_game_state,
-            inputs=[team_name, chatbot, day_box, items_box, friends_box],
-            outputs=[game_state],
-            queue=False
-        ).then(
-            # Update the game state json box from the game state
-            fn=lambda x:x,
-            inputs=[game_state],
+        save_state = render_stats.then(
+            fn=game.save_game_state,
+            inputs=[team_name],
             outputs=[game_state_json],
             queue=False
-            )
+        )
 
         # Update the token trackers
-        get_tokens = predict.then(
-            fn=LLM.get_all_tokens,
-            inputs=None,
+        get_tokens = save_state.then(
+            fn=game.get_all_tokens,
+            inputs=[],
             outputs=token_jsons,
             queue=False
         )
@@ -158,41 +152,38 @@ with gr.Blocks() as player_tab:
     #--------------------------------------------------------------
     # Clear all story boxes
     clear.click(
-        fn=lambda:["","","","","",""],
-        inputs=[],
-        outputs=[player_message, chatbot, team_name, day_box, items_box, friends_box],
+        fn=game.clear,
+        inputs=[game_state_json],
+        outputs=[game_state_json],
     ),
 
     # Load the game state from the team name on enter
     team_name.submit(
-        fn=load_game_state,
+        fn=game.load_game_state,
         inputs=[team_name],
         outputs=[game_state_json],
         queue=False
     )
     # Load the game state from the team name on button click
     load_team_state.click(
-        fn=load_game_state,
+        fn=game.load_game_state,
         inputs=[team_name],
         outputs=[game_state_json],
         queue=False
     )
 
-    # Break game state apart for rendering
-    def render_game_state(state):
-        return (state["team_name"], state["chatbot"], state["day_box"], state["items_box"], state["friends_box"])
     # Update all story boxes when the game state json changes
     game_state_json.change(
-        fn=render_game_state,
-        inputs=[game_state],
-        outputs=[team_name, chatbot, day_box, items_box, friends_box],
+        fn=game.render_game_state,
+        inputs=[],
+        outputs=[team_name, chatbot, player_message, day_box, items_box, friends_box],
         queue=False
     )
 
     # Undo the last user and assistant message
     undo.click(
-        fn=lambda history: history[:-1],
-        inputs=[chatbot],
-        outputs=[chatbot],
+        fn=game.undo,
+        inputs=[game_state_json],
+        outputs=[game_state_json],
         queue=False
     )

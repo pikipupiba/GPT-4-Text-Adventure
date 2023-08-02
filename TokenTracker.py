@@ -84,8 +84,6 @@ class TokenTracker:
     def __init__(self, model:str):
         if model not in AVAILABLE_MODELS:
             raise NotImplementedError(f"Model {model} not implemented.")
-        if model in TokenTracker.trackers:
-            raise NotImplementedError(f"Model {model} already has a token tracker.")
 
         self.model = model
         self.TPM = 0

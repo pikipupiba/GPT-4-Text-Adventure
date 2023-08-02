@@ -1,11 +1,11 @@
 import json,random
 
-def generate_dice_string(num_dice=10):
-    dice_string = "DICE_ROLLS:["
-    
+def generate_dice_string(num_dice:int):
+    dice_string = "intRollArray:["
+
     for i in range(num_dice):
         dice_string += str(random.randint(1,20))
-        if i != 9:
+        if i != num_dice-1:
             dice_string += ","
         else:
             dice_string += "]"
