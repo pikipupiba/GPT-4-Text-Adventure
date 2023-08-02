@@ -26,4 +26,4 @@ game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"])
 # chat.launch(inbrowser=True, show_error=True)
 if __name__ == "__main__":
     game_area.queue()
-    game_area.launch(inbrowser=True, show_error=True)
+    game_area.launch(inbrowser=True, show_error=True, share=True)
