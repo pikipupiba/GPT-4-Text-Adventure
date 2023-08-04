@@ -1,3 +1,6 @@
+import re
+from loguru import logger
+
 # combat_schema={
 #     "Combat_Schema":
 #     [
@@ -166,13 +169,56 @@ stats_schema={
     }
 }
 
+schemas = {
+    "Combat_Schema":combat_schema["Combat_Schema"],
+    "Stats_Schema":stats_schema["Stats_Schema"]
+}
+
+def render_combat(combat_json:dict):
+    logger.debug("RENDERING COMBAT!!!")
+
+    combat_string = f'{combat_json["name"]}  |  {combat_json["action"]}  |  {combat_json["dcRationale"]}  |  {combat_json["modifierRationale"]}  | {combat_json["dc"]} vs {combat_json["roll"]}+{combat_json["modifier"]} = {combat_json["success"]}'
+
+    logger.debug("DONE RENDERING COMBAT!!!")
+
+    return combat_string
+
+def render_stats(partial_json:dict):
+     pass
+
+render_schema = {
+    "Combat_Schema":render_combat,
+    "Stats_Schema":render_stats
+}
 
 
+def render_partial_schema(schema:str, partial_json_string:str):
 
+    partial_json = {}
 
+    # Break down the JSON into lines and process each line separately
+    lines = partial_json_string.strip().split("\n")
+    for line in lines:
+        # Try to match key-value pairs where the value is enclosed in quotes
+        match = re.match(r'\s*"([^"]+)"\s*:\s*"([^"]+)(?<!\\)(?:",?|)$', line)
+        if match:
+            key, value = match.groups()
+            print(f'{key}: {value}')
+            continue
 
+        # Try to match key-value pairs where the value is a number
+        match = re.match(r'\s*"([^"]+)"\s*:\s*([^",]+),?$', line)
+        if match:
+            key, value = match.groups()
+            print(f'{key}: {value}')
 
+    for key in schemas[schema]["properties"].keys():
+        if key not in partial_json.keys():
+            partial_json[key] = ""
 
+    partial_string = render_schema[schema](partial_json)
+
+    yield partial_string
 
 
 

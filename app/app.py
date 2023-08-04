@@ -32,5 +32,4 @@ if __name__ == "__main__":
         inbrowser=True,
         show_error=True,
         share=share_mode,
-        server_name="0.0.0.0",
     )

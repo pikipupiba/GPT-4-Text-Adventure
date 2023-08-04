@@ -168,10 +168,8 @@ class Game:
                             self.history[-1][1] += " COMPLETE!!!\n\n"
                         elif "Combat_Schema" in new_json:
                             self.combat = new_json
-                            if self.combat["Combat_Schema"]["success"] == True:
-                                self.history[-1][1] += " SUCCESS!!!\n\n"
-                            else:
-                                self.history[-1][1] += " FAILURE!!!\n\n"
+                            self.history += render_combat(self.combat["Combat_Schema"])
+
                         logger.info(new_json)
 
                         inside_json=False
@@ -184,14 +182,18 @@ class Game:
                             if "Stats_Schema" in json_string:
                                 logger.info("Found Stats_Schema!")
                                 found_json_schema="Stats_Schema"
-                                self.history[-1][1] += " Calculating stats "
+                                # self.history[-1][1] += " Calculating stats "
                             elif "Combat_Schema" in json_string:
                                 logger.info("Found Combat_Schema!")
                                 found_json_schema="Combat_Schema"
-                                self.history[-1][1] += " Calculating combat "
+                                self.history[-1][1] += "\n\n"
                         else:
-                            if len(json_string)%5 == 0:
-                                self.history[-1][1] += "-"
+                            temp_history = self.history.copy()
+                            if temp_history:
+                                temp_history[-1] = (temp_history[-1][0], temp_history[-1][1] + render_partial_schema(found_json_schema, json_string))
+                            yield temp_history
+
+                        
                 else:
                     # Found the start of a JSON object
                     if content == "{\"":
@@ -244,6 +246,12 @@ class Game:
         r_array = stats["relationships"]
         relationships_string = ""
         for relationship in r_array:
+
+            relationship.setdefault("relationship", "")
+            relationship.setdefault("count", "")
+            relationship.setdefault("rationale", "")
+            relationship.setdefault("names", [])
+            
             relationships_string += f'{relationship["relationship"]}: {relationship["count"]} ({relationship["rationale"]})\n'
             
             for name in relationship["names"]:
