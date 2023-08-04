@@ -1,6 +1,4 @@
-import openai
-import os,time,json,uuid,sys,signal
-from story_chunks import *
+import uuid,sys,signal
 from loguru import logger
 
 import gradio as gr
@@ -24,11 +22,15 @@ logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", l
 game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"])
 # chat.queue()
 # chat.launch(inbrowser=True, show_error=True)
+share_mode_string = os.getenv("SHARE_MODE", "false")
+share_mode = share_mode_string.lower() == 'true'
+
+
 if __name__ == "__main__":
     game_area.queue()
     game_area.launch(
         inbrowser=True,
         show_error=True,
-        # share=True,
-        # server_name="0.0.0.0",
+        share=share_mode,
+        server_name="0.0.0.0",
     )

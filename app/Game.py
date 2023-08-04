@@ -1,9 +1,9 @@
+import os,json
 import openai
-import os,json,random
+from loguru import logger
 from TokenTracker import *
 from helpers import *
 from schemas import *
-from loguru import logger
 
 # set Open AI API Key
 api_key = os.getenv('OPENAI_API_KEY')

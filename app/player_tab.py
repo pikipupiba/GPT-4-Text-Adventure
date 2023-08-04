@@ -1,17 +1,16 @@
 # TODO:
 #-1. !!!REFACTOR CODE!!!
 # 0. AWS BABY!!!
-# 1. state to save raw chat history
+# [done] 1. state to save raw chat history
 # 2. sliders for character stats
 # 3. emojis to indicate emotions
 # 4. auto send next day message
 # 6. define end of game
-# 7. make an unlocked system message
 # 8. try to make the story more interesting
 #    - add more characters with more agency
 #    - special events/plot twists (on friday)
 #       - timeout, thunderstorm (inside that day), get sick, field trip
-# 9. fix dice rolls
+# [almost] 9. fix dice rolls
 # 10. add session functionality
 # 11. Dropdown to select team name from saved sessions
 
