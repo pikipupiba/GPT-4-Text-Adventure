@@ -1,5 +1,25 @@
 #!/bin/bash
 
+# Function to stop the container
+cleanup() {
+  echo "Stopping container..."
+  docker stop "$CONTAINER_NAME"
+}
+
+# Trap to call cleanup function on Ctrl+C
+trap cleanup INT
+
+print_help() {
+  echo "Usage: $0 [OPTIONS]"
+  echo "Build and run a Docker image."
+  echo
+  echo "  Option         Description                                  Default"
+  echo "  -n, --name     Creates <name>_image and <name>_container.   ai-adventure-academy"
+  echo "  -p, --port     Specify the port.                            7878"
+  echo "  -s, --share    Enable Gradio share mode.                    Off"
+  echo "  -h, --help     Show this help message and exit."
+}
+
 # Default image name
 NAME="ai-adventure-academy"
 SHARE_MODE=False
@@ -21,10 +41,14 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
-    -s|--share-mode)
+    -s|--share)
       echo "Share mode enabled"
       SHARE_MODE=True
       shift
+      ;;
+    -h|--help)
+      print_help
+      exit 0
       ;;
     *)
       echo "Unknown option: $key"
@@ -35,15 +59,6 @@ done
 
 IMAGE_NAME=${NAME}_image
 CONTAINER_NAME=${NAME}_container
-
-# Function to stop the container
-cleanup() {
-  echo "Stopping container..."
-  docker stop "$CONTAINER_NAME"
-}
-
-# Trap to call cleanup function on Ctrl+C
-trap cleanup INT
 
 if docker build -t "$IMAGE_NAME" .; then
   echo "Image successfully built!"

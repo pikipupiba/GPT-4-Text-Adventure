@@ -2,7 +2,9 @@
 # 1. track tokens with Game objects (__dict__ anyone?)
 # 2. auto switch to gpt-3.5-turbo-16k-0613 when context is too long
 # 3. add a 3rd item to messages indicating real_model
-# 4. add a 4th item to messages indicating real_model models
+# 4. Output combat and stats in real time. (use a schema for this yeehaw)
+# 5. Add a little text spinner to the chatbot while it's thinking
+#    - Can use emojis! :D
 
 import os,json
 import openai
