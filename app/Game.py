@@ -1,3 +1,9 @@
+#TODO:
+# 1. track tokens with Game objects (__dict__ anyone?)
+# 2. auto switch to gpt-3.5-turbo-16k-0613 when context is too long
+# 3. add a 3rd item to messages indicating real_model
+# 4. add a 4th item to messages indicating real_model models
+
 import os,json
 import openai
 from loguru import logger
@@ -349,7 +355,7 @@ class Game:
             with open(game_state_file_path, "r") as f:
                 game_state = json.load(f)
                 for key, value in game_state.items():
-                    logger.info(f"-------------- Load State --- {key} ---------------------")
+                    logger.info(f"---- Loading State Key -- {key} ----")
                     logger.debug(key, value)
                     setattr(self, key, value)
             # Initialize token trackers
@@ -414,11 +420,15 @@ class Game:
         self.history = []  # Clear the history attribute
         self.raw_history = []  # Clear the raw_history attribute
         self.stats = {}  # Clear the stats attribute
+        self.combat = {}  # Clear the combat attribute
+        self.team_name = ""  # Clear the team_name attribute
         
         # Assign the cleared values to the corresponding keys in the game_state dictionary
         game_state["history"] = self.history
         game_state["raw_history"] = self.raw_history
         game_state["stats"] = self.stats
+        game_state["combat"] = self.combat
+        game_state["team_name"] = self.team_name
         
         return game_state  # Return the updated game state dictionary
 

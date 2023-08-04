@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default image name
-IMAGE_NAME="ai-adventure-academy"
+NAME="ai-adventure-academy"
 SHARE_MODE=False
 PORT=7878
 
@@ -10,8 +10,8 @@ while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
     -n|--name)
-      echo "Image name set to $2"
-      IMAGE_NAME="$2"
+      echo "Name set to $2"
+      NAME="$2"
       shift
       shift
       ;;
@@ -33,11 +33,24 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+IMAGE_NAME=${NAME}_image
+CONTAINER_NAME=${NAME}_container
+
+# Function to stop the container
+cleanup() {
+  echo "Stopping container..."
+  docker stop "$CONTAINER_NAME"
+}
+
+# Trap to call cleanup function on Ctrl+C
+trap cleanup INT
+
 if docker build -t "$IMAGE_NAME" .; then
   echo "Image successfully built!"
 
   # Run the container, mapping port 8000 inside the container to port 8000 on the host
   docker run \
+    --name "$CONTAINER_NAME" \
     -it \
     -p "$PORT":"$PORT" \
     -e OPENAI_API_KEY \
@@ -45,6 +58,9 @@ if docker build -t "$IMAGE_NAME" .; then
     -e GRADIO_SERVER_PORT="$PORT" \
     -e SHARE_MODE="$SHARE_MODE" \
     "$IMAGE_NAME"
+
+  # Clean up container when script exits normally
+  cleanup
 else
   echo "Build failed. Exiting..."
   exit 1
