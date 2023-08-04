@@ -31,8 +31,8 @@ def load_session(file_name, system_message, mode):
     return system_message
 
 def save_current_system_message(system_message):
-    # logger.info("Saving CURRENT SYSTEM message!")
-    session_file_path = os.path.join("sessions", "current_system_message.txt")
+    logger.debug("Saving CURRENT SYSTEM message!")
+    session_file_path = os.path.join("sessions", "current" "system_message.txt")
 
     try:
         with open(session_file_path, "w") as f:
@@ -40,22 +40,26 @@ def save_current_system_message(system_message):
     except IOError as e:
         print(f"Error: {e}")
 
-
 def load_current_system_message():
-    # logger.info("Loading CURRENT SYSTEM message!")
-    session_file_path = os.path.join("sessions", "current_system_message.txt")
+    logger.debug("Loading CURRENT SYSTEM message!")
+    session_file_path = os.path.join("sessions", "current" "system_message.txt")
 
     try:
         with open(session_file_path, "r") as f:
             system_message = f.read()
+    except FileNotFoundError:
+        print(f"Error: File '{session_file_path}' not found. Creating.")
+        system_message = ""
+        save_current_system_message(system_message)
     except IOError as e:
+        system_message = ""
         print(f"Error: {e}")
 
     return system_message
 
 def save_current_example_history(example_history):
-    # logger.info("Saving CURRENT EXAMPLE HISTORY!")
-    session_file_path = os.path.join("sessions", "current_example_history.json")
+    logger.debug("Saving CURRENT EXAMPLE HISTORY!")
+    session_file_path = os.path.join("sessions", "current", "example_history.json")
 
     try:
         with open(session_file_path, "w") as f:
@@ -64,34 +68,33 @@ def save_current_example_history(example_history):
         print(f"Error: {e}")
 
 def load_current_example_history():
-    # logger.info("Loading CURRENT EXAMPLE HISTORY!")
-    session_file_path = os.path.join("sessions", "current_example_history.json")
+    logger.debug("Loading CURRENT EXAMPLE HISTORY!")
+    session_file_path = os.path.join("sessions", "current", "example_history.json")
 
     try:
         with open(session_file_path, "r") as f:
             example_history = f.read()
     except FileNotFoundError:
-        example_history = []
         print(f"Error: File '{session_file_path}' not found")
+        example_history = []
+        save_current_example_history(example_history)
     except IOError as e:
         print(f"Error: {e}")
+        example_history = []
 
     return example_history
 
-def save_current_chat_history(team_name, history):
-    # logger.info("Saving CHAT HISTORY!")
+def save_current_chat_history(history):
+    logger.debug("Saving CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
         os.makedirs("sessions")
         
-    chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
-    team_history_file_path = os.path.join("sessions", f"{team_name}.json")
+    chat_history_file_path = os.path.join("sessions", "current", "current_chat_history.json")
 
     try:
         with open(chat_history_file_path, "w") as f:
-            f.write(json.dumps(history, indent=4))
-        with open(team_history_file_path, "w") as f:
             f.write(json.dumps(history, indent=4))
     except IOError as e:
         print(f"Error: {e}")
@@ -102,23 +105,21 @@ def save_current_chat_history(team_name, history):
     return history
 
 def load_current_chat_history(team_name=""):
-    # logger.info("Loading CHAT HISTORY!")
+    logger.debug("Loading CHAT HISTORY!")
 
     # Check if the "sessions" directory exists
     if not os.path.exists("sessions"):
         os.makedirs("sessions")
 
-    if team_name == "":
-        chat_history_file_path = os.path.join("sessions", "current_chat_history.json")
-    else:
-        chat_history_file_path = os.path.join("sessions", f"{team_name}.json")
+    chat_history_file_path = os.path.join("sessions", "current", "chat_history.json")
 
     try:
         with open(chat_history_file_path, "r") as f:
             history = json.load(f)
     except FileNotFoundError:
+        print(f"Error: File '{chat_history_file_path}' not found. Creating.")
         history = []
-        print(f"Error: File '{chat_history_file_path}' not found")
+        save_current_chat_history(history)
     except IOError as e:
         history = []
         print(f"Error: {e}")

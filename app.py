@@ -21,7 +21,7 @@ logger.add(f"logs/{uid}"+"_{time:YYYY-MM-DD}_info.log", format="{time:YYYY-MM-DD
 logger.level("md",21)
 logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", level="md")
 
-game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"], server_name="0.0.0.0")
+game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"])
 # chat.queue()
 # chat.launch(inbrowser=True, show_error=True)
 if __name__ == "__main__":
@@ -29,5 +29,6 @@ if __name__ == "__main__":
     game_area.launch(
         inbrowser=True,
         show_error=True,
-        # share=True
+        # share=True,
+        # server_name="0.0.0.0",
     )

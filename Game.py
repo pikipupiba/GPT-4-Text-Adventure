@@ -10,7 +10,6 @@ api_key = os.getenv('OPENAI_API_KEY')
 assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
 openai.api_key = api_key
 
-
 class Game:
 
     AVAILABLE_MODELS = [
@@ -211,35 +210,13 @@ class Game:
     def get_all_tokens(self):
         return list(self.token_trackers.values())
     
-    # # OLD VERSION
-    # def render_stats(self):
-    #     if not "Stats_Schema" in self.stats:
-    #         return ["","",""]
-        
-    #     logger.debug("RENDERING THE STATS!!!")
-    #     stats_array = self.stats["Stats_Schema"]
-
-    #     day_name = stats_array[0][0]
-    #     time_left = stats_array[0][1]
-    #     items_array = stats_array[1]
-    #     r_array = stats_array[2]
-
-    #     day = f'{day_name} --- {time_left} minutes left'
-    #     items = ""
-    #     for item in items_array:
-    #         items += f'{item[0]} ({item[1]})\n'
-    #     relationships = ""
-    #     relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
-    #     relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
-    #     relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
-    #     relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
-    #     relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
-
-    #     return [day, items, relationships]
-    
     def render_stats(self):
         if not "Stats_Schema" in self.stats:
-            return ["","","",{},{}]
+            return {
+                "day_string": "??? --- ??? minutes left",
+                "items_string": "???",
+                "relationships_string": "???",
+            }
         
         logger.debug("RENDERING THE STATS!!!")
         stats = self.stats["Stats_Schema"]
