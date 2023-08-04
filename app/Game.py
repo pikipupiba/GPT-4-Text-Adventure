@@ -244,6 +244,12 @@ class Game:
         r_array = stats["relationships"]
         relationships_string = ""
         for relationship in r_array:
+
+            relationship.setdefault("relationship", "")
+            relationship.setdefault("count", "")
+            relationship.setdefault("rationale", "")
+            relationship.setdefault("names", [])
+
             relationships_string += f'{relationship["relationship"]}: {relationship["count"]} ({relationship["rationale"]})\n'
             
             for name in relationship["names"]:
