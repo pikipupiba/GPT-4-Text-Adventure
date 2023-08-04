@@ -2,37 +2,13 @@ import openai
 import os,json,random
 from TokenTracker import *
 from helpers import *
+from schemas import *
 from loguru import logger
 
 # set Open AI API Key
 api_key = os.getenv('OPENAI_API_KEY')
 assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
 openai.api_key = api_key
-
-import os,json,uuid,random
-
-combat_schema={
-    "Combat_Schema":
-    ["{strCharacter}","{strAction}","{strDcReason}","{intDC}","{intRoll}"]
-}
-
-stats_schema={
-    "Stats_Schema":
-    [
-        ["{strDayName}","{intMinsLeft}"],
-        [
-            ["{strItemName}","{strItemStatus}"]
-        ],
-        [
-            ["{intAcquaintanceCount}","{strAcquaintanceChange}","{strAcquaintanceSentiment}"],
-            ["{intFriendCount}","{strFriendChange}","{strFriendSentiment}"],
-            ["{intEnemyCount}","{strEnemyChange}","{strEnemySentiment}"],
-            ["{strBestFriendName}","{strBestFriendSentiment}"],
-            ["{strArchNemesisName}","{strArchNemesisSentiment}"]
-        ]
-    ]
-}
-
 
 
 class Game:
@@ -57,25 +33,28 @@ class Game:
     def __init__(self, team_name:str=None, models:list=[]):
 
         # Copy previous game state into the new game object
+
+        # Default values for the game state
+        default_values = {
+            'team_name': team_name,
+            'models': models,
+            'system_message': "",
+            'history': [],
+            'raw_history': [],
+            'combat': {},
+            # 'message': "",
+            'stats': {},
+            'token_trackers': {}
+        }
+
+        # Load previous game state
         prev_game_state = self.load_game_state(team_name)
 
-        if not hasattr(prev_game_state, 'team_name'):
-            self.team_name = team_name
-        if not hasattr(prev_game_state, 'models'):
-            self.models = models
-        if not hasattr(prev_game_state, 'system_message'):
-            self.system_message = ""
-        if not hasattr(prev_game_state, 'history'):
-            self.history = []
-        if not hasattr(prev_game_state, 'raw_history'):
-            self.raw_history = []
-        if not hasattr(prev_game_state, 'message'):
-            self.message = ""
-        if not hasattr(prev_game_state, 'stats'):
-            self.stats = {}
-        if not hasattr(prev_game_state, 'token_trackers'):
-            self.token_trackers = {}
-            
+        # Copy previous game state into the new game object, or use the default value if the attribute does not exist
+        for key, default_value in default_values.items():
+            value = getattr(prev_game_state, key, default_value)
+            setattr(self, key, value)
+                    
         # Initialize token trackers
         for model in self.models:
             if model not in Game.AVAILABLE_MODELS:
@@ -83,30 +62,13 @@ class Game:
                 continue
             self.token_trackers[model] = TokenTracker(model)
 
-
-    def predict(self, model, system_message, example_history, history):
-        
-        history_openai_format = []
-
+    def build_openai_history_array(self, history, example_history):
         if len(self.history) == 0:
             self.history.append(history[-1].copy())
             self.raw_history.append(history[-1].copy())
         elif self.history[-1][1] is not None:
             self.history.append(history[-1].copy())
             self.raw_history.append(history[-1].copy())
-        
-        
-        # Append strings to system message
-        dice_string = generate_dice_string(5)
-        # dice_string = f'intRoll={random.randint(1,20)}'
-        combat_schema_string = json.dumps(combat_schema)
-        stats_schema_string = json.dumps(stats_schema)
-        
-        complete_system_message = f'{system_message}\n\n{combat_schema_string}\n{stats_schema_string}\n\n{dice_string}'
-        
-        self.system_message = complete_system_message
-        # Append system message to history
-        history_openai_format.append({"role": "system", "content": f'{complete_system_message}\n\n'})
 
         # Check for example history
         # Example history helps the model understand the desired flow of the conversation
@@ -118,27 +80,62 @@ class Game:
                 example_history_json = json.loads(example_history)
             except json.JSONDecodeError as e:
                 raise ValueError(f"Failed to decode example history: {e}")
-
+        
         # Append history to example history
         complete_history = example_history_json + self.raw_history
 
+        # Add dice roll to the end of the user message
+        if "intRollArray" not in self.raw_history[-1][0]:
+            self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
+
+        history_array_openai_format = []
+
         # Convert history to OpenAI format
         for human, assistant in complete_history:
-            if human != None: history_openai_format.append({"role": "user", "content": human })
-            if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
+            if human != None: history_array_openai_format.append({"role": "user", "content": human })
+            if assistant != None: history_array_openai_format.append({"role": "assistant", "content":assistant})
+
+        return history_array_openai_format
+
+
+    def build_openai_system_message(self, system_message):
+
+        # Append schema strings to system message
+        combat_schema_string = json.dumps(combat_schema, separators=(',', ':'))
+        stats_schema_string = json.dumps(stats_schema, separators=(',', ':'))
+        
+        complete_system_message = f'{system_message}\n\n{combat_schema_string}\n{stats_schema_string}\n\n'
+        
+        self.system_message = complete_system_message
+
+        system_message_openai_format = {
+            "role": "system",
+            "content": complete_system_message
+        }
+
+        return system_message_openai_format
+
+    def predict(self, model, system_message, example_history, history):
+        
+        messages_openai_format = []
+
+        # Append system message to history
+        messages_openai_format.append(self.build_openai_system_message(system_message))
+        messages_openai_format += self.build_openai_history_array(history, example_history)
 
         # OpenAI API call
         response = openai.ChatCompletion.create(
             model=model,
-            messages= history_openai_format,         
+            messages= messages_openai_format,         
             temperature=1.0,
             stream=True
         )
         
+
         # Variables to capture JSON objects in the response
         inside_json=False
         json_string=""
-
+        found_json_schema=None
 
         # Parse the response one chunk at a time
         self.history[-1][1] = ""
@@ -149,39 +146,61 @@ class Game:
             real_model = chunk.get("model", model)
             if len(chunk["choices"][0]["delta"]) != 0:
                 content = chunk["choices"][0]["delta"]["content"]
-                # print(content)
+
                 # Add everything to raw history
                 self.raw_history[-1][1] += content
                 # Don't add chunks to the chatbot if they are part of a JSON object
                 # Continue until the JSON object is complete
                 if inside_json:
                     json_string += content
+
                     try:
                         new_json = json.loads(json_string)
                         if "Stats_Schema" in new_json:
                             self.stats = new_json
-                        print(new_json)
+                            self.history[-1][1] += " COMPLETE!!!\n\n"
+                        elif "Combat_Schema" in new_json:
+                            self.combat = new_json
+                            if self.combat["Combat_Schema"]["success"] == True:
+                                self.history[-1][1] += " SUCCESS!!!\n\n"
+                            else:
+                                self.history[-1][1] += " FAILURE!!!\n\n"
+                        logger.info(new_json)
 
                         inside_json=False
                         json_string=""
+                        found_json_schema=None
+                            
                     except json.JSONDecodeError:
-                        continue
+                    
+                        if found_json_schema == None:
+                            if "Stats_Schema" in json_string:
+                                logger.info("Found Stats_Schema!")
+                                found_json_schema="Stats_Schema"
+                                self.history[-1][1] += " Calculating stats "
+                            elif "Combat_Schema" in json_string:
+                                logger.info("Found Combat_Schema!")
+                                found_json_schema="Combat_Schema"
+                                self.history[-1][1] += " Calculating combat "
+                        else:
+                            if len(json_string)%5 == 0:
+                                self.history[-1][1] += "-"
                 else:
                     # Found the start of a JSON object
                     if content == "{\"":
                         inside_json=True
                         json_string += content
-                        self.history[-1][1] += "\n\n---\n"
+                        self.history[-1][1] += "\n\n---"
                     # Send response chunks to the chatbot
                     else:
                         # print(content)
                         self.history[-1][1] += content
                     
-                    yield self.history
+                yield self.history
 
         # print(self.raw_history[-1][1])
         # Calculate streaming token usage
-        self.token_trackers[real_model].add_from_stream(real_model, history_openai_format, self.raw_history[-1][1])
+        self.token_trackers[real_model].add_from_stream(real_model, messages_openai_format, self.raw_history[-1][1])
 
         # logger.info(f"~~--------~~ {model} ~~--------~~")
         # self.token_trackers[real_model].print()
@@ -192,79 +211,133 @@ class Game:
     def get_all_tokens(self):
         return list(self.token_trackers.values())
     
+    # # OLD VERSION
+    # def render_stats(self):
+    #     if not "Stats_Schema" in self.stats:
+    #         return ["","",""]
+        
+    #     logger.debug("RENDERING THE STATS!!!")
+    #     stats_array = self.stats["Stats_Schema"]
+
+    #     day_name = stats_array[0][0]
+    #     time_left = stats_array[0][1]
+    #     items_array = stats_array[1]
+    #     r_array = stats_array[2]
+
+    #     day = f'{day_name} --- {time_left} minutes left'
+    #     items = ""
+    #     for item in items_array:
+    #         items += f'{item[0]} ({item[1]})\n'
+    #     relationships = ""
+    #     relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
+    #     relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
+    #     relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
+    #     relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
+    #     relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
+
+    #     return [day, items, relationships]
+    
     def render_stats(self):
         if not "Stats_Schema" in self.stats:
-            return ["","",""]
+            return ["","","",{},{}]
         
         logger.debug("RENDERING THE STATS!!!")
-        stats_array = self.stats["Stats_Schema"]
+        stats = self.stats["Stats_Schema"]
 
-        day_name = stats_array[0][0]
-        time_left = stats_array[0][1]
-        items_array = stats_array[1]
-        r_array = stats_array[2]
+        # DAY/TIME LEFT
+        day = stats["day"]
+        time = stats["time"]
+        day_string = f'{day} --- {time} minutes left'
 
-        day = f'{day_name} --- {time_left} minutes left'
-        items = ""
+        # ITEMS
+        items_array = stats["items"]
+        items_string = ""
         for item in items_array:
-            items += f'{item[0]} ({item[1]})\n'
-        relationships = ""
-        relationships += f'Acquaintances: {r_array[0][0]} ({r_array[0][1]} {r_array[0][2]})\n'
-        relationships += f'Friends: {r_array[1][0]} ({r_array[1][1]} {r_array[1][2]})\n'
-        relationships += f'Enemies: {r_array[2][0]} ({r_array[2][1]} {r_array[2][2]})\n'
-        relationships += f'Best Friend: {r_array[3][0]} ({r_array[3][1]})\n'
-        relationships += f'Arch Nemesis: {r_array[4][0]} ({r_array[4][1]})\n'
+            items_string += f'{list(item.items())[0][1]} ({list(item.items())[1][1]})\n'
+        
+        # RELATIONSHIPS
+        r_array = stats["relationships"]
+        relationships_string = ""
+        for relationship in r_array:
+            relationships_string += f'{relationship["relationship"]}: {relationship["count"]} ({relationship["rationale"]})\n'
+            
+            for name in relationship["names"]:
+                relationships_string += f'{name},'
 
-        return [day, items, relationships]
+            relationships_string = relationships_string[:-1] + '\n\n'
+
+        logger.debug("DONE RENDERING THE STATS!!!")
+
+        return {
+            "day_string": day_string,
+            "items_string": items_string,
+            "relationships_string": relationships_string,
+        }
+    
+    def render_combat(self):
+        logger.debug("RENDERING COMBAT!!!")
+
+        if not "Combat_Schema" in self.combat:
+            return [""]
+        
+        combat = self.combat["Combat_Schema"]
+
+        combat_string=""
+        for key, value in combat.items():
+            combat_string += f'{key}: {value} --- '
+
+        logger.debug("DONE RENDERING COMBAT!!!")
+
+        return combat_string
 
     # Break game state apart for rendering
     def render_game_state(self):
         logger.debug("RENDERING THE GAME STATE!!!")
         stats_strings = self.render_stats()
+        combat_string = self.render_combat()
 
-        return (self.team_name, self.history, self.message, stats_strings[0], stats_strings[1], stats_strings[2])
+        logger.debug("DONE RENDERING THE GAME STATE!!!")
+        logger.debug(self.team_name)
+        logger.debug(self.history)
+        logger.debug(stats_strings["day_string"])
+        logger.debug(stats_strings["items_string"])
+        logger.debug(stats_strings["relationships_string"])
+        logger.debug(combat_string)
+        return (
+            self.team_name,
+            self.history,
+            stats_strings["day_string"],
+            stats_strings["items_string"],
+            stats_strings["relationships_string"],
+            combat_string
+         )
+    
+    def update_team_name(self, team_name:str=None):
+        logger.info(f"Updating team name to {team_name}!")
+        if team_name is not None:
+            self.team_name = team_name
     
     def save_game_state(self, team_name:str=None):
 
-        # print(vars(self))
-        logger.debug(f"SAVING GAME STATE {self.team_name}!")
+        logger.debug(f"SAVING GAME STATE {team_name}!")
 
-        game_state = {}
-        self.team_name = team_name
-        if hasattr(self, 'team_name'):
-            game_state["team_name"] = self.team_name
-        else:
-            game_state["team_name"] = ""
-        if hasattr(self, 'models'):
-            game_state["models"] = self.models
-        else:
-            game_state["models"] = []
-        if hasattr(self, 'system_message'):
-            game_state["system_message"] = self.system_message
-        else:
-            game_state["system_message"] = ""
-        if hasattr(self, 'history'):
-            game_state["history"] = self.history
-        else:
-            game_state["history"] = []
-        if hasattr(self, 'raw_history'):
-            game_state["raw_history"] = self.raw_history
-        else:
-            game_state["raw_history"] = []
-        if hasattr(self, 'stats'):
-            game_state["stats"] = self.stats
-        else:
-            game_state["stats"] = {}
-        if hasattr(self, 'message'):
-            game_state["message"] = self.message
-        else:
-            game_state["message"] = ""
-        if hasattr(self, 'token_trackers'):
-            # Cannot print these yet... need a good __dict__ 0_o
-            game_state["token_trackers"] = {}
-            # game_state.token_trackers = self.token_trackers
-        else:
-            game_state["token_trackers"] = {}
+        if team_name is not None:
+            self.team_name = team_name
+
+        attributes = {
+            "team_name": "",
+            "models": [],
+            "system_message": "",
+            "history": [],
+            "raw_history": [],
+            "combat": {},
+            "stats": {},
+            "token_trackers": {}
+        }
+
+        game_state = {key: getattr(self, key, default) for key, default in attributes.items()}
+        # Cannot print these yet... need a good __dict__ 0_o
+        game_state["token_trackers"] = {}
 
         # Check if the "sessions/game_states" directory exists
         if not os.path.isdir(os.path.join("sessions", "game_states")):
@@ -279,7 +352,7 @@ class Game:
         except IOError as e:
             game_state = None
             print(f"Error: {e}")
-            return {}
+            return {"error": f"Error saving game state: {e}"}
     
     def load_game_state(self, team_name:str=None):
 
@@ -299,6 +372,8 @@ class Game:
             with open(game_state_file_path, "r") as f:
                 game_state = json.load(f)
                 for key, value in game_state.items():
+                    logger.info(f"-------------- Load State --- {key} ---------------------")
+                    logger.debug(key, value)
                     setattr(self, key, value)
             # Initialize token trackers
             for model in self.models:
@@ -308,10 +383,10 @@ class Game:
                 self.token_trackers[model] = TokenTracker(model)
         except FileNotFoundError:
             print(f"Error: File '{game_state_file_path}' not found")
-            game_state = {}
+            game_state = {"error": f"Error loading game state: File '{game_state_file_path}' not found"}
         except IOError as e:
             print(f"Error: {e}")
-            game_state = {}
+            game_state = {"error": f"Error loading game state: {e}"}
 
         return game_state
     
@@ -329,43 +404,58 @@ class Game:
                     return
 
     def undo(self, game_state):
-        if len(self.history) > 0:
-            # Need to figure out when I should reload teh user message
-            # self.message = self.history[-1][0]
-            self.history.pop()
-            self.raw_history.pop()
-            game_state["message"] = self.message
-            game_state["history"] = self.history
-            game_state["raw_history"] = self.raw_history
-
-            self.find_last_stats()
-            
-            game_state["stats"] = self.stats
+        if not self.history:
             return game_state
-        else:
-            return {}
+
+        # Pop last entries from history
+        self.history.pop()
+        self.raw_history.pop()
+
+        # Update game_state with current history
+        game_state["history"] = self.history
+        game_state["raw_history"] = self.raw_history
+        # game_state["message"] = self.message
+
+        # Find and update stats
+        self.find_last_stats()
+        game_state["stats"] = self.stats
+
+        return game_state
     
     def clear(self, game_state):
-        self.message = ""
-        self.history = []
-        self.raw_history = []
-        self.stats = {}
-        game_state["message"] = self.message
+        """
+        Clears the message, history, and stats attributes of the current game state object.
+        
+        Parameters:
+        - self: The current instance of the game state object.
+        - game_state: A dictionary representing the current state of the game.
+        
+        Returns:
+        - game_state: The updated game state dictionary with cleared values for history and stats.
+        """
+        self.message = ""  # Clear the message attribute
+        self.history = []  # Clear the history attribute
+        self.raw_history = []  # Clear the raw_history attribute
+        self.stats = {}  # Clear the stats attribute
+        
+        # Assign the cleared values to the corresponding keys in the game_state dictionary
         game_state["history"] = self.history
         game_state["raw_history"] = self.raw_history
         game_state["stats"] = self.stats
-        return game_state
+        
+        return game_state  # Return the updated game state dictionary
+
     
     def retry(self, game_state):
-        if len(self.history) > 0:
-            self.history[-1][1] = None
-            self.raw_history[-1][1] = None
-            game_state["history"] = self.history
-            game_state["raw_history"] = self.raw_history
 
-            self.find_last_stats()
-            
-            game_state["stats"] = self.stats
-            return game_state, self.history
-        else:
+        if not self.history:
             return {}, []
+        
+        self.history[-1][1] = None
+        self.raw_history[-1][1] = None
+        game_state["history"] = self.history
+        game_state["raw_history"] = self.raw_history
+
+        self.find_last_stats()
+        game_state["stats"] = self.stats
+        return game_state, self.history

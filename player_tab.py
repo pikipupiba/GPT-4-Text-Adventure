@@ -20,6 +20,7 @@ from gm_tab import *
 from Game import *
 from TokenTracker import *
 from session import *
+from schemas import *
 
 use_models = [
     "gpt-4-0613",
@@ -39,6 +40,9 @@ with gr.Blocks() as player_tab:
             # CHATBOT
             with gr.Row() as history_area:
                 chatbot = gr.Chatbot(height=600)
+            # COMBAT AREA
+            with gr.Row() as combat_area:
+                combat_box = gr.Textbox(label="Combat", interactive=False)
             # USER INPUT
             with gr.Group():
                 with gr.Row() as user_area:
@@ -124,15 +128,15 @@ with gr.Blocks() as player_tab:
         )
         
         # Display stats that were parsed from the assistant message
-        render_stats = predict.then(
-            fn=game.render_stats,
-            inputs=[],
-            outputs=[day_box, items_box, friends_box],
-            queue=False
-        )
+        # render_stats = predict.then(
+        #     fn=game.render_stats,
+        #     inputs=[],
+        #     outputs=[day_box, items_box, friends_box],
+        #     queue=False
+        # )
 
         # Save the game state after populating the stats boxes
-        save_state = render_stats.then(
+        save_state = predict.then(
             fn=game.save_game_state,
             inputs=[team_name],
             outputs=[game_state_json],
@@ -157,6 +161,14 @@ with gr.Blocks() as player_tab:
         outputs=[game_state_json],
     ),
 
+    # Update team name
+    team_name.change(
+        fn=game.update_team_name,
+        inputs=[team_name],
+        outputs=[],
+        queue=False
+    )
+
     # Load the game state from the team name on enter
     team_name.submit(
         fn=game.load_game_state,
@@ -176,7 +188,7 @@ with gr.Blocks() as player_tab:
     game_state_json.change(
         fn=game.render_game_state,
         inputs=[],
-        outputs=[team_name, chatbot, player_message, day_box, items_box, friends_box],
+        outputs=[team_name, chatbot, day_box, items_box, friends_box, combat_box],
         queue=False
     )
 

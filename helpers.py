@@ -30,3 +30,5 @@ def extract_json_objects(text, decoder=json.JSONDecoder()):
             pos = match + index
         except ValueError:
             pos = match + 1
+
+# print(vars(self))
