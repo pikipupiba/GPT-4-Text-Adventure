@@ -26,7 +26,7 @@ Default NPCs:
 - teachers patrolling the playground
 
 Special turns with special rules:
-turn[0]=Introduce the game then make the player must choose 5 items from [8 random items, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
+turn[0]=Introduce the game then make the player must choose 5 items from a list of 10 fun and interesting items [8 random items, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
 "End of Day"=Wrap up the narrative for the day neatly before the Stats_Schema
 "Beginning of Day"=Introduce the scenario for the day.
 

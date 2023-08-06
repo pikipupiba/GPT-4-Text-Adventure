@@ -13,13 +13,13 @@
 # [almost] 9. fix dice rolls
 # 10. add session functionality
 # 11. Dropdown to select team name from saved sessions
+# 12. Countdown timer bar + allow everyone to answer + average actions :) :) :)
+# 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
+# 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
 import gradio as gr
 from gm_tab import *
-from Game import *
-from TokenTracker import *
-from session import *
-from schemas import *
+from PythonClasses import Game
 
 use_models = [
     "gpt-4-0613",

@@ -1,0 +1,43 @@
+{
+    "Classes": {
+        "Game": {
+            "description": "Created every time a new game is started or loaded",
+            "uuid": "uuid",
+            "name": "string",
+            "methods": ["start", "load", "save", "stop"],
+            "GameStateManager": {
+                "description": "Manages the current game state.",
+                "methods": ["get", "set", "update", "delete", "save", "load", "undo", "redo", "reset", "clear", "getHistory", "getHistoryItem", "getHistoryLength", "getHistory"],
+                "GameState": {
+                    "description": "The current game state",
+                    "GameStateSchema": {},
+                    "HistoryManager": {
+                        "description": "Manages the history of the game state",
+                        "HistoryItem": {
+                            "description": "A single history item",
+                            "HistoryItemSchema": {}
+                        }
+                    }
+                }
+            }
+        },
+        "OpenAiInteractor": {
+
+        },
+        "Stats": {
+            "description": "Manages the stats of the game",
+            "StatsSchema": {}
+        },
+        "Combat": {
+            "description": "Manages the combat of the game",
+            "CombatSchema": {}
+        },
+        "SchemaManager": {
+            "description": "Manages the schemas of the game",
+            "Schema": {
+                "description": "A single schema",
+                "SchemaSchema": {}
+            }
+        }
+    }
+}
