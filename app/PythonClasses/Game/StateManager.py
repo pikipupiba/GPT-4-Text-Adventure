@@ -109,7 +109,7 @@ class GameStateManager:
         logger.debug("Attempting to undo last action in game")
 
         if not len(self.turns) > 0:
-            logger.info("No history to undo. Returning game state as is.")
+            logger.info("No history to undo. Leaving game state as is.")
             return None
 
         self.turns.pop()
@@ -129,8 +129,6 @@ class GameStateManager:
         
         logger.debug("Attempting to retry last action in game state")
 
-        self.turns[-1].model = None
-        self.turns[-1].system = None
         self.turns[-1].display[1] = None
         self.turns[-1].raw[1] = None
         self.turns[-1].stats = None

@@ -31,3 +31,5 @@ turn[0]=Introduce the game then make the player must choose 5 items from a list 
 "Beginning of Day"=Introduce the scenario for the day.
 
 Output the schemas on a single line. All items are required. Be realistic, creative, and concise.
+/*\Combat_Schema/*\
+/*\Stats_Schema/*\

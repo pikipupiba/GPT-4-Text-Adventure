@@ -1,4 +1,5 @@
 from loguru import logger
+from . import LLMModel
 
 class LLMToken:
 
@@ -17,7 +18,7 @@ class LLMToken:
 
         self.model = kwargs.get("model", None)
 
-        self.get_cost()
+        self.calculate_cost()
         
 
     def __add__(self, other):
@@ -31,3 +32,10 @@ class LLMToken:
             self.completion + other.completion,
             self.total + other.total
             )
+    
+    def calculate_cost(self, model: LLMModel = None):
+        if model is None:
+            model = self.model
+
+        
+        return model.cost(self.total)
