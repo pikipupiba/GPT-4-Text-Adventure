@@ -2,8 +2,18 @@ import json
 from typing import List, Tuple
 from loguru import logger
 
+import openai
+
+from ...Schemas import schema_strings
+
 class LLM:
     def build_openai_history_array(self, raw_history):
+
+        logger.debug("Building history OpenAI format")
+
+        if raw_history == None:
+            logger.warning("No history provided. Returning None.")
+            return None
         
         history_openai_format = []
 
@@ -12,27 +22,36 @@ class LLM:
             if human != None: history_openai_format.append({"role": "user", "content": human })
             if assistant != None: history_openai_format.append({"role": "assistant", "content":assistant})
 
+        logger.trace(f"Successfully built history OpenAI format | Found {len(history_openai_format)} turns")
+
         return history_openai_format
 
 
     def build_openai_system_message(self, system_message: str = None):
 
+        logger.debug("Building system message OpenAI format")
 
+        if system_message == None:
+            logger.warning("No system message provided. Returning None.")
+            return None
 
         system_message_openai_format = {
             "role": "system",
-            "content": complete_system_message
+            "content": system_message
         }
+
+        logger.trace("Successfully built system message OpenAI format")
 
         return system_message_openai_format
 
-    def predict(self, model, system_message, example_history, history):
+    def predict(self, model, system_message: str = None, raw_history: Tuple[str, str] = None):
+
+        logger.debug(f"Predicting with model: {model} | User message: {raw_history[-1][0]}")
         
         messages_openai_format = []
-
         # Append system message to history
         messages_openai_format.append(self.build_openai_system_message(system_message))
-        messages_openai_format += self.build_openai_history_array(history, example_history)
+        messages_openai_format += self.build_openai_history_array(raw_history)
 
         # OpenAI API call
         response = openai.ChatCompletion.create(
@@ -55,16 +74,15 @@ class LLM:
             if len(chunk["choices"][0]["delta"]) == 0:
                 break
 
-            # print(self.raw_history[-1][1])
+            content = chunk["choices"][0]["delta"]["content"]
+
             # See what model the api actually used. This is important for tracking tokens.
             real_model = chunk.get("model", model)
-            # if len(chunk["choices"][0]["delta"]) != 0:
-            content = chunk["choices"][0]["delta"]["content"]
 
             # Add everything to raw history
             self.raw_history[-1][1] += content
-            # Don't add chunks to the chatbot if they are part of a JSON object
-            # Continue until the JSON object is complete
+
+            # Don't add chunks to the chatbot if they are part of a JSON schema
             if inside_json:
                 json_string += content
 
