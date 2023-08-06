@@ -26,7 +26,10 @@ class GameStateManager:
 
     def change_name(self, new_name:str=None, keep_old:bool=True):
 
+        logger.debug(f"Changing game name from {self.name} to {new_name}")
+
         old_name = self.game_file_path
+        old_file_path = self.game_file_path
 
         if new_name is None:
             new_name = randomish_words()
@@ -36,10 +39,15 @@ class GameStateManager:
         self.game_file_path = os.path.join("sessions", "game_files", f"{self.name}_game_file.json")
 
         if not keep_old and not "error" in self.save_game():
-            self.delete_game(old_name)
+            logger.debug(f"Deleting old game: {old_name}")
+            self.delete_game(old_file_path)
+
+        logger.trace(f"Successfully changed game name from {old_name} to {self.name}")
 
     
     def new_turn(self, user_message = None, model: str = None, system_message: str = None, type: str = "normal"):
+
+        logger.debug(f"Adding new turn to game: {self.name} | Turn # {len(self.turns) + 1}")
         
         if model is None:
             model = self.turns[-1].model
@@ -47,6 +55,8 @@ class GameStateManager:
             system_message = self.turns[-1].system
         
         self.turns.append(Turn(user_message, model, system_message, type))
+
+        logger.trace(f"Successfully added new turn to game: {self.name} | Turn # {len(self.turns)}")
 
         return None
     
@@ -60,12 +70,21 @@ class GameStateManager:
         return self.turns[-1]
     
     def last_stats(self):
+
+        logger.debug(f"Getting last stats from game: {self.name}")
+
         # Stats are not guaranteed to be in every message, so we need to find the last one
         for turn in reversed(self.turns):
             if not "stats" in turn:
                 continue
 
+            logger.trace(f"Successfully got last stats from game: {self.name}")
+
             return turn["stats"]
+
+        logger.warning(f"No stats found in game: {self.name} | Returning None")
+
+        return None
 
     def load_game(self, game_file_path: str = None):
 
