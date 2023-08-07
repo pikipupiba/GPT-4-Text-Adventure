@@ -2,9 +2,10 @@ import os,json,uuid,array
 from typing import List, Tuple
 from loguru import logger
 
-from ..Helpers import file_helpers, randomish_words
+from PythonClasses.Helpers.file_helpers import *
+from PythonClasses.Helpers.randomish_words import *
 
-from Turn import Turn
+from PythonClasses.Game.Turn import Turn
 
 class StateManager:
     """
@@ -18,10 +19,18 @@ class StateManager:
         logger.debug("Initializing StateManager")
         
         self.name = name
-        self.game_file_path = os.path.join("sessions", "game_files", f"{name}_game_file.json")
-        self.turns = array.array("Turn", [])
+        self.game_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "game_files", f"{self.name}_game_file.json"))
+        self.turns = []
 
         self.turns.append(Turn(user_message, model, system_message))
+
+    def __dict__(self):
+
+        return {
+            "name": self.name,
+            "game_file_path": self.game_file_path,
+            "turns": [turn.__dict__() for turn in self.turns]
+        }
 
 
     def change_name(self, new_name:str=None, keep_old:bool=True):
@@ -36,7 +45,7 @@ class StateManager:
             logger.warning(f"No name provided. Using {new_name}.")
         
         self.name = new_name
-        self.game_file_path = os.path.join("sessions", "game_files", f"{self.name}_game_file.json")
+        self.game_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "game_files", f"{self.name}_game_file.json"))
 
         # if not keep_old and not "error" in self.save_game():
         #     logger.debug(f"Deleting old game: {old_name}")
@@ -75,7 +84,7 @@ class StateManager:
 
         # Stats are not guaranteed to be in every message, so we need to find the last one
         for turn in reversed(self.turns):
-            if not "stats" in turn:
+            if not hasattr(turn, "stats") or turn.stats is None:
                 continue
 
             logger.trace(f"Successfully got last stats from game: {self.name}")
@@ -93,15 +102,16 @@ class StateManager:
         if game_file_path is None:
             game_file_path = self.game_file_path
 
-        game_data = file_helpers.load_file(game_file_path, "Load Game")
+        game_data = json.loads(load_file(game_file_path, "Load Game"))
 
         if "error" in game_data:
             logger.error(f"Error loading game: {game_file_path}")
             return game_data
 
-        self.name = game_data.name
-        self.game_file_path = game_file_path
-        self.turns = [Turn(turn) for turn in game_data.turns]
+        self.name = game_data["name"]
+        if game_file_path is not None:
+            self.game_file_path = game_file_path
+        self.turns = [Turn(turn) for turn in game_data["turns"]]
 
         logger.info(f"Successfully loaded game {self.game_file_path}")
 
@@ -111,7 +121,7 @@ class StateManager:
 
         logger.debug(f"Attempting to save game: {self.game_file_path}")
 
-        result = file_helpers.save_file(self.game_file_path, self, "Save Game")
+        result = save_file(self.game_file_path, json.dumps(self.__dict__(), indent=4), "Save Game")
 
         if "error" in result:
             logger.error(f"Error saving game: {self.game_file_path}")
@@ -121,7 +131,7 @@ class StateManager:
             
         logger.debug(f"Attempting to delete game: {game_file_path}")
 
-        result = file_helpers.delete_file(game_file_path, "Delete Game")
+        result = delete_file(game_file_path, "Delete Game")
 
         if "error" in result:
             logger.error(f"Error deleting game: {game_file_path}")

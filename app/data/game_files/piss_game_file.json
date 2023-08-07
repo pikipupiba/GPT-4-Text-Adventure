@@ -1,0 +1,22 @@
+{
+    "name": "piss",
+    "game_file_path": "H:\\GitHub\\GPT-4 Text Adventure\\app\\data\\game_files\\piss_game_file.json",
+    "turns": [
+        {
+            "type": "normal",
+            "model": "gpt-4-0613",
+            "system": null,
+            "display": [
+                "Begin the game.",
+                null
+            ],
+            "raw": [
+                "Begin the game.",
+                null
+            ],
+            "stats": {},
+            "combat": [],
+            "execution": {}
+        }
+    ]
+}

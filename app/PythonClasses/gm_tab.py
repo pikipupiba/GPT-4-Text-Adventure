@@ -3,16 +3,18 @@
 # 2. 
 
 import gradio as gr
-from session import *
+from PythonClasses.Game.SystemMessage import SystemMessage
+
+system = SystemMessage()
 
 # GM TAB
-with gr.Blocks() as gm_tab:
+with gr.Blocks() as gm:
 
     # SAVE/LOAD SESSION
     with gr.Group(): #.style(equal_height=True):
         with gr.Row():
-            file_name = gr.Textbox(
-                            value="current_system_message",
+            system_name = gr.Textbox(
+                            value="",
                             lines=1,
                             show_label=False,
                             interactive=True,
@@ -32,39 +34,46 @@ with gr.Blocks() as gm_tab:
                         label="System",
                         interactive=True,
                         scale=1,
-                        value=load_current_system_message)
+                        value="")
     
     example_history = gr.Code(
                         lines=40,
                         label="Example History",
                         interactive=True,
                         scale=1,
-                        value=load_current_example_history,
+                        value="",
                         language="json")
 
     # GM TAB FUNCTIONS
     save.click(
-        fn=save_session,
-        inputs=[file_name, system_message],
+        fn=system.save_system_message,
+        inputs=[],
         outputs=[]
-        )
+    )
     
     load.click(
-        fn=load_session,
-        inputs=[file_name, system_message, mode],
+        fn=system.load_system_message,
+        inputs=[mode],
         outputs=[system_message]
-        )
+    )
+    
+    system_name.change(
+        fn=system.change_name,
+        inputs=[system_name],
+        outputs=[],
+        queue=False
+    )
 
     system_message.change(
-        fn=save_current_system_message,
+        fn=system.update_system_message,
         inputs=[system_message],
         outputs=[],
         queue=False
-        )
+    )
     
     example_history.change(
-        fn=save_current_example_history,
+        fn=system.update_example_history,
         inputs=[example_history],
         outputs=[],
         queue=False
-        )
+    )

@@ -19,8 +19,7 @@
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
 import gradio as gr
-from gm_tab import *
-from PythonClasses import Game
+from PythonClasses.Game.Game import Game
 
 use_models = [
     "gpt-4-0613",
@@ -29,10 +28,12 @@ use_models = [
 ]
 
 # Game instance
-game = None
+game = Game()
+
+global render_dict
 
 # PLAYER TAB
-with gr.Blocks() as player_tab:
+with gr.Blocks() as player:
     # STORY AREA
     with gr.Row(variant="compact") as story_area:
         # CHAT AREA
@@ -90,7 +91,7 @@ with gr.Blocks() as player_tab:
     #                      PLAYER TAB FUNCTIONS
     #--------------------------------------------------------------
     # Array to update the interface from the game state. Contains all changeable interface elements.
-    render_array = [
+    render_dict = [
         game_name,
         load_game,
         save_game,
@@ -122,7 +123,7 @@ with gr.Blocks() as player_tab:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[player_message],
-            outputs=render_array,
+            outputs=render_dict,
             queue=False
         ),
         # Press enter key
@@ -130,7 +131,7 @@ with gr.Blocks() as player_tab:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[player_message],
-            outputs=render_array,
+            outputs=render_dict,
             queue=False
         ),
         # Click "Retry" button
@@ -138,14 +139,14 @@ with gr.Blocks() as player_tab:
             # Remove the last assistant message from the history
             fn=game.retry,
             inputs=[],
-            outputs=render_array,
+            outputs=render_dict,
             queue=False
         ),
         # Restart the game
             restart.click(
             fn=game.restart,
             inputs=[],
-            outputs=render_array,
+            outputs=render_dict,
         ),
     ]
     
@@ -154,8 +155,8 @@ with gr.Blocks() as player_tab:
         # Generate the assistant message
         submit_item.then(
             fn=game.stream_prediction,
-            inputs=[model_select,system_message,example_history,display_history],
-            outputs=render_array,
+            inputs=[],
+            outputs=render_dict,
             queue=True
         )
     
@@ -166,7 +167,22 @@ with gr.Blocks() as player_tab:
     undo.click(
         fn=game.undo,
         inputs=[],
-        outputs=render_array,
+        outputs=render_dict,
+        queue=False
+    )
+
+    # Delete the game
+    delete_game.click(
+        fn=game.delete_game,
+        inputs=[],
+        outputs=render_dict,
+        queue=False
+    )
+
+    model_select.change(
+        fn=game.change_model,
+        inputs=[model_select],
+        outputs=[],
         queue=False
     )
 
@@ -182,7 +198,7 @@ with gr.Blocks() as player_tab:
     game_name.submit(
         fn=game.load_game,
         inputs=[],
-        outputs=render_array,
+        outputs=render_dict,
         queue=False
     )
 
@@ -190,7 +206,7 @@ with gr.Blocks() as player_tab:
     load_game.click(
         fn=game.load_game,
         inputs=[],
-        outputs=render_array,
+        outputs=render_dict,
         queue=False
     )
 

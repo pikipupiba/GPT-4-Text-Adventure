@@ -2,9 +2,9 @@ import json
 from typing import Dict, List, Union
 from loguru import logger
 
-from ..Helpers import string_helpers
+from PythonClasses.Helpers.string_helpers import *
 
-from ...Schemas import schema_strings
+from PythonClasses.Schemas import schema_strings
 
 class PartialSchema:
     def __init__(self, schema_name: Dict[str, str], partial_json_string: str = None):
@@ -51,7 +51,7 @@ class PartialSchema:
     
     def find_next_value_type(self):
         # Find next non-whitespace character
-        value_position, char = string_helpers.next_non_whitespace(self.partial_json_string, self.current_position)
+        value_position, char = next_non_whitespace(self.partial_json_string, self.current_position)
         
         if value_position is None:
             # Definitely no value
@@ -104,7 +104,7 @@ class PartialSchema:
             
         elif self.current_value_type == "number":
             # Is the number complete?
-            next_non_number_position, next_non_number_char = string_helpers.next_non_number(self.partial_json_string, self.current_position)
+            next_non_number_position, next_non_number_char = next_non_number(self.partial_json_string, self.current_position)
             if next_non_number_position is not None:
                 # Number is complete, return it
                 self.current_value = int(self.partial_json_string[self.current_position:next_non_number_position])

@@ -1,5 +1,5 @@
 from loguru import logger
-from . import LLMModel
+from PythonClasses.OpenAI.LLMModel import LLMModel
 
 class LLMToken:
 

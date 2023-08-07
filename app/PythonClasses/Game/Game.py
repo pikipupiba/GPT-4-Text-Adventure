@@ -5,21 +5,21 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
-
+import os
 from loguru import logger
-from ..Helpers import randomish_words
+from PythonClasses.Helpers.randomish_words import randomish_words
 
-from . import StateManager, Renderer, SystemMessage
-from ..OpenAI import LLM
-
-from SchemaStream import SchemaStream
-
+from PythonClasses.Game.StateManager import StateManager
+from PythonClasses.Game.Renderer import Renderer
+from PythonClasses.Game.SystemMessage import SystemMessage
+from PythonClasses.Game.SchemaStream import SchemaStream
+from PythonClasses.OpenAI.LLM import LLM
 
 
 class Game:
 
     # Initialize a new Game object for each active game.
-    def __init__(self):
+    def __init__(self, name: str = None):
         logger.debug("Initializing Game")
 
         logger.debug("Starting game")
@@ -29,16 +29,28 @@ class Game:
             logger.warning(f"No name provided. Using {name}.")
 
         model = "gpt-4-0613"
-        system_message = None
+        system_message = ""
 
         self.state = StateManager(name, model, system_message, user_message = "Begin the game.")
+
+    def change_model(self, new_model:str=None):
+        logger.debug(f"Changing model to {new_model}")
+
+        self.state.turns[-1].model = new_model
+
+        logger.trace(f"Successfully changed model to {self.state.turns[-1].model}")
+
+    def change_name(self, new_name:str=None, keep_old:bool=True):
+        logger.debug(f"Changing game name to {new_name}")
+
+        self.state.change_name(new_name, keep_old)
+
+        logger.trace(f"Successfully changed game name to {self.state.name}")
 
     def render(self):
         """
         This function is called when the game state changes.
         """
-        logger.debug("Rendering game")
-
         return Renderer.render(self.state)
     
     def save_game(self):
@@ -97,18 +109,22 @@ class Game:
         """
         logger.debug(f"Submitting message: {message}")
 
-        self.state.new_turn(message)
+        if self.state.turns[-1].raw[1] is not None:
+            self.state.new_turn(message)
 
         return self.render()
     
     def stream_prediction(self):
-        model = self.state.turn[-1].model
-        system_message = self.state.turn[-1].system
+
+        model = self.state.turns[-1].model
+        system_message = self.state.turns[-1].system
         raw_history = self.state.get_raw_history()
 
         streaming_json = ""
         schema_stream = None
         did_append_combat = False
+        self.state.turns[-1].raw[1] = ""
+        self.state.turns[-1].display[1] = ""
 
         for chunk in LLM.predict(model, system_message, raw_history):
 
@@ -121,7 +137,7 @@ class Game:
             real_model = chunk.get("model", model)
 
             # All chunks go to the raw history
-            self.state.turn[-1].raw[-1][1] += content
+            self.state.turns[-1].raw[1] += content
             
             if schema_stream == None:
                 # Not currently in json stream, add chunk to chatbot
@@ -129,9 +145,9 @@ class Game:
                     # Found the start of a JSON object
                     schema_stream = SchemaStream()
                     streaming_json += content
-                    self.state.turn[-1].display[-1][1] += "\n\n---"
+                    self.state.turns[-1].display[1] += "\n\n---"
                 else:
-                    self.state.turn[-1].display[-1][1] += content
+                    self.state.turns[-1].display[1] += content
             else:
                 # Don't add content to the chatbot if they are part of a JSON schema
                 # Add content to the streaming json
@@ -142,20 +158,20 @@ class Game:
 
                 if schema_stream.schema_name == "Combat_Schema":
                     if not did_append_combat:
-                        self.state.turn[-1].combat.append({})
+                        self.state.turns[-1].combat.append({})
                         did_append_combat = True
 
                     if data is not None:
-                        self.state.turn[-1].combat[-1] = data
+                        self.state.turns[-1].combat[-1] = data
 
                 elif schema_stream.schema_name == "Stats_Schema":
                     if data is not None:
-                        self.state.turn[-1].stats = data
+                        self.state.turns[-1].stats = data
 
                 if schema_stream.complete:
                     streaming_json = ""
                     self.schema_stream = None
 
-            # yield self.state.turn[-1].raw, self.state.turn[-1].display, self.state.turn[-1].stats, self.state.turn[-1].combat
+            # yield self.state.turns[-1].raw, self.state.turns[-1].display, self.state.turns[-1].stats, self.state.turns[-1].combat
 
             yield self.render()

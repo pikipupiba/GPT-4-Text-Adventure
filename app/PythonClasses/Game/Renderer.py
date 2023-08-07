@@ -2,7 +2,8 @@ from loguru import logger
 
 import gradio as gr
 
-from . import StateManager
+from PythonClasses.Game.StateManager import StateManager
+from PythonClasses.player_tab import *
 
 class Renderer:
 
@@ -10,59 +11,101 @@ class Renderer:
         """
         This function is called when the game state changes.
         """
-        logger.debug("Rendering game")
+        logger.trace("Rendering game")
 
         # Display history for the chatbot
         display_history = state.get_display_history()
+        if display_history is None:
+            display_history = []
 
         # Last available stats
-        day_box, item_box, relationship_box = Renderer.render_stats(state.last_stats())
+        if hasattr(state.turns[-1], "stats"):
+            day_box, item_box, relationship_box = Renderer.render_stats(state.last_stats())
+        else:
+            day_box, item_box, relationship_box = Renderer.render_stats(None)
 
         # Combat for last turn
-        combat_box = Renderer.render_combat(state.turn[-1].combat)
+        if hasattr(state.turns[-1], "combat"):
+            combat_box = Renderer.render_combat(state.turns[-1].combat)
+        else:
+            combat_box = ""
 
         # Execution for last turn
-        execution_json = state.turn[-1].execution
+        if hasattr(state.turns[-1], "execution"):
+            execution_json = state.turns[-1].execution
+        else:
+            execution_json = {}
 
         # Game state for last turn
-        game_state_json = state.turn[-1].game_state
+        game_state_json = state.turns[-1].__dict__()
 
         logger.trace("Successfully generated render strings")
 
-        return {
-            "game_name": state.name,
-            "load_game": gr.update(),
-            "save_game": gr.update(),
-            "delete_game": gr.update(),
+        return [
+            state.name,
+            gr.update(),
+            gr.update(),
+            gr.update(),
 
-            "display_history": display_history,
-            "combat_box": combat_box,
+            display_history,
+            combat_box,
+            day_box,
+            item_box,
+            relationship_box,
 
-            "day_box": day_box,
-            "item_box": item_box,
-            "relationship_box": relationship_box,
+            gr.update(),
+            gr.update(),
+            gr.update(),
+            gr.update(),
+            gr.update(),
+            gr.update(),
 
-            "model_select": gr.update(),
-            "player_message": gr.update(),
-            "submit": gr.update(),
-            "retry": gr.update(),
-            "undo": gr.update(),
-            "clear": gr.update(),
+            execution_json,
+            game_state_json,
+        ]
 
-            "execution_json": execution_json,
-            "game_state_json": game_state_json,
-        }
+        # return {
+        #     render_dict.game_name: state.name,
+        #     render_dict.load_game: gr.update(),
+        #     render_dict.save_game: gr.update(),
+        #     render_dict.delete_game: gr.update(),
 
-    def render_stats(self):
-        if not "Stats_Schema" in self.stats:
-            return {
-                "day_string": "??? --- ??? minutes left",
-                "items_string": "???",
-                "relationships_string": "???",
-            }
+        #     render_dict.display_history: display_history,
+        #     render_dict.combat_box: combat_box,
+        #     render_dict.day_box: day_box,
+        #     render_dict.item_box: item_box,
+        #     render_dict.relationship_box: relationship_box,
+
+        #     render_dict.model_select: gr.update(),
+        #     render_dict.player_message: gr.update(),
+        #     render_dict.submit: gr.update(),
+        #     render_dict.retry: gr.update(),
+        #     render_dict.undo: gr.update(),
+        #     render_dict.restart: gr.update(),
+
+        #     render_dict.execution_json: execution_json,
+        #     render_dict.game_state_json: game_state_json,
+        # }
+
+    def render_stats(stats):
+
+        if stats is None:
+            return [
+                "??? --- ??? minutes left",
+                "???",
+                "???",
+            ]
+
+        if not "Stats_Schema" in stats:
+            return [
+                "??? --- ??? minutes left",
+                "???",
+                "???",
+            ]
         
         logger.debug("RENDERING THE STATS!!!")
-        stats = self.stats
+
+        stats = stats["Stats_Schema"]
 
         # DAY/TIME LEFT
         day = stats["day"]
@@ -94,19 +137,22 @@ class Renderer:
 
         logger.trace("DONE RENDERING THE STATS!!!")
 
-        return {
-            "day_string": day_string,
-            "items_string": items_string,
-            "relationships_string": relationships_string,
-        }
+        return [
+            day_string,
+            items_string,
+            relationships_string,
+        ]
     
-    def render_combat(self):
+    def render_combat(combat):
         logger.debug("RENDERING COMBAT!!!")
 
-        if not "Combat_Schema" in self.combat:
-            return [""]
+        if combat is None:
+            return []
+
+        if not "Combat_Schema" in combat:
+            return []
         
-        combat = self.combat["Combat_Schema"]
+        combat = combat["Combat_Schema"]
 
         combat_string=""
         for key, value in combat.items():

@@ -59,7 +59,7 @@ class LLM:
         messages_openai_format += LLM.build_openai_history_array(raw_history)
 
         # OpenAI API call
-        yield openai.ChatCompletion.create(
+        return openai.ChatCompletion.create(
             model=model,
             messages= messages_openai_format,         
             temperature=1.0,

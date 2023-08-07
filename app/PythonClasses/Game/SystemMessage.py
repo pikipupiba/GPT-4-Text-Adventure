@@ -2,17 +2,18 @@ import os,json,re
 from typing import List
 from loguru import logger
 
-from ..Helpers import file_helpers, randomish_words
+from PythonClasses.Helpers.file_helpers import *
+from PythonClasses.Helpers.randomish_words import *
 
-from ...Schemas import schema_strings
+from PythonClasses.Schemas import schema_strings
 
 class SystemMessage:
-    def __init__(self, name, system_message: str = None):
+    def __init__(self, name: str = None, system_message: str = None):
         logger.debug("Initializing SystemMessage")
 
         self.name = name
         self.system_message = system_message
-        self.system_message_file_path = os.path.join("sessions", "system_messages", f"{self.name}_system_message.txt")
+        self.system_message_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "system_messages", f"{self.name}_system_message.txt"))
         # self.parts = []
 
         logger.debug(f"Successfully initialized SystemMessage: {self.name}")
@@ -20,6 +21,14 @@ class SystemMessage:
 
     def message_to_parts(self):
         pass
+
+    def update_system_message(self, new_system_message: str = None):
+
+        self.system_message = new_system_message
+
+    def update_example_history(self, new_example_history: str = None):
+
+        self.example_history = json.loads(new_example_history)
     
     
     def change_name(self, new_name:str=None, keep_old:bool=True):
@@ -33,11 +42,11 @@ class SystemMessage:
             logger.warning(f"No name provided. Using {new_name}.")
         
         self.name = new_name
-        self.system_message_file_path = os.path.join("sessions", "system_messages", f"{self.name}_system_message.txt")
+        self.system_message_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "system_messages", f"{self.name}_system_message.txt"))
 
-        if not keep_old and not "error" in self.save_system_message():
-            logger.debug(f"Deleting old system message: {old_file_path}")
-            self.delete_system_message(old_file_path)
+        # if not keep_old and not "error" in self.save_system_message():
+        #     logger.debug(f"Deleting old system message: {old_file_path}")
+        #     self.delete_system_message(old_file_path)
 
         logger.trace(f"Successfully changed system message name from {old_name} to {self.name}")
 
@@ -73,22 +82,22 @@ class SystemMessage:
 
     def save_system_message(self):
 
-        logger.debug(f"Attempting to save the system message: {self.game_file_path}")
+        logger.debug(f"Attempting to save the system message: {self.system_message_file_path}")
 
-        result = file_helpers.save_file(self.game_file_path, self, "Save System Message")
+        result = save_file(self.system_message_file_path, self.system_message, "Save System Message")
 
         if "error" in result:
-            logger.error(f"Error saving system message: {self.game_file_path}")
+            logger.error(f"Error saving system message: {self.system_message_file_path}")
             return result
 
-        logger.trace(f"Successfully saved system message: {self.game_file_path}")
+        logger.trace(f"Successfully saved system message: {self.system_message_file_path}")
 
 
     def load_system_message(self, mode: str = "Overwrite"):
 
-        logger.debug(f"Attempting to load system message: {self.game_file_path}")
+        logger.debug(f"Attempting to load system message: {self.system_message_file_path}")
 
-        result = file_helpers.load_file(self.system_message_file_path, "Load System Message")
+        result = load_file(self.system_message_file_path, "Load System Message")
 
         if "error" in result:
             logger.error(f"Error loading system message: {self.system_message_file_path}")
@@ -112,7 +121,7 @@ class SystemMessage:
         if system_message_file_path is None:
             system_message_file_path = self.system_message_file_path
 
-        result = file_helpers.delete_file(system_message_file_path, "Delete System Message")
+        result = delete_file(system_message_file_path, "Delete System Message")
 
         if "error" in result:
             logger.error(f"Error deleting system message: {system_message_file_path}")

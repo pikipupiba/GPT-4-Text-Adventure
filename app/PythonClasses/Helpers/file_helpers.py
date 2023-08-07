@@ -58,7 +58,7 @@ def save_file(file_path: str = None, file_contents: str = None, log: str = None)
         with open(file_path, "w") as f:
             f.write(file_contents)
         logger.trace(f"{log} | {file_path} | Successfully saved file")
-        return None
+        return {}
     except IOError as e:
         logger.error(f"{log} | {file_path} | IOError: {e}")
         return {"error": f"{log} | IOError: {e}"}
@@ -83,7 +83,7 @@ def delete_file(file_path: str = None, log: str = None):
     try:
         os.remove(file_path)
         logger.trace(f"{log_string} | Successfully deleted file")
-        return None
+        return {}
     except FileNotFoundError:
         logger.error(f"{log_string} | File not found")
         return {"error": f"{log_string} | File not found"}

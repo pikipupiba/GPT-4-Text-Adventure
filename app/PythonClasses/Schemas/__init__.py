@@ -1,5 +1,6 @@
 import json
-from . import stats_schema, combat_schema
+from .stats_schema import stats_schema
+from .combat_schema import combat_schema
 
 stats_schema_string = json.dumps(stats_schema, separators=(',', ':'))
 combat_schema_string = json.dumps(combat_schema, separators=(',', ':'))
