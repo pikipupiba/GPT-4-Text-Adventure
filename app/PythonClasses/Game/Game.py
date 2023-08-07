@@ -6,26 +6,32 @@
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
 
-import os,json,uuid
-import openai
 from loguru import logger
 from ..Helpers import randomish_words
-from StateManager import 
-from . import StateManager, Renderer, SystemMessage
-from ..OpenAI import OpenAIInteractor
 
-# set Open AI API Key
-api_key = os.getenv('OPENAI_API_KEY')
-assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
-openai.api_key = api_key
+from . import StateManager, Renderer, SystemMessage
+from ..OpenAI import LLM
+
+from SchemaStream import SchemaStream
+
+
 
 class Game:
 
     # Initialize a new Game object for each active game.
     def __init__(self):
         logger.debug("Initializing Game")
-        self.renderer = Renderer()
-        self.llm = OpenAIInteractor()
+
+        logger.debug("Starting game")
+
+        if name is None:
+            name = randomish_words()
+            logger.warning(f"No name provided. Using {name}.")
+
+        model = "gpt-4-0613"
+        system_message = None
+
+        self.state = StateManager(name, model, system_message, user_message = "Begin the game.")
 
     def render(self):
         """
@@ -33,21 +39,57 @@ class Game:
         """
         logger.debug("Rendering game")
 
-        return self.renderer.render(self.state)
+        return Renderer.render(self.state)
+    
+    def save_game(self):
+        logger.debug("Saving game")
+        self.state.save_game()
+        return None
+    
+    def load_game(self):
+        logger.debug("Loading game")
+        self.state.load_game()
+        return self.render()
+    
+    def delete_game(self):
+        logger.debug("Deleting game")
+        self.state.delete_game()
+        return None
+    
+    def undo(self):
+        logger.debug("Undoing turn")
+        self.state.undo()
+        return self.render()
+    
+    def retry(self):
+        logger.debug("Retrying turn")
+        self.state.retry()
+        return self.render()
 
-    def start(self, name: str = None, model: str = None, system_message: str = None):
+    def restart(self, name: str = None, model: str = None, system_message: str = None):
         """
         This function is called when the game starts.
         """
         logger.debug("Starting game")
 
-        if name is None:
-            name = randomish_words()
-            logger.warning(f"No name provided. Using {name}.")
+        # Increment a number on the end of the name
+        # Check if name ends in a number
+        if self.name is None:
+            self.name = randomish_words()
+            logger.warning(f"No name provided. Using {self.name}.")
+        elif self.name[-1].isdigit():
+            # Increment the number
+            self.name = self.name[:-1] + str(int(self.name[-1]) + 1)
+        else:
+            # Add a number to the end
+            self.name += "_2"
+
+        model = self.model
+        system_message = self.system_message
 
         self.state = StateManager(name, model, system_message, user_message = "Begin the game.")
 
-        return None
+        return self.render()
     
     def submit(self, message: str = None):
         """
@@ -56,44 +98,64 @@ class Game:
         logger.debug(f"Submitting message: {message}")
 
         self.state.new_turn(message)
-        self.render(self.state)
-        return None
 
-    def button(self, button:str=None):
-        """
-        This function is called when a button is pressed in the chatbot.
-        """
-        if button is None:
-            logger.error("No button provided. Unable to process button.")
-            return None
+        return self.render()
+    
+    def stream_prediction(self):
+        model = self.state.turn[-1].model
+        system_message = self.state.turn[-1].system
+        raw_history = self.state.get_raw_history()
 
-        logger.debug(f"Button pressed: {button}")
+        streaming_json = ""
+        schema_stream = None
+        did_append_combat = False
 
-        if button == "start":
-            return self.start
-            self.render(self.state)
-            return None
-        elif button == "save":
-            self.state.save
-            self.render(self.state)
-            return None
-        elif button == "load":
-            self.state.load
-            self.render(self.state)
-            return None
-        elif button == "submit":
-            self.state.submit
-            self.render(self.state)
-            return None
-        elif button == "retry":
-            self.state.retry
-            self.render(self.state)
-            return None
-        elif button == "undo":
-            self.state.undo
-            self.render(self.state)
-            return None
-        elif button == "clear":
-            self.state.clear
-            self.render(self.state)
-            return None
+        for chunk in LLM.predict(model, system_message, raw_history):
+
+            if len(chunk["choices"][0]["delta"]) == 0:
+                break
+
+            content = chunk["choices"][0]["delta"]["content"]
+
+            # See what model the api actually used. This is important for tracking tokens.
+            real_model = chunk.get("model", model)
+
+            # All chunks go to the raw history
+            self.state.turn[-1].raw[-1][1] += content
+            
+            if schema_stream == None:
+                # Not currently in json stream, add chunk to chatbot
+                if content == "{\"":
+                    # Found the start of a JSON object
+                    schema_stream = SchemaStream()
+                    streaming_json += content
+                    self.state.turn[-1].display[-1][1] += "\n\n---"
+                else:
+                    self.state.turn[-1].display[-1][1] += content
+            else:
+                # Don't add content to the chatbot if they are part of a JSON schema
+                # Add content to the streaming json
+                streaming_json += content
+
+                # Check if the streaming json matches any schemas
+                data = schema_stream.check_json_string(streaming_json)
+
+                if schema_stream.schema_name == "Combat_Schema":
+                    if not did_append_combat:
+                        self.state.turn[-1].combat.append({})
+                        did_append_combat = True
+
+                    if data is not None:
+                        self.state.turn[-1].combat[-1] = data
+
+                elif schema_stream.schema_name == "Stats_Schema":
+                    if data is not None:
+                        self.state.turn[-1].stats = data
+
+                if schema_stream.complete:
+                    streaming_json = ""
+                    self.schema_stream = None
+
+            # yield self.state.turn[-1].raw, self.state.turn[-1].display, self.state.turn[-1].stats, self.state.turn[-1].combat
+
+            yield self.render()

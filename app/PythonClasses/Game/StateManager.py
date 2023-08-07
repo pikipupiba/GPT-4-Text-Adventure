@@ -6,16 +6,16 @@ from ..Helpers import file_helpers, randomish_words
 
 from Turn import Turn
 
-class GameStateManager:
+class StateManager:
     """
     This class is responsible for managing the game state, including loading, saving, undoing, clearing, and retrying game states.
     """
 
     def __init__(self, name: str = None, model: str = None, system_message: str = None, user_message: str = None):
         """
-        Initialize the GameStateManager.
+        Initialize the StateManager.
         """
-        logger.debug("Initializing GameStateManager")
+        logger.debug("Initializing StateManager")
         
         self.name = name
         self.game_file_path = os.path.join("sessions", "game_files", f"{name}_game_file.json")
@@ -38,9 +38,9 @@ class GameStateManager:
         self.name = new_name
         self.game_file_path = os.path.join("sessions", "game_files", f"{self.name}_game_file.json")
 
-        if not keep_old and not "error" in self.save_game():
-            logger.debug(f"Deleting old game: {old_name}")
-            self.delete_game(old_file_path)
+        # if not keep_old and not "error" in self.save_game():
+        #     logger.debug(f"Deleting old game: {old_name}")
+        #     self.delete_game(old_file_path)
 
         logger.trace(f"Successfully changed game name from {old_name} to {self.name}")
 
@@ -90,6 +90,9 @@ class GameStateManager:
 
         logger.debug(f"Attempting to load game: {game_file_path}")
 
+        if game_file_path is None:
+            game_file_path = self.game_file_path
+
         game_data = file_helpers.load_file(game_file_path, "Load Game")
 
         if "error" in game_data:
@@ -134,14 +137,6 @@ class GameStateManager:
         self.turns.pop()
 
         logger.trace("Successfully undid last action in game state")
-        return None
-
-    def clear(self):
-        logger.debug("Clearing game state")
-
-        self.turns = []
-
-        logger.trace("Successfully cleared game state")
         return None
 
     def retry(self):

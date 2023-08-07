@@ -74,19 +74,19 @@ class Turn:
             self.display = (user_message, None)
             self.raw = None
 
-        
-
         # Fill in stats, combat, and execution after response
         
 
     def __dict__(self):
         return {
-            "model": self.model,
             "type": self.type,
+            "model": self.model,
             "system": self.system,
             "display": self.display,
             "raw": self.raw,
             "stats": self.stats,
             "combat": self.combat,
-            "tokens": self.tokens,
+            "execution": self.execution,
         }
+    
+    

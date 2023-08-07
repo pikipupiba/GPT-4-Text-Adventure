@@ -26,9 +26,10 @@ Default NPCs:
 - teachers patrolling the playground
 
 Special turns with special rules:
-turn[0]=Introduce the game then make the player must choose 5 items from a list of 10 fun and interesting items [8 random items, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
-"End of Day"=Wrap up the narrative for the day neatly before the Stats_Schema
-"Beginning of Day"=Introduce the scenario for the day.
+turn[0]:Introduce the game then make the player must choose 5 items from a list of 10 fun and interesting items [8 random items, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
+"End of each day":Wrap up the narrative for the day neatly before the Stats_Schema
+"Beginning of each day":Introduce the scenario for the day.
+"When a best friend is acquired":The first best friend I make gives me a nickname that stays with me.
 
 Output the schemas on a single line. All items are required. Be realistic, creative, and concise.
 /*\Combat_Schema/*\
