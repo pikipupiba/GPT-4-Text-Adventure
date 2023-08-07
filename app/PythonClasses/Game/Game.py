@@ -26,7 +26,7 @@ class Game:
 
         if name is None:
             name = randomish_words()
-            logger.warning(f"No name provided. Using {name}.")
+            logger.warning(f"No game name provided. Using {name}.")
 
         model = "gpt-4-0613"
         system_message = ""
@@ -88,7 +88,7 @@ class Game:
         # Check if name ends in a number
         if self.name is None:
             self.name = randomish_words()
-            logger.warning(f"No name provided. Using {self.name}.")
+            logger.warning(f"No game name provided. Using {self.name}.")
         elif self.name[-1].isdigit():
             # Increment the number
             self.name = self.name[:-1] + str(int(self.name[-1]) + 1)

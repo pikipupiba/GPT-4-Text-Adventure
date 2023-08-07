@@ -39,7 +39,7 @@ class SystemMessage:
 
         if new_name is None:
             new_name = randomish_words()
-            logger.warning(f"No name provided. Using {new_name}.")
+            logger.warning(f"No system name provided. Using {new_name}.")
         
         self.name = new_name
         self.system_message_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "system_messages", f"{self.name}_system_message.txt"))

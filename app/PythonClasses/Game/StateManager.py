@@ -42,7 +42,7 @@ class StateManager:
 
         if new_name is None:
             new_name = randomish_words()
-            logger.warning(f"No name provided. Using {new_name}.")
+            logger.warning(f"No system name provided. Using {new_name}.")
         
         self.name = new_name
         self.game_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "game_files", f"{self.name}_game_file.json"))
