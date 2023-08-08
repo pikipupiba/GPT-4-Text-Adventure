@@ -50,9 +50,9 @@ class Game:
         """
         return Render.render_history(self.history)
     
-    def save_history(self):
-        logger.info(f"Saving game | {self.name}")
-        FileManager.save_file(self.history, f"{self.name}_history.json", "history")
+    def save_history(self, history_name: str):
+        logger.info(f"Saving game | {history_name}")
+        FileManager.save_file(self.history, f"{history_name}_history.json", "history")
     
     def load_history(self, history_name: str):
         if history_name is None:

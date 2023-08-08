@@ -18,7 +18,9 @@
 # 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
-global game
+from PythonClasses.Game.Game import Game
+
+game = Game()
 
 import gradio as gr
 from PythonClasses.gm_tab import system_message
@@ -162,14 +164,14 @@ with gr.Blocks() as player:
     # Delete the game
     delete_game.click(
         fn=game.delete_history,
-        inputs=[],
+        inputs=[game_name],
         outputs=render_array,
         queue=False
     )
 
     # Load the game on enter
     game_name.submit(
-        fn=game.load_game,
+        fn=game.load_history,
         inputs=[game_name],
         outputs=render_array,
         queue=False
@@ -177,16 +179,16 @@ with gr.Blocks() as player:
 
     # Load the game on button click
     load_game.click(
-        fn=game.load_game,
-        inputs=[],
+        fn=game.load_history,
+        inputs=[game_name],
         outputs=render_array,
         queue=False
     )
 
     # Save the game on button click
     save_game.click(
-        fn=game.save_game,
-        inputs=[],
+        fn=game.save_history,
+        inputs=[game_name],
         outputs=[],
         queue=False
     )

@@ -47,6 +47,9 @@ class FileManager:
         file_path = FileManager.build_path(file_name, folder)
 
         try:
+            # create file if it doesn't exist
+            if not os.path.exists(file_path):
+                
             with open(file_path, "w") as f:
                 f.write(json.dumps(file_contents, indent=4))
         except IOError as e:

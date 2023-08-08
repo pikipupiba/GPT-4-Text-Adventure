@@ -2,7 +2,7 @@
 # 1. dropdown with saved sessions
 # 2. 
 
-global game
+from PythonClasses.player_tab import game
 
 import gradio as gr
 
@@ -56,9 +56,9 @@ with gr.Blocks() as gm:
         outputs=[system_message]
     )
     
-    example_history.change(
-        fn=game.state.system_message.update_example_history,
-        inputs=[example_history],
-        outputs=[],
-        queue=False
-    )
+    # example_history.change(
+    #     fn=game.state.system_message.update_example_history,
+    #     inputs=[example_history],
+    #     outputs=[],
+    #     queue=False
+    # )
