@@ -6,7 +6,7 @@ from PythonClasses.Schemas import schema_strings
 
 class SystemMessage:
     
-    def inject_schemas():
+    def inject_schemas(system_message: str):
 
         logger.debug("Injecting schemas into system message")
 
@@ -22,7 +22,7 @@ class SystemMessage:
         schema_matcher = re.compile(r'\/\*\\(.*?)\/\*\\')  # Compile regex pattern to match schema placeholders
 
         # Replace schema placeholders with schema strings in system message
-        complete_system_message = re.sub(schema_matcher, replacer, self.system_message)
+        complete_system_message = re.sub(schema_matcher, replacer, system_message)
 
         logger.info(f"Successfully injected *{num_found_schemas}* schemas")
 

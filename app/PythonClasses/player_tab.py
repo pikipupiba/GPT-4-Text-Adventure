@@ -91,9 +91,9 @@ with gr.Blocks() as player:
     #--------------------------------------------------------------
     # Array to update the interface from the game state. Contains all changeable interface elements.
     render_array = [
-        game_name,
+        # game_name,
 
-        player_message,
+        # player_message,
         display_history,
 
         combat_box,

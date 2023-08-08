@@ -35,33 +35,45 @@ class Game:
         if system_name is None:
             system_name = randomish_words()
             logger.warning(f"No system name provided. Using {system_name}.")
+            self.system_message = ""
         else:
             logger.info(f"Loading system message | {system_name}")
-            self.system_message = FileManager.load_file(f"{system_name}_system_message.json", "system_message")
+            self.system_message = FileManager.load_file(f"{system_name}_system_message.txt", "system_message")
 
-    def save_system_message(self):
-        logger.info(f"Saving system message | {self.system_name}")
-        FileManager.save_file(self.system_message, f"{self.system_name}_system_message.json", "system_message")
+        return self.system_message
+
+    def save_system_message(self, system_name: str):
+        logger.info(f"Saving system message | {system_name}")
+        FileManager.save_file(self.system_message, f"{system_name}_system_message.txt", "system_message")
+        self.system_name = system_name
 
 
     def render_history(self):
         """
         This function is called when the game state changes.
         """
+        logger.info("Rendering game")
         return Render.render_history(self.history)
     
     def save_history(self, history_name: str):
         logger.info(f"Saving game | {history_name}")
-        FileManager.save_file(self.history, f"{history_name}_history.json", "history")
+
+        history_json = [turn.__dict__ for turn in self.history]
+
+        FileManager.save_file(history_json, f"{history_name}_history.json", "history")
+        self.history_name = history_name
     
     def load_history(self, history_name: str):
         if history_name is None:
             history_name = randomish_words()
             logger.warning(f"No history name provided. Using {history_name}.")
-            self.history = List[Turn]
+            self.history = []
         else:
             logger.info(f"Loading history | {history_name}")
-            self.history = FileManager.load_file(f"{history_name}_history.json", "history")
+            history_json = FileManager.load_file(f"{history_name}_history.json", "history")
+            self.history = [Turn(**turn) for turn in history_json]
+        
+        return self.render_history()
     
     def delete_history(self, name: str):
 
@@ -112,7 +124,7 @@ class Game:
     
     def stream_prediction(self):
 
-        current_turn = self.history.last()
+        current_turn = self.history[-1]
 
         model = current_turn.model
         system_message = current_turn.system_message

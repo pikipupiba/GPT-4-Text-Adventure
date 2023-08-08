@@ -25,9 +25,12 @@ class FileManager:
         try:
             with open(file_path, "r") as f:
                 file = f.read()
-            return json.loads(file)
-        except FileNotFoundError:
-            logger.error(f"File not found")
+            try:
+                return json.loads(file)
+            except:
+                return file
+        except FileNotFoundError as e:
+            logger.error(f"File not found: {e}")
             return {}
         except IOError as e:
             logger.error(f"IOError: {e}")
@@ -44,14 +47,18 @@ class FileManager:
             logger.warning(f"File contents is *None*, saving empty file")
             file_contents = {}
 
+        folder_path = FileManager.build_path(folder)
         file_path = FileManager.build_path(file_name, folder)
 
         try:
-            # create file if it doesn't exist
-            if not os.path.exists(file_path):
-                
+            # create folder if it doesn't exist
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
             with open(file_path, "w") as f:
-                f.write(json.dumps(file_contents, indent=4))
+                try:
+                    f.write(json.dumps(file_contents, indent=4))
+                except:
+                    f.write(file_contents)
         except IOError as e:
             logger.error(f"IOError: {e}")
         except json.decoder.JSONDecodeError as e:

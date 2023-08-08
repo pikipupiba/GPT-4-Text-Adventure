@@ -8,33 +8,43 @@ from PythonClasses.player_tab import *
 
 class Render:
 
-    def render_history(self, history: List[Turn]):
+    def render_history(self, history: List[any] = []):
         """
         This function is called when the game state changes.
         """
         logger.trace("Rendering game")
 
+        if len(history) == 0:
+            return [
+                [],
+
+                "",
+                "??? --- ??? minutes left",
+                "???",
+                "???",
+
+                {},
+                {},
+            ]
+
         # Display history for the chatbot
-        display_history = [turn.__dict__().get("display", ["", ""]) for turn in history]
+        display_history = [turn.__dict__.get("display", ["", ""]) for turn in history]
 
         # Last available stats
-        day_box, item_box, relationship_box = Render.render_stats(history)
+        day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
 
         # Combat for last turn
-        combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
+        combat_box = Render.render_combat(history[-1].__dict__.get("combat", []))
 
         # Execution for last turn
-        execution_json = history[-1].__dict__().get("execution", {})
+        execution_json = history[-1].__dict__.get("execution", {})
 
         # Last turn json
-        turn_json = history[-1].__dict__()
+        turn_json = history[-1].__dict__
 
         logger.trace("Successfully generated render strings")
 
         return [
-            game_name,
-
-            player_message,
             display_history,
 
             combat_box,
@@ -45,8 +55,19 @@ class Render:
             execution_json,
             turn_json,
         ]
+    
+    def last_stats(history = []):
 
-    def render_stats(_stats: Dict = {}):
+        # Stats are not guaranteed to be in every message, so we need to find the last one
+        for turn in reversed(history):
+            if not hasattr(turn, "stats") or turn.stats == {}:
+                continue
+
+            return turn["stats"]
+
+        return {}
+
+    def render_stats(_stats = {}):
 
         if not (stats := _stats.get("Stats_Schema")):
             return [
