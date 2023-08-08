@@ -2,8 +2,9 @@
 # 1. dropdown with saved sessions
 # 2. 
 
+global game
+
 import gradio as gr
-from PythonClasses.player_tab import game
 
 # GM TAB
 with gr.Blocks() as gm:
@@ -44,29 +45,15 @@ with gr.Blocks() as gm:
 
     # GM TAB FUNCTIONS
     save.click(
-        fn=game.state.system_message.save_system_message,
-        inputs=[],
+        fn=game.save_system_message,
+        inputs=[system_name],
         outputs=[]
     )
     
     load.click(
-        fn=game.state.system_message.load_system_message,
-        inputs=[mode],
-        outputs=[system_message]
-    )
-    
-    system_name.change(
-        fn=game.state.system_message.change_name,
+        fn=game.load_system_message,
         inputs=[system_name],
-        outputs=[],
-        queue=False
-    )
-
-    system_message.change(
-        fn=game.state.system_message.update_system_message,
-        inputs=[system_message],
-        outputs=[],
-        queue=False
+        outputs=[system_message]
     )
     
     example_history.change(

@@ -18,18 +18,16 @@
 # 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
+global game
+
 import gradio as gr
-from PythonClasses.Game.Game import Game
+from PythonClasses.gm_tab import system_message
 
 use_models = [
     "gpt-4-0613",
     "gpt-3.5-turbo-0613",
     "gpt-3.5-turbo-16k-0613"
 ]
-
-# Game instance
-game = Game()
-
 
 # PLAYER TAB
 with gr.Blocks() as player:
@@ -47,7 +45,7 @@ with gr.Blocks() as player:
             with gr.Group():
                 with gr.Row() as user_area:
                     # MODEL
-                    model_select = gr.Dropdown(
+                    model = gr.Dropdown(
                         choices=use_models,
                         label="Model",
                         value=use_models[0],
@@ -60,7 +58,7 @@ with gr.Blocks() as player:
                     with gr.Group():
                         retry = gr.Button(value="Retry", size="sm")
                         undo = gr.Button(value="Undo", size="sm")
-                        restart = gr.Button(value="Restart", size="sm")
+                        clear = gr.Button(value="Clear", size="sm")
         # TEAM/STATS AREA
         with gr.Column(scale=1, variant="compact") as stats_area:
             # GAME NAME
@@ -92,23 +90,14 @@ with gr.Blocks() as player:
     # Array to update the interface from the game state. Contains all changeable interface elements.
     render_array = [
         game_name,
-        load_game,
-        save_game,
-        delete_game,
 
+        player_message,
         display_history,
-        combat_box,
 
+        combat_box,
         day_box,
         item_box,
         relationship_box,
-
-        model_select,
-        player_message,
-        submit,
-        retry,
-        undo,
-        restart,
 
         execution_json,
         game_state_json,
@@ -121,7 +110,7 @@ with gr.Blocks() as player:
         submit.click(
             # Add the player message to the history
             fn=game.submit, 
-            inputs=[player_message],
+            inputs=[model, player_message, system_message],
             outputs=render_array,
             queue=False
         ),
@@ -129,7 +118,7 @@ with gr.Blocks() as player:
         player_message.submit(
             # Add the player message to the history
             fn=game.submit, 
-            inputs=[player_message],
+            inputs=[model, player_message, system_message],
             outputs=render_array,
             queue=False
         ),
@@ -142,8 +131,8 @@ with gr.Blocks() as player:
             queue=False
         ),
         # Restart the game
-            restart.click(
-            fn=game.restart,
+            clear.click(
+            fn=game.clear,
             inputs=[],
             outputs=render_array,
         ),
@@ -172,31 +161,16 @@ with gr.Blocks() as player:
 
     # Delete the game
     delete_game.click(
-        fn=game.delete_game,
+        fn=game.delete_history,
         inputs=[],
         outputs=render_array,
-        queue=False
-    )
-
-    model_select.change(
-        fn=game.change_model,
-        inputs=[model_select],
-        outputs=[],
-        queue=False
-    )
-
-    # Update team name on change
-    game_name.change(
-        fn=game.change_name,
-        inputs=[game_name],
-        outputs=[],
         queue=False
     )
 
     # Load the game on enter
     game_name.submit(
         fn=game.load_game,
-        inputs=[],
+        inputs=[game_name],
         outputs=render_array,
         queue=False
     )

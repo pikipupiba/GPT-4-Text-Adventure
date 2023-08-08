@@ -1,5 +1,112 @@
+from typing import Dict, List
+from loguru import logger
+
+import gradio as gr
+
+from PythonClasses.Game.Turn import Turn
+from PythonClasses.player_tab import *
+
 class Render:
-    @staticmethod
-    def format_output(text):
-        # format the text for Gradio display
-        return text
+
+    def render_history(self, history: List[Turn]):
+        """
+        This function is called when the game state changes.
+        """
+        logger.trace("Rendering game")
+
+        # Display history for the chatbot
+        display_history = [turn.__dict__().get("display", ["", ""]) for turn in history]
+
+        # Last available stats
+        day_box, item_box, relationship_box = Render.render_stats(history)
+
+        # Combat for last turn
+        combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
+
+        # Execution for last turn
+        execution_json = history[-1].__dict__().get("execution", {})
+
+        # Last turn json
+        turn_json = history[-1].__dict__()
+
+        logger.trace("Successfully generated render strings")
+
+        return [
+            game_name,
+
+            player_message,
+            display_history,
+
+            combat_box,
+            day_box,
+            item_box,
+            relationship_box,
+
+            execution_json,
+            turn_json,
+        ]
+
+    def render_stats(_stats: Dict = {}):
+
+        if not (stats := _stats.get("Stats_Schema")):
+            return [
+                "??? --- ??? minutes left",
+                "???",
+                "???",
+            ]
+        
+        logger.trace("RENDERING THE STATS!!!")
+
+        # DAY/TIME LEFT
+        day = stats.get("day", "???")
+        time = stats.get("time", "???")
+        day_string = f'{day} --- {time} minutes left'
+
+        # ITEMS
+        items_array = stats.get("items", [])
+        items_string = ""
+        for item in items_array:
+            items_string += f'{list(item.items())[0][1]} ({list(item.items())[1][1]})\n'
+        
+        # RELATIONSHIPS
+        r_array = stats.get("relationships", [])
+        relationships_string = ""
+        for relationship in r_array:
+
+            relationship.setdefault("relationship", "")
+            relationship.setdefault("count", "")
+            relationship.setdefault("rationale", "")
+            relationship.setdefault("names", [])
+
+            relationships_string += f'{relationship["relationship"]}: {relationship["count"]} ({relationship["rationale"]})\n'
+            
+            for name in relationship["names"]:
+                relationships_string += f'{name},'
+
+            relationships_string = relationships_string[:-1] + '\n\n'
+
+        return [
+            day_string,
+            items_string,
+            relationships_string,
+        ]
+    
+    def render_combat(_combat: List = []):
+        logger.trace("RENDERING COMBAT!!!")
+
+        if _combat is None:
+            return []
+
+        if not "Combat_Schema" in _combat:
+            return []
+        
+        combat = _combat["Combat_Schema"]
+
+        combat_string=""
+        for key, value in combat.items():
+            combat_string += f'{key}: {value} --- '
+
+        logger.trace("DONE RENDERING COMBAT!!!")
+
+        return combat_string
+    

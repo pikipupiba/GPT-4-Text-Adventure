@@ -2,6 +2,11 @@ import os,uuid,sys,signal
 from loguru import logger
 
 import gradio as gr
+
+from PythonClasses.Game.Game import Game
+
+game = Game()
+
 from PythonClasses.player_tab import *
 from PythonClasses.gm_tab import *
 
