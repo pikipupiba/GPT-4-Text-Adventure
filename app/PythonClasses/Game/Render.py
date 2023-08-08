@@ -1,3 +1,4 @@
+from typing import Dict, List, Union
 from loguru import logger
 
 import gradio as gr
@@ -7,61 +8,76 @@ from PythonClasses.player_tab import *
 
 class Renderer:
 
-    def render(state: StateManager):
+    def __init__(self):
+        self.game_name = ""
+        self.load_game = gr.update()
+        self.save_game = gr.update()
+        self.delete_game = gr.update()
+
+        self.display_history = ""
+        self.combat_box = ""
+        self.day_box = ""
+        self.item_box = ""
+        self.relationship_box = ""
+
+        self.model_select = gr.update()
+        self.player_message = gr.update()
+        self.submit = gr.update()
+        self.retry = gr.update()
+        self.undo = gr.update()
+        self.restart = gr.update()
+
+        self.execution_json = {}
+        self.game_state_json = {}
+
+    def render(self, state: StateManager):
         """
         This function is called when the game state changes.
         """
         logger.trace("Rendering game")
 
         # Display history for the chatbot
-        display_history = state.get_display_history()
-        if display_history is None:
-            display_history = []
+        self.display_history = state.get_display_history()
 
         # Last available stats
-        if hasattr(state.turns[-1], "stats"):
-            day_box, item_box, relationship_box = Renderer.render_stats(state.last_stats())
-        else:
-            day_box, item_box, relationship_box = Renderer.render_stats(None)
+        self.day_box, self.item_box, self.relationship_box = Renderer.render_stats(state.last_stats())
 
         # Combat for last turn
-        if hasattr(state.turns[-1], "combat"):
-            combat_box = Renderer.render_combat(state.turns[-1].combat)
-        else:
-            combat_box = ""
+        self.combat_box = Renderer.render_combat(state.last_turn().__dict__().get("combat", []))
+
 
         # Execution for last turn
-        if hasattr(state.turns[-1], "execution"):
-            execution_json = state.turns[-1].execution
+        if hasattr(state.last_turn(), "execution"):
+            self.execution_json = state.last_turn().execution
         else:
-            execution_json = {}
+            self.execution_json = {}
 
         # Game state for last turn
-        game_state_json = state.turns[-1].__dict__()
+        self.game_state_json = state.last_turn().__dict__()
 
         logger.trace("Successfully generated render strings")
 
         return [
-            state.name,
-            gr.update(),
-            gr.update(),
-            gr.update(),
+            self.game_name,
+            self.load_game,
+            self.save_game,
+            self.delete_game,
 
-            display_history,
-            combat_box,
-            day_box,
-            item_box,
-            relationship_box,
+            self.display_history,
+            self.combat_box,
+            self.day_box,
+            self.item_box,
+            self.relationship_box,
 
-            gr.update(),
-            gr.update(),
-            gr.update(),
-            gr.update(),
-            gr.update(),
-            gr.update(),
+            self.model_select,
+            self.player_message,
+            self.submit,
+            self.retry,
+            self.undo,
+            self.restart,
 
-            execution_json,
-            game_state_json,
+            self.execution_json,
+            self.game_state_json,
         ]
 
         # return {
@@ -87,25 +103,16 @@ class Renderer:
         #     render_dict.game_state_json: game_state_json,
         # }
 
-    def render_stats(stats):
+    def render_stats(_stats: Dict = {}):
 
-        if stats is None:
-            return [
-                "??? --- ??? minutes left",
-                "???",
-                "???",
-            ]
-
-        if not "Stats_Schema" in stats:
+        if not (stats := _stats.get("Stats_Schema")):
             return [
                 "??? --- ??? minutes left",
                 "???",
                 "???",
             ]
         
-        logger.debug("RENDERING THE STATS!!!")
-
-        stats = stats["Stats_Schema"]
+        logger.trace("RENDERING THE STATS!!!")
 
         # DAY/TIME LEFT
         day = stats["day"]
@@ -113,13 +120,13 @@ class Renderer:
         day_string = f'{day} --- {time} minutes left'
 
         # ITEMS
-        items_array = stats["items"]
+        items_array = stats.get("items", [])
         items_string = ""
         for item in items_array:
             items_string += f'{list(item.items())[0][1]} ({list(item.items())[1][1]})\n'
         
         # RELATIONSHIPS
-        r_array = stats["relationships"]
+        r_array = stats.get("relationships", [])
         relationships_string = ""
         for relationship in r_array:
 
@@ -143,16 +150,16 @@ class Renderer:
             relationships_string,
         ]
     
-    def render_combat(combat):
-        logger.debug("RENDERING COMBAT!!!")
+    def render_combat(_combat: List = []):
+        logger.trace("RENDERING COMBAT!!!")
 
-        if combat is None:
+        if _combat is None:
             return []
 
-        if not "Combat_Schema" in combat:
+        if not "Combat_Schema" in _combat:
             return []
         
-        combat = combat["Combat_Schema"]
+        combat = _combat["Combat_Schema"]
 
         combat_string=""
         for key, value in combat.items():

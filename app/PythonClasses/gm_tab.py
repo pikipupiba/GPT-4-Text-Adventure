@@ -3,9 +3,7 @@
 # 2. 
 
 import gradio as gr
-from PythonClasses.Game.SystemMessage import SystemMessage
-
-system = SystemMessage()
+from PythonClasses.player_tab import game
 
 # GM TAB
 with gr.Blocks() as gm:
@@ -46,33 +44,33 @@ with gr.Blocks() as gm:
 
     # GM TAB FUNCTIONS
     save.click(
-        fn=system.save_system_message,
+        fn=game.state.system_message.save_system_message,
         inputs=[],
         outputs=[]
     )
     
     load.click(
-        fn=system.load_system_message,
+        fn=game.state.system_message.load_system_message,
         inputs=[mode],
         outputs=[system_message]
     )
     
     system_name.change(
-        fn=system.change_name,
+        fn=game.state.system_message.change_name,
         inputs=[system_name],
         outputs=[],
         queue=False
     )
 
     system_message.change(
-        fn=system.update_system_message,
+        fn=game.state.system_message.update_system_message,
         inputs=[system_message],
         outputs=[],
         queue=False
     )
     
     example_history.change(
-        fn=system.update_example_history,
+        fn=game.state.system_message.update_example_history,
         inputs=[example_history],
         outputs=[],
         queue=False

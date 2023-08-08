@@ -8,19 +8,19 @@ from PythonClasses.Helpers.randomish_words import *
 from PythonClasses.Schemas import schema_strings
 
 class SystemMessage:
-    def __init__(self, name: str = None, system_message: str = None):
+    def __init__(self, name: str = "", system_message: str = ""):
         logger.debug("Initializing SystemMessage")
 
         self.name = name
         self.system_message = system_message
-        self.system_message_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "system_messages", f"{self.name}_system_message.txt"))
+        self.system_message_file_path = os.path.join(system_message_folder, f"{self.name}_system_message.txt")
         # self.parts = []
 
         logger.debug(f"Successfully initialized SystemMessage: {self.name}")
     
 
-    def message_to_parts(self):
-        pass
+    # def message_to_parts(self):
+    #     pass
 
     def update_system_message(self, new_system_message: str = None):
 
@@ -42,7 +42,7 @@ class SystemMessage:
             logger.warning(f"No system name provided. Using {new_name}.")
         
         self.name = new_name
-        self.system_message_file_path = os.path.abspath(os.path.join(os.getcwd(), "data", "system_messages", f"{self.name}_system_message.txt"))
+        self.system_message_file_path = os.path.join(system_message_folder, f"{self.name}_system_message.txt")
 
         # if not keep_old and not "error" in self.save_system_message():
         #     logger.debug(f"Deleting old system message: {old_file_path}")
@@ -65,17 +65,18 @@ class SystemMessage:
         # Function to replace matched pattern with schema string
         num_found_schemas = 0
         def replacer(match):
+            nonlocal num_found_schemas
             num_found_schemas += 1
             schema_name = match.group(1)  # Extract the schema_name from the matched pattern
             return schema_strings.get(schema_name, match.group(0))  # Return variable value or original if not found
         
         # /*\schema_name*/\  # Pattern to match schema placeholders
-        schema_matcher = re.compile(r'/\*\\(.*?)\*/\\')  # Compile regex pattern to match schema placeholders
+        schema_matcher = re.compile(r'\/\*\\(.*?)\/\*\\')  # Compile regex pattern to match schema placeholders
 
         # Replace schema placeholders with schema strings in system message
         complete_system_message = re.sub(schema_matcher, replacer, self.system_message)
 
-        logger.trace(f"Successfully built system message: {self.name} | Replaced {num_found_schemas} schema placeholders")
+        logger.info(f"Successfully built system message: {self.name} | Replaced {num_found_schemas} schema placeholders")
 
         return complete_system_message
     

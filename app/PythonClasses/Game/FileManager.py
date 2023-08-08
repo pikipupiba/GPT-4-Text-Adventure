@@ -1,6 +1,64 @@
-import os
-
+import os, json
 from loguru import logger
+
+data_folder = os.path.join(os.getcwd(), "data")
+game_folder = os.path.join(data_folder, "game_files")
+system_message_folder = os.path.join(data_folder, "system_messages")
+
+class FileManager:
+    def __init__(self):
+
+        pass
+
+    def load_game(self, new_name: str = None):
+
+        if new_name is None:
+            logger.warning(f"No game name provided. Unable to load game.")
+            return {"error": "No game name provided. Unable to load game."}
+
+        logger.trace(f"Attempting to load game: {new_name}")
+
+        game_file_path = os.path.join(game_folder, f"{new_name}_game_file.json")
+        game_data = json.loads(load_file(self.game_file_path, "Load Game"))
+
+        if "error" in game_data:
+            logger.error(f"Error loading game: {game_file_path}")
+            return game_data
+
+        self.name = game_data["name"]
+        if game_file_path is not None:
+            self.game_file_path = game_file_path
+        self.turns = [Turn(turn) for turn in game_data["turns"]]
+
+        logger.info(f"Successfully loaded game {self.game_file_path}")
+
+        return None
+            
+    def save_game(self):
+
+        logger.trace(f"Attempting to save game: {self.name}")
+
+        # game_file_path = os.path.join(game_folder, f"{self.name}_game_file.json")
+
+        result = save_file(self.game_file_path, json.dumps(self.__dict__(), indent=4), "Save Game")
+
+        if "error" in result:
+            logger.error(f"Error saving game: {self.game_file_path}")
+            return result
+        
+    def delete_game(self):
+            
+        logger.trace(f"Attempting to delete game: {self.name}")
+
+        # game_file_path = os.path.join(game_folder, f"{self.name}_game_file.json")
+
+        result = delete_file(self.game_file_path, "Delete Game")
+
+        if "error" in result:
+            logger.error(f"Error deleting game: {self.name}")
+            return result
+
+
 
 def load_file(file_path: str = None, log: str = None) -> str:
     """
@@ -12,13 +70,14 @@ def load_file(file_path: str = None, log: str = None) -> str:
     Returns:
     - str: The contents of the file.
     """
-
     if file_path is None:
         logger.error(f"LOAD FILE: {log} | None | No file_path provided. Unable to load file.")
         return {"error": f"LOAD FILE: {log} | None | No file_path provided. Unable to load file."}
-    
+
     log_string = f"LOAD FILE: {log} | {file_path}"
     logger.trace(log_string)
+
+    file_path = os.path.abspath(file_path)
 
     try:
         with open(file_path, "r") as f:
@@ -46,13 +105,15 @@ def save_file(file_path: str = None, file_contents: str = None, log: str = None)
     if file_path is None:
         logger.error(f"SAVE FILE: {log} | None | No file_path provided. Unable to load file.")
         return {"error": f"SAVE FILE: {log} | None | No file_path provided. Unable to load file."}
-    
+
     log_string = f"SAVE FILE: {log} | {file_path}"
     logger.trace(log_string)
 
     if file_contents is None:
         logger.warning(f"{log_string} | Saving empty file")
         file_contents = ""
+
+    file_path = os.path.abspath(file_path)
 
     try:
         with open(file_path, "w") as f:
@@ -79,6 +140,8 @@ def delete_file(file_path: str = None, log: str = None):
     
     log_string = f"DELETE FILE: {log} | {file_path}"
     logger.trace(log_string)
+
+    file_path = os.path.abspath(file_path)
 
     try:
         os.remove(file_path)

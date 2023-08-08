@@ -22,6 +22,7 @@ def randomish_words(length: int = 2, prompt: str = None) -> str:
     if prompt is None:
         return random_string
     
-    # TODO: If a prompt is provided, ask LLM for a words vaguely themed around the prompt. Appending the random_string to the prompt for now.
+    # TODO: If a prompt is provided, ask LLM for a words vaguely themed around the prompt.
+    # Appending the random_string to the prompt for now.
 
     return prompt + "_" + random_string

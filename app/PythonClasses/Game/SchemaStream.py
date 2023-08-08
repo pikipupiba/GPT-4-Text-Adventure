@@ -139,7 +139,7 @@ class PartialSchema:
             return None
         
         # Add chunk to partial json string
-        self.partial_json_string += partial_json_string
+        self.partial_json_string = partial_json_string
         
         try:
             # Full send! See if we can get the full json
@@ -166,9 +166,6 @@ class PartialSchema:
         
         # If partial json string contains any values, return them
         return None
-            
-
-
 
 class SchemaStream:
     def __init__(self):
@@ -198,7 +195,7 @@ class SchemaStream:
         
         self.streaming_json = streaming_json
         
-        if (not self.partial_schema) and (not self.identify_streaming_schema(self.streaming_json)):
+        if (not self.partial_schema) and (not self.identify_streaming_schema()):
             logger.debug("No streaming schema identified. Returning None.")
             return None
         

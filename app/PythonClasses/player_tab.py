@@ -30,7 +30,6 @@ use_models = [
 # Game instance
 game = Game()
 
-global render_dict
 
 # PLAYER TAB
 with gr.Blocks() as player:
@@ -91,7 +90,7 @@ with gr.Blocks() as player:
     #                      PLAYER TAB FUNCTIONS
     #--------------------------------------------------------------
     # Array to update the interface from the game state. Contains all changeable interface elements.
-    render_dict = [
+    render_array = [
         game_name,
         load_game,
         save_game,
@@ -123,7 +122,7 @@ with gr.Blocks() as player:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[player_message],
-            outputs=render_dict,
+            outputs=render_array,
             queue=False
         ),
         # Press enter key
@@ -131,7 +130,7 @@ with gr.Blocks() as player:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[player_message],
-            outputs=render_dict,
+            outputs=render_array,
             queue=False
         ),
         # Click "Retry" button
@@ -139,14 +138,14 @@ with gr.Blocks() as player:
             # Remove the last assistant message from the history
             fn=game.retry,
             inputs=[],
-            outputs=render_dict,
+            outputs=render_array,
             queue=False
         ),
         # Restart the game
             restart.click(
             fn=game.restart,
             inputs=[],
-            outputs=render_dict,
+            outputs=render_array,
         ),
     ]
     
@@ -156,7 +155,7 @@ with gr.Blocks() as player:
         submit_item.then(
             fn=game.stream_prediction,
             inputs=[],
-            outputs=render_dict,
+            outputs=render_array,
             queue=True
         )
     
@@ -167,7 +166,7 @@ with gr.Blocks() as player:
     undo.click(
         fn=game.undo,
         inputs=[],
-        outputs=render_dict,
+        outputs=render_array,
         queue=False
     )
 
@@ -175,7 +174,7 @@ with gr.Blocks() as player:
     delete_game.click(
         fn=game.delete_game,
         inputs=[],
-        outputs=render_dict,
+        outputs=render_array,
         queue=False
     )
 
@@ -198,7 +197,7 @@ with gr.Blocks() as player:
     game_name.submit(
         fn=game.load_game,
         inputs=[],
-        outputs=render_dict,
+        outputs=render_array,
         queue=False
     )
 
@@ -206,7 +205,7 @@ with gr.Blocks() as player:
     load_game.click(
         fn=game.load_game,
         inputs=[],
-        outputs=render_dict,
+        outputs=render_array,
         queue=False
     )
 

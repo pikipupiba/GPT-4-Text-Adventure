@@ -9,11 +9,13 @@ import os
 from loguru import logger
 from PythonClasses.Helpers.randomish_words import randomish_words
 
-from PythonClasses.Game.StateManager import StateManager
-from PythonClasses.Game.Renderer import Renderer
+from PythonClasses.Game.History import History
+from PythonClasses.Game.Render import Render
 from PythonClasses.Game.SystemMessage import SystemMessage
+
+from PythonClasses.LLM.LLM import LLM
 from PythonClasses.Game.SchemaStream import SchemaStream
-from PythonClasses.OpenAI.LLM import LLM
+
 
 
 class Game:
@@ -22,26 +24,31 @@ class Game:
     def __init__(self, name: str = None):
         logger.debug("Initializing Game")
 
-        logger.debug("Starting game")
-
         if name is None:
             name = randomish_words()
             logger.warning(f"No game name provided. Using {name}.")
 
+        self.name = name
+        self.render = Render()
+        self.history = History()
+        self.system_message = SystemMessage(name)
+        
+        
+
         model = "gpt-4-0613"
         system_message = ""
 
-        self.state = StateManager(name, model, system_message, user_message = "Begin the game.")
+        self.state = StateManager(name, model, user_message = "Begin the game.")
 
     def change_model(self, new_model:str=None):
-        logger.debug(f"Changing model to {new_model}")
+        logger.info(f"Changing model to {new_model}")
 
         self.state.turns[-1].model = new_model
 
         logger.trace(f"Successfully changed model to {self.state.turns[-1].model}")
 
     def change_name(self, new_name:str=None, keep_old:bool=True):
-        logger.debug(f"Changing game name to {new_name}")
+        logger.trace(f"Changing game name to {new_name}")
 
         self.state.change_name(new_name, keep_old)
 
@@ -51,30 +58,30 @@ class Game:
         """
         This function is called when the game state changes.
         """
-        return Renderer.render(self.state)
+        return self.renderer.render(self.state)
     
     def save_game(self):
-        logger.debug("Saving game")
+        logger.info(f"Saving game | {self.state.name}")
         self.state.save_game()
         return None
     
     def load_game(self):
-        logger.debug("Loading game")
+        logger.info(f"Loading game | {self.state.name}")
         self.state.load_game()
         return self.render()
     
     def delete_game(self):
-        logger.debug("Deleting game")
+        logger.info(f"Deleting game | {self.state.name}")
         self.state.delete_game()
         return None
     
     def undo(self):
-        logger.debug("Undoing turn")
+        logger.info("Undoing turn")
         self.state.undo()
         return self.render()
     
     def retry(self):
-        logger.debug("Retrying turn")
+        logger.info("Retrying turn")
         self.state.retry()
         return self.render()
 
@@ -82,7 +89,7 @@ class Game:
         """
         This function is called when the game starts.
         """
-        logger.debug("Starting game")
+        logger.info("Restarting game")
 
         # Increment a number on the end of the name
         # Check if name ends in a number
@@ -108,6 +115,10 @@ class Game:
         This function is called when the user submits a message.
         """
         logger.debug(f"Submitting message: {message}")
+
+        # # Add dice roll to the end of the user message
+        # if "intRollArray" not in self.raw_history[-1][0]:
+        #     self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
 
         if self.state.turns[-1].raw[1] is not None:
             self.state.new_turn(message)
