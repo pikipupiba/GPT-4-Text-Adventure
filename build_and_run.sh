@@ -17,7 +17,7 @@ print_help() {
   echo "  Option         Description                                  Default"
   echo "  -k, --name     OpenAI API key.                              $ + OPENAI_API_KEY"
   echo "  -n, --name     Creates <name>_image and <name>_container.   ai-adventure-academy"
-  echo "  -p, --port     Specify the port.                            7878"
+  echo "  -p, --port     Specify the port.                            80"
   echo "  -s, --share    Enable Gradio share mode.                    Off"
   echo "  -h, --help     Show this help message and exit."
 }
@@ -25,7 +25,7 @@ print_help() {
 # Default image name
 NAME="ai-adventure-academy"
 SHARE_MODE=False
-PORT=7878
+PORT=80
 
 # Parse command-line options
 while [[ $# -gt 0 ]]; do
