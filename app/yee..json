@@ -1,0 +1,38 @@
+{
+  "Stats_Schema": {
+    "day": "Monday",
+    "time": 60,
+    "items": [
+      {
+        "name": "Sketchbook and Pencils",
+        "description": "A sketchbook full of blank page potential, paired with a vibrant assortment of colored pencils."
+      },
+      {
+        "name": "Sticker Collection",
+        "description": "A collection of all sorts of stickers, from cute animals to cool logos."
+      },
+      {
+        "name": "Beaded DIY Friendship Bracelet Kit",
+        "description": "A DIY friendship bracelet kit, complete with colorful beads and strings."
+      },
+      {
+        "name": "Trading Card Deck",
+        "description": "A deck of trading cards from a popular game."
+      },
+      {
+        "name": "Rubber Duck",
+        "description": "A yellow rubber duck with a curious twinkle in its eyes."
+      }
+    ],
+    "relationships": [
+      {
+        "relationship": "Acquaintance",
+        "count": 0,
+        "change": 0,
+        "rationale": "You have not interacted with anyone yet.",
+        "names": []
+      }
+    ],
+    "friendCount": 0
+  }
+}

@@ -47,7 +47,7 @@ class Turn:
     # }
 
     # def __init__(self, model: str = None, user_message = None, system_message: str = None, type: str = "normal"):
-    def __init__(self, load_obj, *args):
+    def __init__(self, load_obj = {}, *args):
 
         if load_obj != {}:
             for key, value in load_obj.items():
@@ -69,14 +69,17 @@ class Turn:
         if self.type == "normal":
             # Normal turn usually takes 2 messages. Shows one thing, does another.
             # For adding dice rolls and such to user messages.
-            if isinstance(self.user_message, tuple):
+            if isinstance(self.user_message, list):
+                self.display = [self.user_message[0], None]
+                self.raw = [self.user_message[1], None]
+            elif isinstance(self.user_message, tuple):
                 self.display = [self.user_message[0], None]
                 self.raw = [self.user_message[1], None]
             elif isinstance(self.user_message, str):
                 self.display = [self.user_message, None]
                 self.raw = [self.user_message, None]
             else:
-                logger.warning(f"User message is neither tuple or string. Setting to (None, None).")
+                logger.warning(f"User message is neither list, tuple, or string. Setting to [None, None].")
                 self.display = [None, None]
                 self.raw = [None, None]
         elif self.type == "example":

@@ -1,1 +1,1 @@
-__all__ = ['Game', 'Renderer', 'StateManager', 'Turn', 'SystemMessage', 'SchemaStream']
+__all__ = ['Game', 'Renderer', 'StateManager', 'Turn', 'SystemMessage', 'SchemaStream', 'CompleteJson']

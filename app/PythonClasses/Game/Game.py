@@ -5,9 +5,11 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
+import json
 from typing import List
 from loguru import logger
 from PythonClasses.Helpers.randomish_words import randomish_words
+from PythonClasses.Helpers.helpers import generate_dice_string
 
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.Render import Render
@@ -16,6 +18,7 @@ from PythonClasses.Game.FileManager import FileManager
 
 from PythonClasses.LLM.LLM import LLM
 from PythonClasses.Game.SchemaStream import SchemaStream
+from PythonClasses.Game.CompleteJson import CompleteJson
 
 class Game:
 
@@ -113,13 +116,15 @@ class Game:
         # # Add dice roll to the end of the user message
         # if "intRollArray" not in self.raw_history[-1][0]:
         #     self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
-        complete_user_message = message # UserMessage.build(message)
+        dice_string = generate_dice_string(5)
+        complete_user_message = f'{message}\n{dice_string}'
+        complete_user_message += "\nRemember to use the schemas exactly as provided."
         complete_system_message = SystemMessage.inject_schemas(system_message)
 
         if len(self.history) == 0 or len(self.history[-1].raw[1]) > 0:
-            self.history.append(Turn({}, model, complete_user_message, complete_system_message, type))
+            self.history.append(Turn({}, model, [message, complete_user_message], complete_system_message, type))
 
-        return self.render_history()
+        return [""] + self.render_history()
     
     def get_raw_history(self):
         return [turn.raw for turn in self.history]
@@ -133,8 +138,9 @@ class Game:
         raw_history = self.get_raw_history()
 
         streaming_json = ""
-        schema_stream = None
+        in_streaming_json = False
         did_append_combat = False
+        last_combat_string = ""
         self.history[-1].raw[1] = ""
         self.history[-1].display[1] = ""
 
@@ -151,13 +157,13 @@ class Game:
             # All chunks go to the raw history
             self.history[-1].raw[1] += content
             
-            if schema_stream == None:
+            if not in_streaming_json:
                 # Not currently in json stream, add chunk to chatbot
                 if content == "{\"":
                     # Found the start of a JSON object
-                    schema_stream = SchemaStream()
+                    in_streaming_json = True
                     streaming_json += content
-                    self.history[-1].display[1] += "\n\n---"
+                    self.history[-1].display[1] += "\n\n---\n\n"
                 else:
                     self.history[-1].display[1] += content
             else:
@@ -165,24 +171,39 @@ class Game:
                 # Add content to the streaming json
                 streaming_json += content
 
+                if "\n" in streaming_json:
+                    pass
                 # Check if the streaming json matches any schemas
-                data = schema_stream.check_json_string(streaming_json)
+                data, complete = CompleteJson.complete_json(streaming_json)
 
-                if schema_stream.schema_name == "Combat_Schema":
+                if data is None:
+                    # Parsing json failed for some reason. Such is life.
+                    continue
+
+                if "Combat_Schema" in data:
                     if not did_append_combat:
                         self.history[-1].combat.append({})
                         did_append_combat = True
 
-                    if data is not None:
-                        self.history[-1].combat[-1] = data
+                    self.history[-1].combat[-1] = data["Combat_Schema"]
 
-                elif schema_stream.schema_name == "Stats_Schema":
-                    if data is not None:
-                        self.history[-1].stats = data
+                    combat_string = Render.render_combat_new(self.history[-1].combat[-1])
 
-                if schema_stream.complete:
+                    if combat_string != last_combat_string:
+                        delta = len(combat_string) - len(last_combat_string)
+                        delta_string = combat_string[-delta:]
+                        self.history[-1].display[1] += delta_string
+                        last_combat_string = combat_string
+
+                elif "Stats_Schema" in data:
+                    self.history[-1].stats = data["Stats_Schema"]
+
+                if complete:
+                    if did_append_combat == True:
+                        did_append_combat = False
                     streaming_json = ""
-                    self.schema_stream = None
+                    in_streaming_json = False
+                    self.history[-1].display[1] += "\n\n"
 
             # yield self.history[-1].raw, self.history[-1].display, self.history[-1].stats, self.history[-1].combat
 

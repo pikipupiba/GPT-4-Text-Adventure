@@ -1,3 +1,5 @@
+import json
+
 from typing import Dict, List
 from loguru import logger
 
@@ -34,7 +36,7 @@ class Render:
         day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
 
         # Combat for last turn
-        combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
+        # combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
 
         # Execution for last turn
         execution_json = history[-1].__dict__().get("execution", {})
@@ -47,7 +49,8 @@ class Render:
         return [
             display_history,
 
-            combat_box,
+            # player_message,
+            # combat_box,
             day_box,
             item_box,
             relationship_box,
@@ -59,12 +62,21 @@ class Render:
     def last_stats(history = []):
 
         # Stats are not guaranteed to be in every message, so we need to find the last one
+        i = len(history)-1
         for turn in reversed(history):
+            logger.info(f"Checking turn {i}")
+            i -= 1
             if not hasattr(turn, "stats") or turn.stats == {}:
                 continue
+            
+            last_stats_yee = turn.__dict__()["stats"]
+            last_stats_yee2 = turn.stats
+            logger.info("Last stats:")
+            logger.info(json.dumps(last_stats_yee, indent=4))
+            logger.info(json.dumps(last_stats_yee2, indent=4))
+            return turn.stats
 
-            return turn.__dict__()["stats"]
-
+        logger.info("No stats found in history. Returning {}.")
         return {}
 
     def render_stats(stats = {}):
@@ -87,24 +99,26 @@ class Render:
         items_array = stats.get("items", [])
         items_string = ""
         for item in items_array:
-            items_string += f'{list(item.items())[0][1]} ({list(item.items())[1][1]})\n'
+            name = item.get("name", "???")
+            description = item.get("description", "???")
+            items_string += f'{name} ({description})\n'
         
         # RELATIONSHIPS
         r_array = stats.get("relationships", [])
         relationships_string = ""
         for relationship in r_array:
 
-            relationship.setdefault("relationship", "")
-            relationship.setdefault("count", "")
-            relationship.setdefault("rationale", "")
-            relationship.setdefault("names", [])
+            type = relationship.get("relationship", "")
+            count = relationship.get("count", "")
+            rationale = relationship.get("rationale", "")
+            names = relationship.get("names", [])
 
-            relationships_string += f'{relationship["relationship"]}: {relationship["count"]} ({relationship["rationale"]})\n'
+            relationships_string += f'{type}: {count} ({rationale})\n'
             
-            for name in relationship["names"]:
-                relationships_string += f'{name},'
+            for name in names:
+                relationships_string += f'{name}, '
 
-            relationships_string = relationships_string[:-1] + '\n\n'
+            relationships_string = relationships_string[:-2] + '\n\n'
 
         return [
             day_string,
@@ -128,3 +142,34 @@ class Render:
 
         return combat_string
     
+    def render_combat_new(combat: {}):
+        logger.trace("RENDERING COMBAT!!!")
+
+        combat_string=""
+        
+        if "name" in combat:
+            combat_string += f'---> {combat["name"]}'
+        if "action" in combat:
+            combat_string += f' is trying to {combat["action"]}'
+        if "dcRationale" in combat:
+            combat_string += f'\n---> {combat["dcRationale"]}'
+        if "modifierRationale" in combat:
+            combat_string += f'\n---> {combat["modifierRationale"]}'
+        if "dc" in combat:
+            combat_string += f'\n---> Need: {combat["dc"]}'
+        if "roll" in combat:
+            combat_string += f' | Got: {combat["roll"]}'
+        if "modifier" in combat and "roll" in combat:
+            combat_string += f' + {combat["modifier"]}'
+        if "result" in combat:
+            combat_string += f' = {combat["result"]}'
+        if "success" in combat:
+            if combat["success"] == True:
+                combat_string += f' | Success!'
+            else:
+                combat_string += f' | Failure!'
+        
+
+        logger.trace("DONE RENDERING COMBAT!!!")
+
+        return combat_string

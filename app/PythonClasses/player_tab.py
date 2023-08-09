@@ -40,9 +40,9 @@ with gr.Blocks() as player:
             # CHATBOT
             with gr.Row() as history_area:
                 display_history = gr.Chatbot(height=600)
-            # COMBAT AREA
-            with gr.Row() as combat_area:
-                combat_box = gr.Textbox(label="Combat", interactive=False)
+            # # COMBAT AREA
+            # with gr.Row() as combat_area:
+            #     combat_box = gr.Textbox(label="Combat", interactive=False)
             # USER INPUT
             with gr.Group():
                 with gr.Row() as user_area:
@@ -54,7 +54,7 @@ with gr.Blocks() as player:
                         scale=1,
                         )
                     # MESSAGE
-                    player_message = gr.Textbox(lines=1, label="Player Message", interactive=True, scale=20)
+                    player_message = gr.Textbox(value="what are my stats", lines=1, label="Player Message", interactive=True, scale=20)
                     # BUTTONS
                     submit = gr.Button(value="Do it!", scale=1, size="sm")
                     with gr.Group():
@@ -96,7 +96,7 @@ with gr.Blocks() as player:
         # player_message,
         display_history,
 
-        combat_box,
+        # combat_box,
         day_box,
         item_box,
         relationship_box,
@@ -113,7 +113,7 @@ with gr.Blocks() as player:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[model, player_message, system_message],
-            outputs=render_array,
+            outputs=[player_message] + render_array,
             queue=False
         ),
         # Press enter key
@@ -121,7 +121,7 @@ with gr.Blocks() as player:
             # Add the player message to the history
             fn=game.submit, 
             inputs=[model, player_message, system_message],
-            outputs=render_array,
+            outputs=[player_message] + render_array,
             queue=False
         ),
         # Click "Retry" button

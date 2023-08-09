@@ -32,18 +32,25 @@ class LLM:
         return history_openai_format
 
 
-    def build_openai_system_message(system_message: str = None):
+    def build_openai_system_message(system_message: str = None, model: str = "gpt-4"):
 
         logger.debug("Building system message OpenAI format")
+
 
         if system_message == None:
             logger.warning("No system message provided. Returning None.")
             return None
-
-        system_message_openai_format = {
-            "role": "system",
-            "content": system_message
-        }
+        
+        if "gpt-4" in model:
+            system_message_openai_format = {
+                "role": "system",
+                "content": system_message
+            }
+        else:
+            system_message_openai_format = {
+                "role": "user",
+                "content": system_message
+            }
 
         logger.trace("Successfully built system message OpenAI format")
 
@@ -66,7 +73,7 @@ class LLM:
 
         logger.info(f"Predicting with model: {model} | User message: {raw_history[-1][0]}")
         
-        openai_system_message = LLM.build_openai_system_message(system_message)
+        openai_system_message = LLM.build_openai_system_message(system_message, model)
         openai_history = LLM.build_openai_history_array(raw_history)
 
         messages_openai_format = []

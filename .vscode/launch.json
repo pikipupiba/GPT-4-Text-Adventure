@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "H:\\GitHub\\GPT-4 Text Adventure\\app\\app.py",
+            "program": "H:\\GitHub\\GPT-4 Text Adventure\\app\\yee3.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${workspaceFolder}/app"
