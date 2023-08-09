@@ -13,7 +13,7 @@ with gr.Blocks() as gm:
     with gr.Group(): #.style(equal_height=True):
         with gr.Row():
             system_name = gr.Textbox(
-                            value="",
+                            value="BEST",
                             lines=1,
                             show_label=False,
                             interactive=True,

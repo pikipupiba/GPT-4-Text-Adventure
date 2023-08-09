@@ -7,17 +7,22 @@ from PythonClasses.Helpers.string_helpers import *
 from PythonClasses.Schemas import schema_strings
 
 class PartialSchema:
-    def __init__(self, schema_name: Dict[str, str], partial_json_string: str = None):
+    def __init__(self, schema_name: str, partial_json_string: str = None, sub_schema=None):
 
         logger.debug(f"Initializing PartialSchema with schema: {schema_name}")
         self.schema_name = schema_name
-        self.schema_string = schema_strings[schema_name]
-        self.schema = json.loads(self.schema_string)
+        # If sub_schema is provided, use it as the schema
+        if sub_schema:
+            self.schema_string = json.dumps(sub_schema)
+            self.schema = sub_schema
+        else:
+            self.schema_string = schema_strings[schema_name]
+            self.schema = json.loads(self.schema_string)
         
         self.partial_json_string = partial_json_string
 
         self.data = {}
-        self.current_position = 0
+        self.current_position = len(schema_name) + 4
         self.current_key = None
         self.current_value_type = None
         self.current_value = None
@@ -37,13 +42,13 @@ class PartialSchema:
 
     def find_next_key(self):
         # Check if partial json string contains any remaining keys
-        remaining_keys = set(self.schema.keys()) - set(self.data.keys())
+        remaining_keys = set(self.schema[self.schema_name]["properties"].keys()) - set(self.data.keys())
         for key in remaining_keys:
             key_position = self.partial_json_string.find(f"\"{key}\":", self.current_position)
             if key_position != -1:
                 self.current_key = key
                 # move position to end of key
-                self.current_position = key_position + len(key)
+                self.current_position = key_position + len(key) + 3
                 # We found a key but definitely no value yet, return current data
                 return None
         # No keys found, return current data
@@ -53,23 +58,34 @@ class PartialSchema:
         # Find next non-whitespace character
         value_position, char = next_non_whitespace(self.partial_json_string, self.current_position)
         
-        if value_position is None:
+        if value_position == -1:
             # Definitely no value
             return None
         
         self.current_position = value_position
 
         if char == "{":
-            # Value is a dictionary. Recursion!?!?
+            # Value is a dictionary. Recursion!
             self.current_value_type = "dict"
+            # Extract the sub_schema for the current key
+            sub_schema = self.schema[self.schema_name]["properties"][self.current_key]
+            # Create a new instance of PartialSchema for the dictionary
+            sub_schema = {self.current_key: sub_schema}
+            self.child = PartialSchema(self.current_key, sub_schema=sub_schema)
 
         elif char == "[":
-            # Value is a list
+            # Value is a list. Recursion!
             self.current_value_type = "list"
+            # Extract the sub_schema for the current key
+            sub_schema = self.schema[self.schema_name]["items"][self.current_key]
+            # Create a new instance of PartialSchema for the array
+            sub_schema = {self.current_key: sub_schema}
+            self.child = PartialSchema(self.current_key, sub_schema=sub_schema)
 
         elif char == "\"":
             # Value is a string
             self.current_value_type = "string"
+            self.current_position = value_position + 1
 
         elif char.lower() == "t":
             # Value is a true
@@ -86,6 +102,7 @@ class PartialSchema:
         elif char.isdigit() or char == "-":
             # Value is a number
             self.current_value_type = "number"
+            self.current_position = value_position
 
         return None
     
@@ -95,9 +112,10 @@ class PartialSchema:
 
         if self.current_value_type == "string":
             # Is the string complete?
-            next_quote_position = self.partial_json_string[self.current_position:].find("\"")
+            next_quote_position = self.partial_json_string.find("\"", self.current_position)
             if next_quote_position != -1:
                 # String is complete, return it
+                self.current_value = self.partial_json_string[self.current_position:next_quote_position]
                 self.current_position = next_quote_position + 1
                 self.key_complete()
                 return None
@@ -105,7 +123,7 @@ class PartialSchema:
         elif self.current_value_type == "number":
             # Is the number complete?
             next_non_number_position, next_non_number_char = next_non_number(self.partial_json_string, self.current_position)
-            if next_non_number_position is not None:
+            if next_non_number_position != -1:
                 # Number is complete, return it
                 self.current_value = int(self.partial_json_string[self.current_position:next_non_number_position])
                 self.current_position = next_non_number_position
@@ -119,11 +137,12 @@ class PartialSchema:
         
         elif self.current_value_type == "list":
             # Value is a list. Recursion!?!?
-            pass
+            self.child.check(self.partial_json_string[self.current_position:])
+
 
         elif self.current_value_type == "dict":
             # Value is a dictionary. Recursion!?!?
-            pass
+            self.child.check(self.partial_json_string[self.current_position:])
         
         # Stream the string value into the data
         self.data[self.current_key] = self.current_value
@@ -140,13 +159,21 @@ class PartialSchema:
         
         # Add chunk to partial json string
         self.partial_json_string = partial_json_string
+
+        if len(self.partial_json_string) < self.current_position:
+            # Partial json string is too short to contain any values
+            return None
         
         try:
             # Full send! See if we can get the full json
-            self.full_data = json.loads(self.partial_json_string)
-            logger.trace(f"{self.schema_name} complete!")
-            self.complete = True
-            return None
+            new_line_position = self.partial_json_string.find("\n", self.current_position)
+            if new_line_position != -1:
+                # json string is complete, continue
+                self.data = json.loads(self.partial_json_string[:new_line_position])
+                logger.trace(f"{self.schema_name} complete!")
+                self.complete = True
+                return None
+
         except json.decoder.JSONDecodeError as e:
             # json string is incomplete, continue
             pass
@@ -154,15 +181,14 @@ class PartialSchema:
         if self.current_key is None:
             # We aren't currently working on a key, so let's find one
             self.find_next_key()
-            return None
         
-        if self.current_value_type is None:
+        if (self.current_key is not None) and (self.current_value_type is None):
             # We don't know the value type, so let's find it
             self.find_next_value_type()
-            return None
 
         # We know the value type, so let's get the value
-        self.find_next_value()
+        if (self.current_value_type is not None):
+            self.find_next_value()
         
         # If partial json string contains any values, return them
         return None
@@ -220,7 +246,6 @@ class SchemaStream:
         # Not done and no update to send
         return None
 
-    
     def identify_streaming_schema(self):
         logger.debug("Identifying streaming schema")
 
@@ -229,7 +254,7 @@ class SchemaStream:
             return False
         
         # See how many schemas match the partial json string
-        schema_name_matches = [key for key,value in self.schema_strings.items() if key.startswith(self.streaming_json)]
+        schema_name_matches = [key for key, value in self.schema_strings.items() if key.startswith(self.streaming_json[2:])]
 
         # If there's only one match, set self.streaming_schema to that schema
         if len(schema_name_matches) != 1:

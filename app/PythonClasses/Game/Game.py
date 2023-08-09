@@ -52,13 +52,12 @@ class Game:
         """
         This function is called when the game state changes.
         """
-        logger.info("Rendering game")
         return Render.render_history(self.history)
     
     def save_history(self, history_name: str):
         logger.info(f"Saving game | {history_name}")
 
-        history_json = [turn.__dict__ for turn in self.history]
+        history_json = [turn.__dict__() for turn in self.history]
 
         FileManager.save_file(history_json, f"{history_name}_history.json", "history")
         self.history_name = history_name
@@ -71,7 +70,8 @@ class Game:
         else:
             logger.info(f"Loading history | {history_name}")
             history_json = FileManager.load_file(f"{history_name}_history.json", "history")
-            self.history = [Turn(**turn) for turn in history_json]
+            # TODO: this def doesn't work
+            self.history = [Turn(turn) for turn in history_json]
         
         return self.render_history()
     
@@ -86,6 +86,8 @@ class Game:
         logger.info("Undoing turn")
         if len(self.history) > 0:
             self.history.pop()
+
+        return self.render_history()
     
     def retry(self):
         logger.info("Retrying turn")
@@ -94,12 +96,12 @@ class Game:
         self.history[-1].stats = None
         self.history[-1].combat = None
         self.history[-1].tokens = None
-        return self.render()
+        return self.render_history()
 
     def clear(self):
         logger.info("Clearing history")
         self.history = []
-        return self.render()
+        return self.render_history()
     
     def submit(self, model: str = None, message: str = "", system_message: str = None, type: str = "normal"):
         """
@@ -114,10 +116,10 @@ class Game:
         complete_user_message = message # UserMessage.build(message)
         complete_system_message = SystemMessage.inject_schemas(system_message)
 
-        if len(self.history.last().raw[1]) > 0:
-            self.history.append(Turn(model, complete_user_message, complete_system_message, type))
+        if len(self.history) == 0 or len(self.history[-1].raw[1]) > 0:
+            self.history.append(Turn({}, model, complete_user_message, complete_system_message, type))
 
-        return self.render()
+        return self.render_history()
     
     def get_raw_history(self):
         return [turn.raw for turn in self.history]
@@ -133,8 +135,8 @@ class Game:
         streaming_json = ""
         schema_stream = None
         did_append_combat = False
-        self.state.turns[-1].raw[1] = ""
-        self.state.turns[-1].display[1] = ""
+        self.history[-1].raw[1] = ""
+        self.history[-1].display[1] = ""
 
         for chunk in LLM.predict(model, system_message, raw_history):
 
@@ -147,7 +149,7 @@ class Game:
             real_model = chunk.get("model", model)
 
             # All chunks go to the raw history
-            self.state.turns[-1].raw[1] += content
+            self.history[-1].raw[1] += content
             
             if schema_stream == None:
                 # Not currently in json stream, add chunk to chatbot
@@ -155,9 +157,9 @@ class Game:
                     # Found the start of a JSON object
                     schema_stream = SchemaStream()
                     streaming_json += content
-                    self.state.turns[-1].display[1] += "\n\n---"
+                    self.history[-1].display[1] += "\n\n---"
                 else:
-                    self.state.turns[-1].display[1] += content
+                    self.history[-1].display[1] += content
             else:
                 # Don't add content to the chatbot if they are part of a JSON schema
                 # Add content to the streaming json
@@ -168,20 +170,20 @@ class Game:
 
                 if schema_stream.schema_name == "Combat_Schema":
                     if not did_append_combat:
-                        self.state.turns[-1].combat.append({})
+                        self.history[-1].combat.append({})
                         did_append_combat = True
 
                     if data is not None:
-                        self.state.turns[-1].combat[-1] = data
+                        self.history[-1].combat[-1] = data
 
                 elif schema_stream.schema_name == "Stats_Schema":
                     if data is not None:
-                        self.state.turns[-1].stats = data
+                        self.history[-1].stats = data
 
                 if schema_stream.complete:
                     streaming_json = ""
                     self.schema_stream = None
 
-            # yield self.state.turns[-1].raw, self.state.turns[-1].display, self.state.turns[-1].stats, self.state.turns[-1].combat
+            # yield self.history[-1].raw, self.history[-1].display, self.history[-1].stats, self.history[-1].combat
 
-            yield self.render()
+            yield self.render_history()

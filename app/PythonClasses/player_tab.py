@@ -66,7 +66,7 @@ with gr.Blocks() as player:
             # GAME NAME
             with gr.Group():
                 with gr.Row():
-                    game_name = gr.Textbox(lines=1, label="Game Name", interactive=True)
+                    game_name = gr.Textbox(value="BAH", lines=1, label="Game Name", interactive=True)
                     save_game = gr.Button(value="Save", size="sm")
                     load_game = gr.Button(value="Load", size="sm")
                     delete_game = gr.Button(value="Delete", size="sm")
