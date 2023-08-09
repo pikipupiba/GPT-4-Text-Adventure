@@ -10,7 +10,7 @@ REGION="us-east-1"
 OPENAI_API_KEY=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region "$REGION" | jq -r '.SecretString')
 # Export OPENAI_API_KEY as an environment variable (this will only set it for the duration of the script)
 export OPENAI_API_KEY=$OPENAI_API_KEY
-sudo echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> /etc/environment
+echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> /etc/environment
 
 
 # Define the repo and directory
@@ -22,18 +22,20 @@ REPO_DIR="$CLONE_DIR/GPT-4-Text-Adventure"
 if [ -d "$CLONE_DIR" ]; then
     # If it exists, navigate to it and pull the latest changes
     echo "Directory $CLONE_DIR exists, pulling latest changes for $REPO_URL"
-    cd "$CLONE_DIR"
+    cd "$CLONE_DIR" || return
+    sudo git reset --hard origin/master
+    sudo git clean -fxd
     sudo git pull
 else
     # If it doesn't exist, clone the repo
     echo "Directory $CLONE_DIR does not exist, cloning $REPO_URL"
     sudo git clone "$REPO_URL" "$CLONE_DIR"
-    cd "$CLONE_DIR"
+    cd "$CLONE_DIR" || return
 fi
 
 sudo chmod +x "$REPO_DIR/build_and_run.sh"
 
 # Navigate to the repo
-cd "$REPO_DIR"
+cd "$REPO_DIR" || return
 
-sudo ./build_and_run.sh
+sudo bash ./build_and_run.sh -k "$OPENAI_API_KEY"

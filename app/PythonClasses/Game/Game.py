@@ -21,7 +21,7 @@ from PythonClasses.Game.CompleteJson import CompleteJson
 
 class Game:
 
-    # TODO: Game array
+    GAMES = {}
 
     # Initialize a new Game object for each active game.
     def __init__(self, history_name: str = None, system_name: str = None, ):
@@ -34,6 +34,8 @@ class Game:
         self.system_name = system_name
 
         self.state = "START"
+
+        Game.GAMES[self.history_name] = self
     
     def load_system_message(self, system_name: str):
         if system_name is None:
