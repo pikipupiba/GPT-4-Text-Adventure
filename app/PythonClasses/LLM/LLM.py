@@ -4,10 +4,14 @@ from loguru import logger
 
 import openai
 
-# set Open AI API Key
-api_key = os.getenv('OPENAI_API_KEY')
-assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
-openai.api_key = api_key
+# # set Open AI API Key
+# api_key = os.getenv('OPENAI_API_KEY')
+
+# if (api_key is None) or (len(api_key) == 0):
+#     api_key = os.environ['OPENAI_API_KEY']
+
+# assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
+# openai.api_key = api_key
 
 
 class LLM:
@@ -89,4 +93,23 @@ class LLM:
             messages= messages_openai_format,         
             temperature=1.0,
             stream=True
+        )
+    
+    def summarize(self, text: str = None, model: str = "gpt-4"):
+
+        if text == None:
+            logger.warning("No text provided. Returning [].")
+            return []
+
+        logger.info(f"Summarizing text: {text}")
+
+        return openai.Completion.create(
+            engine="davinci",
+            prompt=text,
+            temperature=0.5,
+            max_tokens=1000,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=["\n"]
         )

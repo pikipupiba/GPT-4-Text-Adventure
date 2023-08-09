@@ -23,7 +23,7 @@ from PythonClasses.Game.Game import Game
 game = Game()
 
 import gradio as gr
-from PythonClasses.gm_tab import system_message
+from PythonClasses.game_master import system_message
 
 use_models = [
     "gpt-4-0613",
@@ -32,7 +32,7 @@ use_models = [
 ]
 
 # PLAYER TAB
-with gr.Blocks() as player:
+with gr.Blocks() as player_tab:
     # STORY AREA
     with gr.Row(variant="compact") as story_area:
         # CHAT AREA

@@ -2,23 +2,42 @@
 # 1. dropdown with saved sessions
 # 2. 
 
-from PythonClasses.player_tab import game
+from PythonClasses.player import game
 
 import gradio as gr
 
 # GM TAB
-with gr.Blocks() as gm:
+with gr.Blocks() as gm_tab:
 
     # SAVE/LOAD SESSION
     with gr.Group(): #.style(equal_height=True):
         with gr.Row():
-            system_name = gr.Textbox(
-                            value="BEST",
-                            lines=1,
-                            show_label=False,
-                            interactive=True,
-                            scale=7,
-                            )
+            with gr.Row():
+                system_name = gr.Textbox(
+                    value="BEST",
+                    lines=1,
+                    show_label=False,
+                    interactive=True,
+                    scale=7,
+                )
+                select_system = gr.Dropdown(
+                    choices=["BEST", "BAH"],
+                    label="System",
+                    scale=1,
+                )
+            with gr.Row():
+                example_name = gr.Textbox(
+                    value="BEST",
+                    lines=1,
+                    show_label=False,
+                    interactive=True,
+                    scale=7,
+                )
+                select_example = gr.Dropdown(
+                    choices=["BEST", "BAH"],
+                    label="System",
+                    scale=1,
+                )
             save = gr.Button(value="Save", scale=1, size="sm")
             load = gr.Button(value="Load", scale=1, size="sm")
             mode = gr.Radio(

@@ -2,4 +2,4 @@ openai
 gradio
 loguru
 tiktoken
-dirtyjson
+boto3

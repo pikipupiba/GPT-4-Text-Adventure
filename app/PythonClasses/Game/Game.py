@@ -5,22 +5,23 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
-import json
-from typing import List
 from loguru import logger
-from PythonClasses.Helpers.randomish_words import randomish_words
+from PythonClasses.Helpers.helpers import randomish_words
 from PythonClasses.Helpers.helpers import generate_dice_string
 
-from PythonClasses.Game.Turn import Turn
-from PythonClasses.Game.Render import Render
-from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.FileManager import FileManager
+from PythonClasses.Game.Render import Render
+from PythonClasses.Game.Turn import Turn
+from PythonClasses.Game.SystemMessage import SystemMessage
+from PythonClasses.Game.UserMessage import UserMessage
 
 from PythonClasses.LLM.LLM import LLM
-from PythonClasses.Game.SchemaStream import SchemaStream
 from PythonClasses.Game.CompleteJson import CompleteJson
 
+
 class Game:
+
+    # TODO: Game array
 
     # Initialize a new Game object for each active game.
     def __init__(self, history_name: str = None, system_name: str = None, ):

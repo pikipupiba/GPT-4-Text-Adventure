@@ -6,7 +6,7 @@ from loguru import logger
 import gradio as gr
 
 from PythonClasses.Game.Turn import Turn
-from PythonClasses.player_tab import *
+from PythonClasses.player import *
 
 class Render:
 
