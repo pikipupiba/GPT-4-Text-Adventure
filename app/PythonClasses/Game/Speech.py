@@ -41,4 +41,3 @@ class Speech:
     def save_speech_response():
         pass
     
-    
