@@ -30,7 +30,7 @@ class Render:
             ]
 
         # Display history for the chatbot
-        display_history = [turn.__dict__().get("display", ["", ""]) for turn in history]
+        display_history = [getattr(turn, "display", ["", ""]) for turn in history]
 
         # Last available stats
         day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
@@ -62,18 +62,16 @@ class Render:
     def last_stats(history = []):
 
         # Stats are not guaranteed to be in every message, so we need to find the last one
-        i = len(history)-1
+        # i = len(history)-1
         for turn in reversed(history):
-            logger.info(f"Checking turn {i}")
+            # logger.info(f"Checking turn {i}")
             i -= 1
-            if not hasattr(turn, "stats") or turn.stats == {}:
+            if not hasattr(turn, "stats") or turn.stats == {} or turn.stats is None:
                 continue
-            
-            last_stats_yee = turn.__dict__()["stats"]
-            last_stats_yee2 = turn.stats
-            logger.info("Last stats:")
-            logger.info(json.dumps(last_stats_yee, indent=4))
-            logger.info(json.dumps(last_stats_yee2, indent=4))
+
+            # last_stats_yee = turn.stats
+            # logger.info("Last stats:")
+            # logger.info(json.dumps(last_stats_yee, indent=4))
             return turn.stats
 
         logger.info("No stats found in history. Returning {}.")
