@@ -65,7 +65,7 @@ class Render:
         # i = len(history)-1
         for turn in reversed(history):
             # logger.info(f"Checking turn {i}")
-            i -= 1
+            # i -= 1
             if not hasattr(turn, "stats") or turn.stats == {} or turn.stats is None:
                 continue
 
@@ -74,7 +74,7 @@ class Render:
             # logger.info(json.dumps(last_stats_yee, indent=4))
             return turn.stats
 
-        logger.info("No stats found in history. Returning {}.")
+        # logger.info("No stats found in history. Returning {}.")
         return {}
 
     def render_stats(stats = {}):

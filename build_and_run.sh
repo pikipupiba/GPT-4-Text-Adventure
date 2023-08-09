@@ -4,6 +4,7 @@
 cleanup() {
   echo "Stopping container..."
   docker stop "$CONTAINER_NAME"
+  docker rm "$CONTAINER_NAME"
 }
 
 # Trap to call cleanup function on Ctrl+C

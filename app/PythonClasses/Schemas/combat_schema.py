@@ -47,7 +47,7 @@ combat_schema={
             },
             "modifier":{
                 "type":"integer",
-                "description":"+/- to the roll based on rationale"
+                "description":"+/- to the roll based on modifier rationale"
             },
             "result":{
                 "type":"integer",

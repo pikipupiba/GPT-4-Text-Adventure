@@ -118,7 +118,8 @@ class Game:
         #     self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
         dice_string = generate_dice_string(5)
         complete_user_message = f'{message}\n{dice_string}'
-        complete_user_message += "\nRemember to use the schemas exactly as provided."
+        if "gpt-3" in model:
+            complete_user_message += "\nRemember to use the schemas exactly as provided."
         complete_system_message = SystemMessage.inject_schemas(system_message)
 
         if len(self.history) == 0 or len(self.history[-1].raw[1]) > 0:
@@ -143,6 +144,9 @@ class Game:
         last_combat_string = ""
         self.history[-1].raw[1] = ""
         self.history[-1].display[1] = ""
+        setattr(self.history[-1], "combat", [])
+        setattr(self.history[-1], "stats", {})
+        setattr(self.history[-1], "execution", {})
 
         for chunk in LLM.predict(model, system_message, raw_history):
 

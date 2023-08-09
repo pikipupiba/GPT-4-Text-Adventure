@@ -26,8 +26,6 @@ game_area = gr.TabbedInterface([player, gm], ["Player", "Game Master"])
 share_mode_string = os.getenv("SHARE_MODE", "false")
 share_mode = share_mode_string.lower() == 'true'
 
-share_mode = True
-
 if __name__ == "__main__":
     game_area.queue()
     game_area.launch(
