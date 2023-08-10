@@ -13,7 +13,7 @@ stats_schema={
             },
             "items":{
                 "type":"array",
-                "description":"Items in the player's inventory",
+                "description":"Items in the player's inventory. Be as succinct as possible.",
                 "items":{
                     "type":"object",
                     "properties":{
@@ -21,7 +21,7 @@ stats_schema={
                             "type":"string",
                             "description":"Name of the item"
                         },
-                        "description":{
+                        "status":{
                             "type":"string",
                             "description":"Information about and/or status of the item"
                         }

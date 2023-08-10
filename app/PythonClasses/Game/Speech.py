@@ -25,6 +25,7 @@ class Speech:
     client = boto3.client("polly", config=config)
 
     def __init__(self):
+        self.input_stream = ""
         self.sentences = []
         self.audios = []
         self.ssml = []

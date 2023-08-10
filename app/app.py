@@ -49,9 +49,7 @@ story_interface_array = [
 with player_tab:
     start_game.click(
         fn=Game,
-        inputs=[
-            game_name,
-        ],
+        inputs=[game_name ],
         outputs=[],
         queue=False,
     ).then(
@@ -59,6 +57,17 @@ with player_tab:
         inputs=[game_name],
         outputs=story_render_array + story_interface_array,
         queue=False,
+    ).then(
+        # Add the player message to the history
+        fn=Game.submit,
+        inputs=[game_name, user_message, system_message, select_model],
+        outputs=[user_message] + story_render_array,
+        queue=False
+    ).then(
+        fn=Game.stream_prediction,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=True
     )
 
     #--------------------------------------------------------------

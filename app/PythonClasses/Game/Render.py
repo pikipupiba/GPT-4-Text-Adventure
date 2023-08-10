@@ -63,8 +63,8 @@ class Render:
         items_string = ""
         for item in items_array:
             name = item.get("name", "???")
-            description = item.get("description", "???")
-            items_string += f'{name} ({description})\n'
+            status = item.get("status", "???")
+            items_string += f'{name} ({status})\n'
         
         # RELATIONSHIPS
         r_array = stats.get("relationships", [])

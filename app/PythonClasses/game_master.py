@@ -59,7 +59,8 @@ with gr.Blocks() as gm_tab:
                         label="System",
                         interactive=True,
                         scale=1,
-                        value="")
+                        value=FileManager.load_system_message("BEST_system_message"),
+                    )
     
     # example_history = gr.Code(
     #                     lines=40,
