@@ -1,29 +1,59 @@
 import os, json
 from loguru import logger
 
-data_folder = os.path.join(os.getcwd(), "data")
-game_folder = os.path.join(data_folder, "game_files")
-system_message_folder = os.path.join(data_folder, "system_messages")
-
+from PythonClasses.Game.Turn import Turn
+from PythonClasses.Game.Game import Game
 class FileManager:
+# The `FileManager` class is responsible for managing file operations such as saving, loading,
+# and deleting files. It provides methods for saving system messages, saving and loading game
+# history, and performing general file operations like getting file names, building file paths,
+# and deleting files. The class uses the `os` and `json` modules for file operations and the
+# `loguru` module for logging.
 
     DATA_FOLDER = os.path.join(os.getcwd(), "data")
+    HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "history")
+    SYSTEM_MESSAGE_FOLDER = os.path.join(os.getcwd(), "data", "system_message")
+    EXAMPLE_HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "example_history")
 
-    def build_path(file_name: str = None, folder: str = None):
-        if folder is None:
-            return os.path.abspath(os.path.join(FileManager.DATA_FOLDER, file_name))
-        else:
-            return os.path.abspath(os.path.join(FileManager.DATA_FOLDER, folder, file_name))
+    def save_system_message(system_message_name: str, system_message: str):
+        logger.info(f"Saving system message | {system_message_name}")
+        FileManager.save_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", system_message)
 
-    def load_file(file_name: str = None, folder: str = None):
+    def load_system_message(system_message_name: str):
+        logger.info(f"Loading system message | {system_message_name}")
+        system_message = FileManager.load_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", default="")
+        return system_message
+    
+    def save_history(game_name: str, history_name: str):
+        logger.info(f"Saving history | {game_name} -> {history_name}")
+        FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", Game._history_to_dict(game_name))
+    
+    def load_history(history_name: str):
+        logger.info(f"Loading history | {history_name}")
+        history_dict_array = FileManager.load_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", default=[])
+        history = [Turn(turn) for turn in history_dict_array]
+        return history
+    
+    def delete_history(history_name: str):
+        if history_name is None: return
+        logger.info(f"Deleting history | {history_name}")
+        FileManager.delete_file(FileManager.HISTORY_FOLDER, f"{history_name}.json")
 
-        if file_name is None:
-            return {}
+    def get_file_names(folder: str = None):
+        return [file_name.split(".")[0] for file_name in os.listdir(folder) if file_name != ""]
 
-        file_path = FileManager.build_path(file_name, folder)
+    def build_path(folder: str, file_name: str):
+        return os.path.abspath(os.path.join(folder, file_name))
+
+    def load_file(folder: str, file_name: str, default = ""):
+
+        if (folder is None) or (file_name is None):
+            return default
+
+        full_path = FileManager.build_path(folder, file_name)
 
         try:
-            with open(file_path, "r") as f:
+            with open(full_path, "r") as f:
                 file = f.read()
             try:
                 return json.loads(file)
@@ -31,58 +61,45 @@ class FileManager:
                 return file
         except FileNotFoundError as e:
             logger.error(f"File not found: {e}")
-            return {}
+            return default
         except IOError as e:
             logger.error(f"IOError: {e}")
-            return {}
+            return default
         except json.decoder.JSONDecodeError as e:
             logger.error(f"JSONDecodeError: {e}")
-            return {}
+            return default
 
-    def save_file(file_contents = None, file_name: str = None,  folder: str = None):
-        if file_name is None:
+    def save_file(folder: str, file_name: str, file_contents = ""):
+        if (folder is None) or (file_name is None):
             return
 
-        if file_contents is None:
-            logger.warning(f"File contents is *None*, saving empty file")
-            file_contents = {}
-
-        folder_path = FileManager.build_path(folder)
-        file_path = FileManager.build_path(file_name, folder)
+        full_path = FileManager.build_path(folder, file_name)
 
         try:
             # create folder if it doesn't exist
-            if not os.path.exists(folder_path):
-                os.makedirs(folder_path)
-            with open(file_path, "w") as f:
-                try:
+            if not os.path.exists(folder):
+                os.makedirs(folder)
+
+            with open(full_path, "w") as f:
+                if (file_name.split(".")[-1] == "json") and (type(file_contents) != str):
                     f.write(json.dumps(file_contents, indent=4))
-                except:
+                elif (file_name.split(".")[-1] == "txt") and (type(file_contents) == str):
                     f.write(file_contents)
         except IOError as e:
             logger.error(f"IOError: {e}")
         except json.decoder.JSONDecodeError as e:
             logger.error(f"JSONDecodeError: {e}")
         
-    def delete_file(file_name: str = None, folder: str = None):
-        """
-        Delete a file from a file path.
+    def delete_file(folder: str, file_name: str):
 
-        Parameters:
-        - file_path (str): The path to the file.
-
-        Returns:
-        - dict: An error message if the file could not be deleted, otherwise None.
-        """
-        if file_path is None:
-            logger.error(f"No file_path provided. Unable to delete file.")
+        if (folder is None) or (file_name is None):
             return
 
-        file_path = FileManager.build_path(file_name, folder)
+        full_path = FileManager.build_path(folder, file_name)
 
         try:
-            os.remove(file_path)
-        except FileNotFoundError:
-            logger.error(f"{file_name} | File not found")
+            os.remove(full_path)
+        except FileNotFoundError as e:
+            logger.error(f"{full_path} | File not found error: {e}")
         except IOError as e:
-            logger.error(f"{file_name} | IOError: {e}")
+            logger.error(f"{full_path} | IOError: {e}")

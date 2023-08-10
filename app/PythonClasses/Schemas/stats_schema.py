@@ -13,7 +13,7 @@ stats_schema={
             },
             "items":{
                 "type":"array",
-                "description":"Items in the player's inventory",
+                "description":"Items in the player's inventory. Be as succinct as possible.",
                 "items":{
                     "type":"object",
                     "properties":{
@@ -21,9 +21,9 @@ stats_schema={
                             "type":"string",
                             "description":"Name of the item"
                         },
-                        "description":{
+                        "status":{
                             "type":"string",
-                            "description":"Information about and/or status of the item"
+                            "description":"The current status or condition of the item"
                         }
                     }
                 }
@@ -36,7 +36,7 @@ stats_schema={
                     "properties":{
                         "relationship":{
                             "type":"string",
-                            "description":"Type of relationship",
+                            "description":"Type of relationship. Be creative, precise, and concise.",
                             "examples":[
                                 "Acquaintance",
                                 "Friend",
@@ -58,13 +58,9 @@ stats_schema={
                             "type":"string",
                             "description":"rationale for the change in the number of relationships of this type"
                         },
-                        "names":{
-                            "type":"array",
-                            "description":"names of important characters in this type of relationship. Only for named characters",
-                            "items":{
-                                "type":"string",
-                                "description":"Name of the character"
-                            }
+                        "info":{
+                            "type":"string",
+                            "description":"What has changed about the NPCs in this relationship. Names, sentiments, etc."
                         }
                     }
                 }

@@ -14,6 +14,11 @@ import openai
 # openai.api_key = api_key
 
 
+# `LLM` is a class that provides methods for interacting with the OpenAI API. It includes
+# methods for generating responses in a chat-like format (`oneshot`), building the history array
+# in the required OpenAI format (`build_openai_history_array`), building the system message in
+# the required OpenAI format (`build_openai_system_message`), predicting the next response based
+# on the model, system message, and history (`predict`), and summarizing text (`summarize`).
 class LLM:
     def oneshot(system_message: str, user_message: str, model: str = "gpt-4"):
         chat = openai.ChatCompletion.create(
@@ -24,7 +29,7 @@ class LLM:
             ],
         )
         return chat.choices[0].message["content"]
-
+    
     def build_openai_history_array(raw_history):
         logger.debug("Building history OpenAI format")
 

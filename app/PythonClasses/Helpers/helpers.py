@@ -1,6 +1,11 @@
 import random
 
 def generate_dice_string(num_dice:int):
+# The `generate_dice_string` function generates a string representation of a list of random dice
+# rolls. It takes an input `num_dice` which specifies the number of dice rolls to generate. It
+# uses the `random.randint` function to generate a random number between 1 and 20 for each dice
+# roll. The function then constructs a string in the format "intRollArray:[roll1, roll2, ...,
+# rollN]" where roll1, roll2, ..., rollN are the randomly generated dice rolls.
     dice_string = "intRollArray:["
 
     for i in range(num_dice):
@@ -14,6 +19,11 @@ def generate_dice_string(num_dice:int):
 
 
 def randomish_words(length: int = 2, prompt: str = None) -> str:
+# The `randomish_words` function generates a random word string based on a given length. It
+# selects words from a predefined list of fruits and animals. The function randomly chooses words
+# from the list and concatenates them with underscores to form the random word string. If a prompt
+# is provided, the function appends the random word string to the prompt, separated by an
+# underscore.
     """
     Returns a random word string from {length} words from the list of words
     """
