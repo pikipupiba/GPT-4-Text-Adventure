@@ -1,50 +1,59 @@
-# TODO:
-# 1. dropdown with saved sessions
-# 2. 
+import gradio as gr
 
+from PythonClasses.Game.FileManager import FileManager
 from PythonClasses.player import game
 
-import gradio as gr
 
 # GM TAB
 with gr.Blocks() as gm_tab:
 
-    # SAVE/LOAD SESSION
-    with gr.Group(): #.style(equal_height=True):
+    with gr.Group():
+        # SAVE/LOAD SESSION
         with gr.Row():
-            with gr.Row():
-                system_name = gr.Textbox(
-                    value="BEST",
-                    lines=1,
-                    show_label=False,
-                    interactive=True,
-                    scale=7,
-                )
-                select_system = gr.Dropdown(
-                    choices=["BEST", "BAH"],
-                    label="System",
-                    scale=1,
-                )
-            with gr.Row():
-                example_name = gr.Textbox(
-                    value="BEST",
-                    lines=1,
-                    show_label=False,
-                    interactive=True,
-                    scale=7,
-                )
-                select_example = gr.Dropdown(
-                    choices=["BEST", "BAH"],
-                    label="System",
-                    scale=1,
-                )
-            save = gr.Button(value="Save", scale=1, size="sm")
-            load = gr.Button(value="Load", scale=1, size="sm")
-            mode = gr.Radio(
-                    choices=["Overwrite", "Prepend", "Append"],
-                    show_label=False,
-                    value="Overwrite",
-                    scale=3)
+            system_name = gr.Textbox(
+                value="BEST",
+                lines=1,
+                show_label=True,
+                label="System Message Name",
+                interactive=True,
+                scale=2,
+            )
+
+            save_system_message = gr.Button(value="Save", scale=1, size="sm")
+            load_system_message = gr.Button(value="Load", scale=1, size="sm")
+
+            select_system_message = gr.Dropdown(
+                choices=FileManager.get_file_names(FileManager.SYSTEM_FOLDER),
+                show_label=True,
+                label="Select System Message",
+                scale=2,
+            )
+            
+        with gr.Row():
+            example_history_name = gr.Textbox(
+                value="",
+                lines=1,
+                show_label=True,
+                label="Example History Name",
+                interactive=True,
+                scale=2,
+            )
+
+            save_example_history = gr.Button(value="Save", scale=1, size="sm")
+            load_example_history = gr.Button(value="Load", scale=1, size="sm")
+
+            select_example_history = gr.Dropdown(
+                choices=FileManager.get_file_names(FileManager.EXAMPLE_HISTORY_FOLDER),
+                show_label=True,
+                label="Select Example History",
+                scale=2,
+            )
+
+    load_mode = gr.Radio(
+            choices=["Overwrite", "Prepend", "Append"],
+            show_label=False,
+            value="Overwrite",
+            scale=2)
         
     # SYSTEM MESSAGE
     system_message = gr.Textbox(
@@ -63,17 +72,49 @@ with gr.Blocks() as gm_tab:
                         language="json")
 
     # GM TAB FUNCTIONS
-    save.click(
+    save_system_message.click(
         fn=game.save_system_message,
-        inputs=[system_name],
-        outputs=[]
+        inputs=[system_name, system_message],
+        outputs=[],
+        queue=False
     )
     
-    load.click(
+    load_system_message.click(
         fn=game.load_system_message,
-        inputs=[system_name],
-        outputs=[system_message]
+        inputs=[select_system_message],
+        outputs=[system_message],
+        queue=False
     )
+
+    select_system_message.change(
+        fn=game.load_system_message,
+        inputs=[select_system_message],
+        outputs=[system_message],
+        queue=False
+    )
+
+    save_system_message.click(
+        fn=game.save_system_message,
+        inputs=[system_name, system_message],
+        outputs=[],
+        queue=False
+    )
+    
+    load_example_history.click(
+        fn=game.load_example_history,
+        inputs=[select_example_history],
+        outputs=[example_history],
+        queue=False
+    )
+
+    select_example_history.change(
+        fn=game.load_example_history,
+        inputs=[select_example_history],
+        outputs=[example_history],
+        queue=False
+    )
+
+    
     
     # example_history.change(
     #     fn=game.state.system_message.update_example_history,

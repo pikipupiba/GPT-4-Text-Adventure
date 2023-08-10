@@ -20,7 +20,7 @@ logger.add(f"logs/{uid}"+"_{time:YYYY-MM-DD}_info.log", format="{time:YYYY-MM-DD
 logger.level("md",21)
 logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", level="md")
 
-game_area = gr.TabbedInterface([player_tab, gm_tab], ["Player", "Game Master"])
+game_area = gr.TabbedInterface([player_tab, gm_tab, config_tab], ["Player", "Game Master", "Config"])
 # chat.queue()
 # chat.launch(inbrowser=True, show_error=True)
 share_mode_string = os.getenv("SHARE_MODE", "false")

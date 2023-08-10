@@ -7,9 +7,11 @@ apt-get install -y git awscli jq
 # Fetch the OPENAI_API_KEY from AWS Secrets Manager
 SECRET_NAME="OPENAI_API_KEY"
 REGION="us-east-1"
-OPENAI_API_KEY=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region "$REGION" | jq -r '.SecretString')
+OPENAI_API_KEY_SECRET=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region "$REGION" | jq -r '.SecretString')
+OPENAI_API_KEY=$(echo "$OPENAI_API_KEY_SECRET" | jq -r '.OPENAI_API_KEY')
 # Export OPENAI_API_KEY as an environment variable (this will only set it for the duration of the script)
-export OPENAI_API_KEY=$OPENAI_API_KEY
+export OPENAI_API_KEY="$OPENAI_API_KEY"
+# Add OPENAI_API_KEY to /etc/environment so it persists after the script is done
 echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> /etc/environment
 
 

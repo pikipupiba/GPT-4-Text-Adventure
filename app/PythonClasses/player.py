@@ -25,11 +25,9 @@ game = Game()
 import gradio as gr
 from PythonClasses.game_master import system_message
 
-use_models = [
-    "gpt-4-0613",
-    "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-16k-0613"
-]
+
+
+
 
 # PLAYER TAB
 with gr.Blocks() as player_tab:
@@ -46,21 +44,11 @@ with gr.Blocks() as player_tab:
             # USER INPUT
             with gr.Group():
                 with gr.Row() as user_area:
-                    # MODEL
-                    model = gr.Dropdown(
-                        choices=use_models,
-                        label="Model",
-                        value=use_models[0],
-                        scale=1,
-                        )
                     # MESSAGE
                     player_message = gr.Textbox(value="what are my stats", lines=1, label="Player Message", interactive=True, scale=20)
                     # BUTTONS
                     submit = gr.Button(value="Do it!", scale=1, size="sm")
-                    with gr.Group():
-                        retry = gr.Button(value="Retry", size="sm")
-                        undo = gr.Button(value="Undo", size="sm")
-                        clear = gr.Button(value="Clear", size="sm")
+                    
         # TEAM/STATS AREA
         with gr.Column(scale=1, variant="compact") as stats_area:
             # GAME NAME

@@ -21,37 +21,25 @@ from PythonClasses.Game.CompleteJson import CompleteJson
 
 class Game:
 
+    INIT, START, STOP, PREDICTING = range(4)
+
     GAMES = {}
 
     # Initialize a new Game object for each active game.
-    def __init__(self, history_name: str = None, system_name: str = None, ):
+    def __init__(self, history_name: str, system_name: str):
         logger.debug("Initializing Game")
+        history_dict_array = FileManager.load_history(history_name)
+        self.history = [Turn(turn) for turn in history_dict_array]
+        self.state = Game.INIT
+        Game.GAMES[history_name] = self
 
-        self.load_history(history_name)
-        self.load_system_message(system_name)
-
-        self.history_name = history_name
-        self.system_name = system_name
-
-        self.state = "START"
-
-        Game.GAMES[self.history_name] = self
-    
-    def load_system_message(self, system_name: str):
-        if system_name is None:
-            system_name = randomish_words()
-            logger.warning(f"No system name provided. Using {system_name}.")
-            self.system_message = ""
-        else:
-            logger.info(f"Loading system message | {system_name}")
-            self.system_message = FileManager.load_file(f"{system_name}_system_message.txt", "system_message")
-
-        return self.system_message
-
-    def save_system_message(self, system_name: str):
-        logger.info(f"Saving system message | {system_name}")
-        FileManager.save_file(self.system_message, f"{system_name}_system_message.txt", "system_message")
-        self.system_name = system_name
+    def __del__(self):
+        logger.debug("Deleting Game")
+        del self
+        # delete any empty games
+        for game_name, game in Game.GAMES.items():
+            if game is None:
+                del Game.GAMES[game_name]
 
 
     def render_history(self):
@@ -60,39 +48,10 @@ class Game:
         """
         return Render.render_history(self.history)
     
-    def save_history(self, history_name: str):
-        logger.info(f"Saving game | {history_name}")
-
-        history_json = [turn.__dict__() for turn in self.history]
-
-        FileManager.save_file(history_json, f"{history_name}_history.json", "history")
-        self.history_name = history_name
-    
-    def load_history(self, history_name: str):
-        if history_name is None:
-            history_name = randomish_words()
-            logger.warning(f"No history name provided. Using {history_name}.")
-            self.history = []
-        else:
-            logger.info(f"Loading history | {history_name}")
-            history_json = FileManager.load_file(f"{history_name}_history.json", "history")
-            # TODO: this def doesn't work
-            self.history = [Turn(turn) for turn in history_json]
-        
-        return self.render_history()
-    
-    def delete_history(self, name: str):
-
-        if name is None:
-            name = self.name
-        logger.info(f"Deleting game | {name}")
-        FileManager.delete_file(f"{self.name}_history.json", "history")
-    
     def undo(self):
-        logger.info("Undoing turn")
+        logger.info("Undoing last turn")
         if len(self.history) > 0:
-            self.history.pop()
-
+            del self.history[-1]
         return self.render_history()
     
     def retry(self):
@@ -106,7 +65,8 @@ class Game:
 
     def clear(self):
         logger.info("Clearing history")
-        self.history = []
+        for turn in self.history:
+            del turn
         return self.render_history()
     
     def submit(self, model: str = None, message: str = "", system_message: str = None, type: str = "normal"):
