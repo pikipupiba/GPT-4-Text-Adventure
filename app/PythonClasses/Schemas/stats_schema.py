@@ -9,11 +9,11 @@ stats_schema={
             },
             "time":{
                 "type":"integer",
-                "description":"Minutes left in the day after the actions this turn. Be realistic and precise."
+                "description":"Minutes left in the day after the actions this turn. Be realistic and precise. The player asking a question about the game or their environment costs no time."
             },
             "items":{
                 "type":"array",
-                "description":"Items in the player's inventory. Be as succinct as possible.",
+                "description":"Items in the player's inventory. Be as succinct as possible. Only include items in the object if they have changed.",
                 "items":{
                     "type":"object",
                     "properties":{

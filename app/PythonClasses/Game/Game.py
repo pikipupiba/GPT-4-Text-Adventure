@@ -126,6 +126,7 @@ class Game:
         """
         display_history = Game._display_history(game_name)
         stats = Game._stats(game_name)
+        
         return Render.render_story(display_history, stats)
     
     def undo(game_name: str):
@@ -217,7 +218,7 @@ class Game:
                     # Found the start of a JSON object
                     in_streaming_json = True
                     streaming_json += content
-                    Game._last_display(game_name)[1] += "\n\n---\n\n"
+                    Game._last_display(game_name)[1] += "\n\n"
                 else:
                     Game._last_display(game_name)[1] += content
             else:

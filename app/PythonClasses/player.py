@@ -41,7 +41,7 @@ Every 'day' in the game lasts for an hour, and actions consume time. Make sure t
 
 Finally, if you are confused or don’t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.
 
-Start by telling me what your name is!
+Start by telling me what your character's name is!
         '''
         ]
     ]
@@ -79,7 +79,7 @@ with gr.Blocks() as player_tab:
 
                 game_name = gr.Textbox(
                     value="",
-                    placeholder="What is your team name?",
+                    placeholder="Character Name",
                     lines=1,
                     label="Enter Team Name",
                     interactive=True,
