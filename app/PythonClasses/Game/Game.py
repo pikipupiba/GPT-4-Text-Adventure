@@ -31,12 +31,44 @@ class Game:
     GAMES = {}
 
     # Initialize a new Game object for each active game.
-    def __init__(self, game_name: str):
+    def __init__(self, game_name: str, history: [], system_message: str):
         logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
         self.game_name = game_name
 
         self.history = []
+
+        intro_json = {
+            "type": "normal",
+            "model": "gpt-4-0613",
+            "system_message": system_message,
+            "display": history[0],
+            "raw": history[0],
+            "stats": {
+                "day": "Monday",
+            },
+            "combat": [],
+            "execution": {},
+        }
+
+        self.history.append(Turn(intro_json))
+
+        choose_items_string = f"{game_name}\nLet's choose items now."
+
+        choose_items_json = {
+            "type": "normal",
+            "model": "gpt-4-0613",
+            "system_message": system_message,
+            "display": [game_name, None],
+            "raw": [choose_items_string, None],
+            "stats": {
+                "day": "Monday",
+            },
+            "combat": [],
+            "execution": {},
+        }
+
+        self.history.append(Turn(choose_items_json))
         
         Game.GAMES[game_name] = self
 
@@ -138,7 +170,7 @@ class Game:
             complete_user_message += "\nRemember to use the schemas exactly as provided."
         complete_system_message = SystemMessage.inject_schemas(system_message)
 
-        if len(Game._history(game_name)) == 0 or len(Game._last_raw(game_name)[1]) > 0:
+        if (len(Game._history(game_name)) == 0) or (Game._last_raw(game_name)[1] == None) or (len(Game._last_raw(game_name)[1]) > 0):
             Game._history(game_name).append(Turn({}, model, [message, complete_user_message], complete_system_message, type))
 
         return [""] + Game.render_story(game_name)

@@ -9,7 +9,7 @@ with gr.Blocks() as gm_tab:
         # SAVE/LOAD SESSION
         with gr.Row():
             system_message_name = gr.Textbox(
-                value="BEST",
+                value="NEW",
                 lines=1,
                 show_label=True,
                 label="System Message Name",
@@ -24,6 +24,7 @@ with gr.Blocks() as gm_tab:
                 choices=FileManager.get_file_names(FileManager.SYSTEM_MESSAGE_FOLDER),
                 show_label=True,
                 label="Select System Message",
+                value="BEST_system_message",
                 scale=2,
             )
             

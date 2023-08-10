@@ -10,7 +10,7 @@
 # 8. try to make the story more interesting
 #    - add more characters with more agency
 #    - special events/plot twists (on friday)
-#       - timeout, thunderstorm (inside that day), get sick, field trip
+#       - timeout, thunderstorm (insideWelcome that day), get sick, field trip
 # [almost] 9. fix dice rolls
 # 10. add session functionality
 # 11. Dropdown to select team name from saved sessions
@@ -20,6 +20,32 @@
 
 import gradio as gr
 
+intro = [
+    [
+        None,
+        '''
+Welcome to 'AI Adventure Academy'!
+(an interactive storytelling game)
+
+You, as a team, must step into the shoes of the main character…
+
+Main Character: a fifth grader on your first day at a new school
+Birthday: Saturday
+Invitations handed out: ZERO
+
+…And I, as the game master, will describe the scenarios and characters you meet, while you shape the narrative with your actions. Your goal? Navigate recess, make decisions, and forge friendships, all before your birthday on Saturday. If you don’t make any friends your birthday party will be sad and lonely. Nobody wants that. Much like the first day of school, your only limit is your imagination.
+
+The game evolves dynamically based on your choices and actions. If you decide to act against your apparent goal, that's allowed, provided it doesn't conflict with the story's established setting.
+
+Every 'day' in the game lasts for an hour, and actions consume time. Make sure to keep an eye on your stats on the right side of the screen. This will tell you what day it is, how much time you have left, the items you haven’t used, and any relationships you have formed with your peers. At the end of each day, a new day will start and and I will introduce new scenarios at recess.
+
+Finally, if you are confused or don’t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.
+
+Start by telling me what your name is!
+        '''
+        ]
+    ]
+
 # PLAYER TAB
 with gr.Blocks() as player_tab:
     # STORY AREA
@@ -28,7 +54,7 @@ with gr.Blocks() as player_tab:
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
-                value=[[None, "Welcome to AI Adventure Academy, where every day is an opportunity for a new adventure."]], 
+                value=intro, 
             )
 
             # USER MESSAGE AREA

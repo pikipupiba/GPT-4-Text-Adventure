@@ -80,14 +80,9 @@ class Render:
             type = relationship.get("relationship", "")
             count = relationship.get("count", "")
             rationale = relationship.get("rationale", "")
-            names = relationship.get("names", [])
+            info = relationship.get("info", "")
 
-            relationships_string += f'{type}: {count} ({rationale})\n'
-            
-            for name in names:
-                relationships_string += f'{name}, '
-
-            relationships_string = relationships_string[:-2] + '\n\n'
+            relationships_string += f'{type}: {count} ({rationale})\n{info}\n\n'
 
         return [
             day_string,
@@ -108,19 +103,19 @@ class Render:
             combat_string += f'\n---> {combat["dcRationale"]}'
         if "modifierRationale" in combat:
             combat_string += f'\n---> {combat["modifierRationale"]}'
-        if "dc" in combat:
-            combat_string += f'\n---> Need: {combat["dc"]}'
-        if "roll" in combat:
-            combat_string += f' | Got: {combat["roll"]}'
-        if "modifier" in combat and "roll" in combat:
-            combat_string += f' + {combat["modifier"]}'
-        if "result" in combat:
-            combat_string += f' = {combat["result"]}'
-        if "success" in combat:
-            if combat["success"] == True:
-                combat_string += f' | Success!'
-            else:
-                combat_string += f' | Failure!'
+        # if "dc" in combat:
+        #     combat_string += f'\n---> Need: {combat["dc"]}'
+        # if "roll" in combat:
+        #     combat_string += f' | Got: {combat["roll"]}'
+        # if "modifier" in combat and "roll" in combat:
+        #     combat_string += f' + {combat["modifier"]}'
+        # if "result" in combat:
+        #     combat_string += f' = {combat["result"]}'
+        # if "success" in combat:
+        #     if combat["success"] == True:
+        #         combat_string += f'\n---> | Success! |'
+        #     else:
+        #         combat_string += f'\n---> | Failure! |'
         
 
         logger.trace("DONE RENDERING COMBAT!!!")

@@ -55,6 +55,10 @@ class Turn:
 
         if load_obj != {}:
             for key, value in load_obj.items():
+                if key == "display" or key == "raw":
+                    for i in range(len(value)):
+                        if value[i] is "":
+                            value[i] = None
                 setattr(self, key, value)
             return
 
@@ -94,6 +98,11 @@ class Turn:
             # Debug turn requires 1 message. Shows something but does not affect raw history.
             self.display = [self.user_message, None]
             self.raw = [None, None]
+
+        if len(self.display[0]) == 0:
+            self.display[0] = None
+        if len(self.raw[0]) == 0:
+            self.raw[0] = None
 
         self.stats = {}
         self.combat = []

@@ -20,6 +20,10 @@ combat_schema={
                 "type":"string",
                 "description":"the rationale for the DC"
             },
+            "dc":{
+                "type":"integer",
+                "description":"DC for the action. Harder actions have higher DCs"
+            },
             "modifierRationale":{
                 "type":"string",
                 "description":"rationale for roll modifier to allow for positive or negative externalities.",
@@ -33,21 +37,17 @@ combat_schema={
                 #     "The character is very skilled",
                 # ]
             },
+            "modifier":{
+                "type":"integer",
+                "description":"+/- to the roll based on modifier rationale"
+            },
             "numPreviousRolls":{
                 "type":"integer",
                 "description":"number of dice rolled so far this turn. Starts at 0 every time and increments by 1 for each roll",
             },
-            "dc":{
-                "type":"integer",
-                "description":"DC for the action. Harder actions have higher DCs"
-            },
             "roll":{
                 "type":"integer",
                 "description":"the user will send an array of dice rolls with each turn called intRollArray[]. use intRollArray[numPreviousRolls] for this value"
-            },
-            "modifier":{
-                "type":"integer",
-                "description":"+/- to the roll based on modifier rationale"
             },
             "result":{
                 "type":"integer",

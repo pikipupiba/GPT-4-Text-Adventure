@@ -51,7 +51,7 @@ story_interface_array = [
 with player_tab:
     start_game.click(
         fn=Game,
-        inputs=[game_name],
+        inputs=[game_name, chatbot, system_message],
         outputs=[],
         queue=False,
     ).then(
