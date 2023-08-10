@@ -24,9 +24,9 @@ class Speech:
     )
     client = boto3.client("polly", config=config)
 
-    def __init__(self):
+    def __init__(self, directory: str):
+        self.directory = directory
         self.sentences = []
-        self.audios = []
         self.ssml = []
         
     def add_sentence(self, text: str):
