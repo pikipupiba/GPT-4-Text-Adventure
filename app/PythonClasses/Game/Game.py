@@ -10,7 +10,6 @@ from loguru import logger
 from PythonClasses.Helpers.helpers import randomish_words
 from PythonClasses.Helpers.helpers import generate_dice_string
 
-from PythonClasses.Game.FileManager import FileManager
 from PythonClasses.Game.Render import Render
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.SystemMessage import SystemMessage
@@ -27,23 +26,22 @@ class Game:
     GAMES = {}
 
     # Initialize a new Game object for each active game.
-    def __init__(self, history_name: str):
-        logger.debug(f"Initializing Game: {history_name}")
+    def __init__(self, game_name: str):
+        logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
-        self.game_name = history_name
+        self.game_name = game_name
 
-        history_dict_array = FileManager.load_history(history_name)
-        self.history = [Turn(turn) for turn in history_dict_array]
+        self.history = []
         
-        Game.GAMES[history_name] = self
+        Game.GAMES[game_name] = self
 
 
     def start(game_name: str):
         logger.info(f"Starting Game: {game_name}")
         hide = gr.update(visible=False)
         show = gr.update(visible=True)
-        current_game = Game.GAMES[game_name]
-        return current_game.render_story() + [game_name, gr.update(visible=False), gr.update(visible=False), gr.update(visible=True), gr.update(visible=True)]
+        # current_game = Game.GAMES[game_name]
+        return Game.render_story(game_name) + [game_name, hide, hide, show, show, show]
 
     def __del__(self):
         logger.debug("Deleting Game")
@@ -53,35 +51,73 @@ class Game:
             if game is None:
                 del Game.GAMES[game_name]
 
+    def _(game_name: str):
+        return Game.GAMES[game_name]
+    
+    def _last_turn(game_name: str):
+        return Game._history(game_name)[-1]
+    def _history(game_name: str):
+        return Game.GAMES[game_name].history
+    
+    def _history_to_dict(game_name: str):
+        return [turn.__dict__() for turn in Game._history(game_name)]
+    
+    def _dict_to_history(game_name: str, history_dict_array: []):
+        Game.GAMES[game_name].history = [Turn(turn) for turn in history_dict_array]
+    
+    def _stats(game_name: str):
+        # Stats are not guaranteed to be in every message, so we need to find the last one
+        for turn in reversed(Game._history(game_name)):
+            if not turn.has_stats():
+                continue
+            return turn.stats
+        return {}
+    
+    def _last_stats(game_name: str):
+        return Game._last_turn(game_name).stats
+    def _combat(game_name: str):
+        return Game._last_turn(game_name).combat
+    def _last_display(game_name: str):
+        return Game._last_turn(game_name).display
+    def _last_raw(game_name: str):
+        return Game._last_turn(game_name).raw   
 
-    def render_story(self):
+
+    def render_story(game_name: str):
         """
         This function is called when the game state changes.
         """
-        return Render.render_story(self.history)
+        display_history = Game._display_history(game_name)
+        stats = Game._stats(game_name)
+        return Render.render_story(display_history, stats)
     
-    def undo(self):
-        logger.info("Undoing last turn")
-        if len(self.history) > 0:
-            del self.history[-1]
-        return self.render_story()
+    def undo(game_name: str):
+        logger.info(f"Undoing last turn: {game_name}")
+        if len(Game._history(game_name)) > 0:
+            del Game._history(game_name)[-1]
+        return Game.render_story(game_name)
     
-    def retry(self):
+    def retry(game_name: str):
         logger.info("Retrying turn")
-        self.history[-1].display[1] = None
-        self.history[-1].raw[1] = None
-        self.history[-1].stats = None
-        self.history[-1].combat = None
-        self.history[-1].tokens = None
-        return self.render_story()
+        Game._last_display(game_name)[1] = None
+        Game._last_raw(game_name)[1] = None
+        Game._last_turn(game_name).stats = None
+        Game._last_turn(game_name).combat = None
+        Game._last_turn(game_name).tokens = None
+        return Game.render_story(game_name)
 
-    def clear(self):
+    def clear(game_name: str):
         logger.info("Clearing history")
-        for turn in self.history:
+        for turn in Game._history(game_name):
             del turn
-        return self.render_story()
+        return Game.render_story(game_name)
     
-    def submit(self, model: str = None, message: str = "", system_message: str = None, type: str = "normal"):
+    def restart(game_name: str):
+        logger.info("Restarting game")
+        Game.clear(game_name)
+        return Game.start(game_name)
+    
+    def submit(game_name: str, message: str = "", system_message: str = None, model: str = None, type: str = "normal"):
         """
         This function is called when the user submits a message.
         """
@@ -97,31 +133,33 @@ class Game:
             complete_user_message += "\nRemember to use the schemas exactly as provided."
         complete_system_message = SystemMessage.inject_schemas(system_message)
 
-        if len(self.history) == 0 or len(self.history[-1].raw[1]) > 0:
-            self.history.append(Turn({}, model, [message, complete_user_message], complete_system_message, type))
+        if len(Game._history(game_name)) == 0 or len(Game._last_raw(game_name)[1]) > 0:
+            Game._history(game_name).append(Turn({}, model, [message, complete_user_message], complete_system_message, type))
 
-        return [""] + self.render_story()
+        return [""] + Game.render_story(game_name)
     
-    def get_raw_history(self):
-        return [turn.raw for turn in self.history]
+    def _raw_history(game_name: str):
+        return [turn.raw for turn in Game._history(game_name)]
+    def _display_history(game_name: str):
+        return [turn.display for turn in Game._history(game_name)]
     
-    def stream_prediction(self):
+    def stream_prediction(game_name: str):
 
-        current_turn = self.history[-1]
+        current_turn = Game._last_turn(game_name)
 
         model = current_turn.model
         system_message = current_turn.system_message
-        raw_history = self.get_raw_history()
+        raw_history = Game._raw_history(game_name)
 
         streaming_json = ""
         in_streaming_json = False
         did_append_combat = False
         last_combat_string = ""
-        self.history[-1].raw[1] = ""
-        self.history[-1].display[1] = ""
-        setattr(self.history[-1], "combat", [])
-        setattr(self.history[-1], "stats", {})
-        setattr(self.history[-1], "execution", {})
+        Game._last_raw(game_name)[1] = ""
+        Game._last_display(game_name)[1] = ""
+        setattr(Game._last_turn(game_name), "combat", [])
+        setattr(Game._last_turn(game_name), "stats", {})
+        setattr(Game._last_turn(game_name), "execution", {})
 
         for chunk in LLM.predict(model, system_message, raw_history):
 
@@ -134,7 +172,7 @@ class Game:
             real_model = chunk.get("model", model)
 
             # All chunks go to the raw history
-            self.history[-1].raw[1] += content
+            Game._last_raw(game_name)[1] += content
             
             if not in_streaming_json:
                 # Not currently in json stream, add chunk to chatbot
@@ -142,9 +180,9 @@ class Game:
                     # Found the start of a JSON object
                     in_streaming_json = True
                     streaming_json += content
-                    self.history[-1].display[1] += "\n\n---\n\n"
+                    Game._last_display(game_name)[1] += "\n\n---\n\n"
                 else:
-                    self.history[-1].display[1] += content
+                    Game._last_display(game_name)[1] += content
             else:
                 # Don't add content to the chatbot if they are part of a JSON schema
                 # Add content to the streaming json
@@ -161,29 +199,29 @@ class Game:
 
                 if "Combat_Schema" in data:
                     if not did_append_combat:
-                        self.history[-1].combat.append({})
+                        Game._last_turn(game_name).combat.append({})
                         did_append_combat = True
 
-                    self.history[-1].combat[-1] = data["Combat_Schema"]
+                    Game._last_turn(game_name).combat[-1] = data["Combat_Schema"]
 
-                    combat_string = Render.render_combat_new(self.history[-1].combat[-1])
+                    combat_string = Render.render_combat(Game._last_turn(game_name).combat[-1])
 
                     if combat_string != last_combat_string:
                         delta = len(combat_string) - len(last_combat_string)
                         delta_string = combat_string[-delta:]
-                        self.history[-1].display[1] += delta_string
+                        Game._last_display(game_name)[1] += delta_string
                         last_combat_string = combat_string
 
                 elif "Stats_Schema" in data:
-                    self.history[-1].stats = data["Stats_Schema"]
+                    Game._last_turn(game_name).stats = data["Stats_Schema"]
 
                 if complete:
                     if did_append_combat == True:
                         did_append_combat = False
                     streaming_json = ""
                     in_streaming_json = False
-                    self.history[-1].display[1] += "\n\n"
+                    Game._last_display(game_name)[1] += "\n\n"
 
             # yield self.history[-1].raw, self.history[-1].display, self.history[-1].stats, self.history[-1].combat
 
-            yield self.render_story()
+            yield Game.render_story(game_name)

@@ -10,13 +10,13 @@ from PythonClasses.player import *
 
 class Render:
 
-    def render_story(history = []):
+    def render_story(chatbot: [], stats: {}):
         """
         This function is called when the game state changes.
         """
         logger.trace("Rendering game")
 
-        if len(history) == 0:
+        if len(chatbot) == 0 and stats == {}:
             return [
                 [],
                 "??? --- ??? minutes left",
@@ -24,11 +24,8 @@ class Render:
                 "???",
             ]
 
-        # Display history for the chatbot
-        chatbot = [getattr(turn, "display", ["", ""]) for turn in history]
-
         # Last available stats
-        day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
+        day_box, item_box, relationship_box = Render.render_stats(stats)
 
         # # Execution for last turn
         # execution_json = history[-1].__dict__().get("execution", {})
@@ -44,24 +41,6 @@ class Render:
             item_box,
             relationship_box,
         ]
-    
-    def last_stats(history = []):
-
-        # Stats are not guaranteed to be in every message, so we need to find the last one
-        # i = len(history)-1
-        for turn in reversed(history):
-            # logger.info(f"Checking turn {i}")
-            # i -= 1
-            if not hasattr(turn, "stats") or turn.stats == {} or turn.stats is None:
-                continue
-
-            # last_stats_yee = turn.stats
-            # logger.info("Last stats:")
-            # logger.info(json.dumps(last_stats_yee, indent=4))
-            return turn.stats
-
-        # logger.info("No stats found in history. Returning {}.")
-        return {}
 
     def render_stats(stats = {}):
 
