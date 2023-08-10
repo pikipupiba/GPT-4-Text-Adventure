@@ -95,6 +95,9 @@ class Turn:
         self.combat = []
         self.execution = {}
         # Fill in stats, combat, and execution after response
+
+    def has_stats(self):
+        return (self.stats is not None) and (self.stats != {})
         
 
     def __dict__(self):

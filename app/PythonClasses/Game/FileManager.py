@@ -2,6 +2,7 @@ import os, json
 from loguru import logger
 
 from PythonClasses.Game.Turn import Turn
+from PythonClasses.Game.Game import Game
 class FileManager:
 
     DATA_FOLDER = os.path.join(os.getcwd(), "data")
@@ -18,10 +19,9 @@ class FileManager:
         system_message = FileManager.load_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", default="")
         return system_message
     
-    def save_history(history_name: str, history: list):
-        logger.info(f"Saving history | {history_name}")
-        history_dict_array = [turn.__dict__() for turn in history]
-        FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", history_dict_array)
+    def save_history(game_name: str, history_name: str):
+        logger.info(f"Saving history | {game_name} -> {history_name}")
+        FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", Game._history_to_dict(game_name))
     
     def load_history(history_name: str):
         logger.info(f"Loading history | {history_name}")

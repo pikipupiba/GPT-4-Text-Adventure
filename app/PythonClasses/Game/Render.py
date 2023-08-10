@@ -10,72 +10,37 @@ from PythonClasses.player import *
 
 class Render:
 
-    def render_history(history = []):
+    def render_story(chatbot: [], stats: {}):
         """
         This function is called when the game state changes.
         """
         logger.trace("Rendering game")
 
-        if len(history) == 0:
+        if len(chatbot) == 0 and stats == {}:
             return [
                 [],
-
-                "",
                 "??? --- ??? minutes left",
                 "???",
                 "???",
-
-                {},
-                {},
             ]
 
-        # Display history for the chatbot
-        display_history = [getattr(turn, "display", ["", ""]) for turn in history]
-
         # Last available stats
-        day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
+        day_box, item_box, relationship_box = Render.render_stats(stats)
 
-        # Combat for last turn
-        # combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
+        # # Execution for last turn
+        # execution_json = history[-1].__dict__().get("execution", {})
 
-        # Execution for last turn
-        execution_json = history[-1].__dict__().get("execution", {})
-
-        # Last turn json
-        turn_json = history[-1].__dict__()
+        # # Last turn json
+        # turn_json = history[-1].__dict__()
 
         logger.trace("Successfully generated render strings")
 
         return [
-            display_history,
-
-            # player_message,
-            # combat_box,
+            chatbot,
             day_box,
             item_box,
             relationship_box,
-
-            execution_json,
-            turn_json,
         ]
-    
-    def last_stats(history = []):
-
-        # Stats are not guaranteed to be in every message, so we need to find the last one
-        # i = len(history)-1
-        for turn in reversed(history):
-            # logger.info(f"Checking turn {i}")
-            # i -= 1
-            if not hasattr(turn, "stats") or turn.stats == {} or turn.stats is None:
-                continue
-
-            # last_stats_yee = turn.stats
-            # logger.info("Last stats:")
-            # logger.info(json.dumps(last_stats_yee, indent=4))
-            return turn.stats
-
-        # logger.info("No stats found in history. Returning {}.")
-        return {}
 
     def render_stats(stats = {}):
 
@@ -124,23 +89,7 @@ class Render:
             relationships_string,
         ]
     
-    def render_combat(combat_array: List = []):
-        logger.trace("RENDERING COMBAT!!!")
-
-        if len(combat_array) == 0:
-            return ""
-
-        combat_string=""
-        for combat in combat_array:
-            for key, value in combat.items():
-                combat_string += f'{key}: {value} --- '
-            combat_string = combat_string[:-4] + '\n'
-
-        logger.trace("DONE RENDERING COMBAT!!!")
-
-        return combat_string
-    
-    def render_combat_new(combat: {}):
+    def render_combat(combat: {}):
         logger.trace("RENDERING COMBAT!!!")
 
         combat_string=""

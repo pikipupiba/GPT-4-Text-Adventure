@@ -21,13 +21,13 @@
 import gradio as gr
 
 # PLAYER TAB
-with gr.Blocks(title="AI Adventure Academy") as player_tab:
+with gr.Blocks() as player_tab:
     # STORY AREA
-    with gr.Row(variant="compact") as story_area:
+    with gr.Row(variant="compact").style(equal_height=True) as story_area:
         # CHAT AREA
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
-            display_history = gr.Chatbot(
+            chatbot = gr.Chatbot(
                 value="", 
             )
 
@@ -51,7 +51,7 @@ with gr.Blocks(title="AI Adventure Academy") as player_tab:
                 )
                 
 
-                new_game_name = gr.Textbox(
+                game_name = gr.Textbox(
                     value="",
                     placeholder="What is your team name?",
                     lines=1,

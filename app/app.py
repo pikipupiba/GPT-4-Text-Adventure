@@ -1,6 +1,7 @@
 import os,uuid,sys,signal
 from loguru import logger
 
+from PythonClasses.Game.Game import Game
 from PythonClasses.Game.FileManager import FileManager
 
 import gradio as gr
@@ -27,44 +28,132 @@ logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", l
 # #--------------------------------------------------------------
 # #                      PLAYER TAB FUNCTIONS
 # #--------------------------------------------------------------
-# # Array to update the interface from the game state. Contains all changeable interface elements.
-player_render_array = [
-    display_history,
+# # Array to update the interface from the game state. Contains all updatable interface elements.
+story_render_array = [
+    chatbot,
     day_box,
     item_box,
     relationship_box,
 ]
 
-# #--------------------------------------------------------------
-# # SUBMIT FUNCTIONS
-# #--------------------------------------------------------------
-# Click "Do it!" button
-# submit.click(
-#     # Add the player message to the history
-#     fn=game.submit, 
-#     inputs=[user_message, system_message, select_model],
-#     outputs=[user_message] + player_render_array,
-#     queue=False
-# ).then(
-#     fn=game.stream_prediction,
-#     inputs=[],
-#     outputs=player_render_array,
-#     queue=True
-# )
+story_interface_array = [
+    history_name,
+    game_name,
+    start_game,
+    user_message,
+    submit,
+    stats_area,
+]
 
-# # Press enter key
-# user_message.submit(
-#     # Add the player message to the history
-#     fn=game.submit, 
-#     inputs=[user_message, system_message, select_model],
-#     outputs=[user_message] + player_render_array,
-#     queue=False
-# ).then(
-#     fn=game.stream_prediction,
-#     inputs=[],
-#     outputs=player_render_array,
-#     queue=True
-# )
+
+with player_tab:
+    start_game.click(
+        fn=Game,
+        inputs=[
+            game_name,
+        ],
+        outputs=[],
+        queue=False,
+    ).then(
+        fn= Game.start,
+        inputs=[game_name],
+        outputs=story_render_array + story_interface_array,
+        queue=False,
+    )
+
+    #--------------------------------------------------------------
+    # SUBMIT FUNCTIONS
+    #--------------------------------------------------------------
+    # Click "Do it!" button
+    submit.click(
+        # Add the player message to the history
+        fn=Game.submit,
+        inputs=[game_name, user_message, system_message, select_model],
+        outputs=[user_message] + story_render_array,
+        queue=False
+    ).then(
+        fn=Game.stream_prediction,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=True
+    )
+
+    # Press enter key
+    user_message.submit(
+        # Add the player message to the history
+        fn=Game.submit, 
+        inputs=[game_name, user_message, system_message, select_model],
+        outputs=[user_message] + story_render_array,
+        queue=False
+    ).then(
+        fn=Game.stream_prediction,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=True
+    )
+
+with config_tab:
+    # Click "Retry" button
+    retry.click(
+        # Remove the last assistant message from the history
+        fn=Game.retry,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=False,
+    )
+
+    undo.click(
+        fn=Game.undo,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=False
+    )
+
+    # Restart the game
+    clear.click(
+        fn=Game.clear,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=False,
+    )
+
+    # Restart the game
+    restart.click(
+        fn=Game.restart,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=False,
+    )
+
+    #--------------------------------------------------------------
+    # AUXILIARY FUNCTIONS
+    #--------------------------------------------------------------
+    # Undo the last user and assistant message
+    
+
+    # Delete the game
+    delete_game.click(
+        fn=FileManager.delete_history,
+        inputs=[select_history_name],
+        outputs=[],
+        queue=False
+    )
+
+    # Load the game on button click
+    load_game.click(
+        fn=FileManager.load_history,
+        inputs=[select_history_name],
+        outputs=story_render_array,
+        queue=False
+    )
+
+    # Save the game on button click
+    save_game.click(
+        fn=FileManager.save_history,
+        inputs=[game_name, history_name],
+        outputs=[],
+        queue=False
+    )
 
 
 
@@ -76,7 +165,12 @@ player_render_array = [
 
 # --------------------------------------------------------------
 
-game_area = gr.TabbedInterface([player_tab, gm_tab, config_tab], ["Player", "Game Master", "Config"])
+game_area = gr.TabbedInterface(
+    [player_tab, gm_tab, config_tab],
+    ["Player", "Game Master", "Config"],
+    title="AI Adventure Academy",
+)
+
 share_mode_string = os.getenv("SHARE_MODE", "false")
 share_mode = share_mode_string.lower() == 'true'
 

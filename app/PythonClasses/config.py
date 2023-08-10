@@ -1,6 +1,9 @@
 import gradio as gr
 
+from PythonClasses.player import *
+
 from PythonClasses.Game.FileManager import FileManager
+from PythonClasses.Game.Game import Game
 
 use_models = [
     "gpt-4-0613",
@@ -22,6 +25,7 @@ with gr.Blocks() as config_tab:
             retry = gr.Button(value="Retry", size="sm")
             undo = gr.Button(value="Undo", size="sm")
             clear = gr.Button(value="Clear", size="sm")
+            restart = gr.Button(value="Restart", size="sm")
 
     # GAME NAME
     with gr.Group():
@@ -60,62 +64,3 @@ with gr.Blocks() as config_tab:
         execution_json,
         turn_json,
     ]
-
-    # # Click "Retry" button
-    # retry.click(
-    #     # Remove the last assistant message from the history
-    #     fn=game.retry,
-    #     inputs=[],
-    #     outputs=render_array,
-    #     queue=False
-    # )
-
-    # # Restart the game
-    #     clear.click(
-    #     fn=game.clear,
-    #     inputs=[],
-    #     outputs=render_array,
-    # )
-
-    # #--------------------------------------------------------------
-    # # AUXILIARY FUNCTIONS
-    # #--------------------------------------------------------------
-    # # Undo the last user and assistant message
-    # undo.click(
-    #     fn=game.undo,
-    #     inputs=[],
-    #     outputs=render_array,
-    #     queue=False
-    # )
-
-    # # Delete the game
-    # delete_game.click(
-    #     fn=game.delete_history,
-    #     inputs=[game_name],
-    #     outputs=render_array,
-    #     queue=False
-    # )
-
-    # # Load the game on enter
-    # game_name.submit(
-    #     fn=game.load_history,
-    #     inputs=[game_name],
-    #     outputs=render_array,
-    #     queue=False
-    # )
-
-    # # Load the game on button click
-    # load_game.click(
-    #     fn=game.load_history,
-    #     inputs=[game_name],
-    #     outputs=render_array,
-    #     queue=False
-    # )
-
-    # # Save the game on button click
-    # save_game.click(
-    #     fn=game.save_history,
-    #     inputs=[game_name],
-    #     outputs=[],
-    #     queue=False
-    # )
