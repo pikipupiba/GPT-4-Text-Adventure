@@ -9,22 +9,27 @@ from tempfile import gettempdir
 from PythonClasses.LLM import LLM
 
 
+# EACH GAME HAS ITS OWN INSTANCE OF SPEECH
+
+# arrays and fifo
+
+# 
+
+
 class Speech:
     config = Config(
         region_name="us-east-1",
         signature_version="v4",
         retries={"max_attempts": 10, "mode": "standard"},
     )
-    count = 0
     client = boto3.client("polly", config=config)
-    audios = []
 
-    def __init__(self, text: str):
-        self.text = text
-        self.filename = f"speech{self.count}.mp3"
-        self.count += 1
+    def __init__(self):
+        self.sentences = []
+        self.audios = []
+        
 
-    def get_ssml(self):
+    def get_ssml():
         text = self.text
         system = "You convert the user message from plaintext to SSML.\n\nDo not respond stating what you are doing, simply do."
         self.ssml = LLM.oneshot(system_message = system, user_message = text)
