@@ -1,4 +1,20 @@
 import boto3
+from botocore.config import Config
+from botocore.exceptions import BotoCoreError, ClientError
+from contextlib import closing
+import os
+import sys
+import subprocess
+from tempfile import gettempdir
+from PythonClasses.LLM import LLM
+
+
+# EACH GAME HAS ITS OWN INSTANCE OF SPEECH
+
+# arrays and fifo
+
+# 
+
 
 class Speech:
     config = Config(
@@ -6,39 +22,43 @@ class Speech:
         signature_version="v4",
         retries={"max_attempts": 10, "mode": "standard"},
     )
-
     client = boto3.client("polly", config=config)
 
-    audios = []
+    def __init__(self):
+        self.sentences = []
+        self.audios = []
+        
 
-    def __init__(self, text: str) -> None:
-        self.text = text
-
-    def get_ssml(self):
-        system_message = "You are an SSML processor, you trun the user message into a speech response."
-        self.ssml = LLM.oneshot(system_message=system_message, user_message=self.text)
+    def get_ssml():
+        text = self.text
+        system = "You convert the user message from plaintext to SSML.\n\nDo not respond stating what you are doing, simply do."
+        self.ssml = LLM.oneshot(system_message = system, user_message = text)
 
     def get_speech_response(self, voice: str = "Brian", type="ssml"):
-        text = self.ssml if self.ssml != None else self.text
+        text = self.text if self.ssml is None else self.ssml
         if "<speak>" not in text:
             text = f"<speak>{text}</speak>"
         response = self.client.synthesize_speech(
-                Engine="standard",
-                LanguageCode="en-US",
-                OutputFormat="mp3",
-                VoiceId=voice,
-                Text=text,
-                TextType=type
-            )
+            Engine="standard",
+            LanguageCode="en-US",
+            OutputFormat="mp3",
+            VoiceId=voice,
+            Text=text,
+            TextType=type,
+        )
         if "AudioStream" in response:
-            with closing(self.response["AudioStream"]) as stream:
-                output = os.path.join(gettempdir(), f"speech_{self.audios.count}.mp3")
+            # Note: Closing the stream is important because the service throttles on the
+            # number of parallel connections. Here we are using contextlib.closing to
+            # ensure the close method of the stream object will be called automatically
+            # at the end of the with statement's scope.
+            with closing(response["AudioStream"]) as stream:
+                output = os.path.join(gettempdir(), self.filename)
+
                 try:
+                    # Open a file for writing the output as a binary stream
                     with open(output, "wb") as file:
                         file.write(stream.read())
-                        self.audios.append(file)
+                        self.audios.append(file.name)
                 except IOError as error:
+                    # Could not write to file, exit gracefully
                     print(error)
-
-        else:
-            print("Could not stream audio")
