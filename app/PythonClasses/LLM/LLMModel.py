@@ -2,6 +2,11 @@ import tiktoken
 from loguru import logger
 
 class LLMModel:
+# The `LLMModel` class is a class for looking up information about language models (LLMs). It
+# provides methods for getting the price of a specific LLM model, getting information about a
+# specific LLM model, and calculating the number of tokens used by a string of text or a list of
+# messages for a specific LLM model. The class also defines a list of available LLM models and
+# their corresponding prices.
     # Class for looking up information about LLM models
 
     AVAILABLE_MODELS = [

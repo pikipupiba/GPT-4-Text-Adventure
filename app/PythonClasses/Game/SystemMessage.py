@@ -5,8 +5,22 @@ from loguru import logger
 from PythonClasses.Schemas import schema_strings
 
 class SystemMessage:
+# The `SystemMessage` class is providing a method called `inject_schemas` that is used to inject
+# schema strings into a given system message. It does this by searching for schema placeholders
+# in the system message and replacing them with the corresponding schema string. The schema
+# placeholders are identified using a specific pattern (`/*\schema_name*/\`) and are replaced
+# using the `re.sub` function. If a schema string is not found for a particular schema name, the
+# original placeholder is retained in the system message. The method returns the complete system
+# message with the injected schemas.
+
     
     def inject_schemas(system_message: str):
+    # The `inject_schemas` method is used to inject schema strings into a given system message. It
+    # searches for schema placeholders in the system message and replaces them with the
+    # corresponding schema string. The schema placeholders are identified using a specific pattern
+    # (`/*\schema_name*/\`) and are replaced using the `re.sub` function. If a schema string is
+    # not found for a particular schema name, the original placeholder is retained in the system
+    # message. The method returns the complete system message with the injected schemas.
 
         logger.debug("Injecting schemas into system message")
 

@@ -9,6 +9,12 @@ from PythonClasses.Game.Turn import Turn
 from PythonClasses.player import *
 
 class Render:
+# The `Render` class is responsible for rendering the game state and combat information. It
+# provides methods to generate strings that represent the current state of the game, including
+# chatbot messages, day and time left, items, and relationships. It also has a method to render
+# combat information, including the name of the combatant, the action they are trying to
+# perform, the DC (Difficulty Class) required, the roll result, and the success or failure of
+# the action.
 
     def render_story(chatbot: [], stats: {}):
         """

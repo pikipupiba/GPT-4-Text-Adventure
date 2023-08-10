@@ -3,6 +3,10 @@ from typing import List, Tuple, Dict
 from loguru import logger
 
 class Turn:
+# The `Turn` class represents the state of a game turn. It includes attributes such as the
+# model, user message, system message, type, display, raw, stats, combat, and execution. The
+# class provides methods to initialize a turn object, check if it has stats, and convert the
+# object to a dictionary.
     """
     This class represents the state of a game, including the message, history, raw history, stats, combat, and team name.
     """

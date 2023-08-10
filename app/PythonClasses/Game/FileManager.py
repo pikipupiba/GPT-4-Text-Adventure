@@ -4,6 +4,11 @@ from loguru import logger
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.Game import Game
 class FileManager:
+# The `FileManager` class is responsible for managing file operations such as saving, loading,
+# and deleting files. It provides methods for saving system messages, saving and loading game
+# history, and performing general file operations like getting file names, building file paths,
+# and deleting files. The class uses the `os` and `json` modules for file operations and the
+# `loguru` module for logging.
 
     DATA_FOLDER = os.path.join(os.getcwd(), "data")
     HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "history")

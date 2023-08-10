@@ -2,6 +2,9 @@ from loguru import logger
 from PythonClasses.OpenAI.LLMModel import LLMModel
 
 class LLMToken:
+# The `LLMToken` class is a Python class that represents a token in a language model. It has
+# attributes such as `prompt`, `completion`, and `total` which represent the number of tokens in
+# the prompt, completion, and the total number of tokens respectively.
 
     def __init__(self, *args, **kwargs):
         if "usage" in kwargs:

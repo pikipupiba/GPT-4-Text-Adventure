@@ -3,6 +3,10 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 
 def get_secret(secret_name, region_name="us-west-2"):
+# The `get_secret` function is a Python function that retrieves a secret value from AWS Secrets
+# Manager. It takes in two parameters: `secret_name` (the name or ARN of the secret) and
+# `region_name` (the AWS region where the secret is stored, defaulting to "us-west-2").
+
     # Initialize a session using Amazon S3
     session = boto3.session.Session()
     
