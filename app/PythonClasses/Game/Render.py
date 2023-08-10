@@ -10,7 +10,7 @@ from PythonClasses.player import *
 
 class Render:
 
-    def render_history(history = []):
+    def render_story(history = []):
         """
         This function is called when the game state changes.
         """
@@ -19,44 +19,30 @@ class Render:
         if len(history) == 0:
             return [
                 [],
-
-                "",
                 "??? --- ??? minutes left",
                 "???",
                 "???",
-
-                {},
-                {},
             ]
 
         # Display history for the chatbot
-        display_history = [getattr(turn, "display", ["", ""]) for turn in history]
+        chatbot = [getattr(turn, "display", ["", ""]) for turn in history]
 
         # Last available stats
         day_box, item_box, relationship_box = Render.render_stats(Render.last_stats(history))
 
-        # Combat for last turn
-        # combat_box = Render.render_combat(history[-1].__dict__().get("combat", []))
+        # # Execution for last turn
+        # execution_json = history[-1].__dict__().get("execution", {})
 
-        # Execution for last turn
-        execution_json = history[-1].__dict__().get("execution", {})
-
-        # Last turn json
-        turn_json = history[-1].__dict__()
+        # # Last turn json
+        # turn_json = history[-1].__dict__()
 
         logger.trace("Successfully generated render strings")
 
         return [
-            display_history,
-
-            # player_message,
-            # combat_box,
+            chatbot,
             day_box,
             item_box,
             relationship_box,
-
-            execution_json,
-            turn_json,
         ]
     
     def last_stats(history = []):
@@ -124,23 +110,7 @@ class Render:
             relationships_string,
         ]
     
-    def render_combat(combat_array: List = []):
-        logger.trace("RENDERING COMBAT!!!")
-
-        if len(combat_array) == 0:
-            return ""
-
-        combat_string=""
-        for combat in combat_array:
-            for key, value in combat.items():
-                combat_string += f'{key}: {value} --- '
-            combat_string = combat_string[:-4] + '\n'
-
-        logger.trace("DONE RENDERING COMBAT!!!")
-
-        return combat_string
-    
-    def render_combat_new(combat: {}):
+    def render_combat(combat: {}):
         logger.trace("RENDERING COMBAT!!!")
 
         combat_string=""

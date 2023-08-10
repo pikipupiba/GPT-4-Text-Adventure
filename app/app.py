@@ -2,6 +2,7 @@ import os,uuid,sys,signal
 from loguru import logger
 
 from PythonClasses.Game.FileManager import FileManager
+from PythonClasses.Game.Game import Game
 
 import gradio as gr
 from PythonClasses.player import *
@@ -27,13 +28,39 @@ logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", l
 # #--------------------------------------------------------------
 # #                      PLAYER TAB FUNCTIONS
 # #--------------------------------------------------------------
-# # Array to update the interface from the game state. Contains all changeable interface elements.
-player_render_array = [
-    display_history,
+# # Array to update the interface from the game state. Contains all updatable interface elements.
+story_render_array = [
+    chatbot,
     day_box,
     item_box,
     relationship_box,
 ]
+
+story_interface_array = [
+    history_name,
+    game_name,
+    start_game,
+    user_message,
+    submit,
+]
+
+
+with player_tab:
+    start_game.click(
+        fn=Game,
+        inputs=[
+            game_name,
+        ],
+        outputs=[],
+        queue=False,
+    ).then(
+        fn= Game.start,
+        inputs=[
+            game_name
+        ],
+        outputs=story_render_array + story_interface_array,
+        queue=False,
+    )
 
 # #--------------------------------------------------------------
 # # SUBMIT FUNCTIONS
@@ -76,7 +103,11 @@ player_render_array = [
 
 # --------------------------------------------------------------
 
-game_area = gr.TabbedInterface([player_tab, gm_tab, config_tab], ["Player", "Game Master", "Config"])
+game_area = gr.TabbedInterface(
+    [player_tab, gm_tab, config_tab],
+    ["Player", "Game Master", "Config"],
+)
+
 share_mode_string = os.getenv("SHARE_MODE", "false")
 share_mode = share_mode_string.lower() == 'true'
 

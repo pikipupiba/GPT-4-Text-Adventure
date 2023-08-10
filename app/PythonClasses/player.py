@@ -27,7 +27,7 @@ with gr.Blocks(title="AI Adventure Academy") as player_tab:
         # CHAT AREA
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
-            display_history = gr.Chatbot(
+            chatbot = gr.Chatbot(
                 value="", 
             )
 
@@ -51,7 +51,7 @@ with gr.Blocks(title="AI Adventure Academy") as player_tab:
                 )
                 
 
-                new_game_name = gr.Textbox(
+                game_name = gr.Textbox(
                     value="",
                     placeholder="What is your team name?",
                     lines=1,

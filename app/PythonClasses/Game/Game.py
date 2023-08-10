@@ -5,6 +5,7 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
+import gradio as gr
 from loguru import logger
 from PythonClasses.Helpers.helpers import randomish_words
 from PythonClasses.Helpers.helpers import generate_dice_string
@@ -21,17 +22,28 @@ from PythonClasses.Game.CompleteJson import CompleteJson
 
 class Game:
 
-    INIT, START, STOP, PREDICTING = range(4)
+    START, STOP, PREDICTING = range(3)
 
     GAMES = {}
 
     # Initialize a new Game object for each active game.
-    def __init__(self, history_name: str, system_name: str):
-        logger.debug("Initializing Game")
+    def __init__(self, history_name: str):
+        logger.debug(f"Initializing Game: {history_name}")
+        self.state = Game.START
+        self.game_name = history_name
+
         history_dict_array = FileManager.load_history(history_name)
         self.history = [Turn(turn) for turn in history_dict_array]
-        self.state = Game.INIT
+        
         Game.GAMES[history_name] = self
+
+
+    def start(game_name: str):
+        logger.info(f"Starting Game: {game_name}")
+        hide = gr.update(visible=False)
+        show = gr.update(visible=True)
+        current_game = Game.GAMES[game_name]
+        return current_game.render_story() + [game_name, gr.update(visible=False), gr.update(visible=False), gr.update(visible=True), gr.update(visible=True)]
 
     def __del__(self):
         logger.debug("Deleting Game")
@@ -42,17 +54,17 @@ class Game:
                 del Game.GAMES[game_name]
 
 
-    def render_history(self):
+    def render_story(self):
         """
         This function is called when the game state changes.
         """
-        return Render.render_history(self.history)
+        return Render.render_story(self.history)
     
     def undo(self):
         logger.info("Undoing last turn")
         if len(self.history) > 0:
             del self.history[-1]
-        return self.render_history()
+        return self.render_story()
     
     def retry(self):
         logger.info("Retrying turn")
@@ -61,13 +73,13 @@ class Game:
         self.history[-1].stats = None
         self.history[-1].combat = None
         self.history[-1].tokens = None
-        return self.render_history()
+        return self.render_story()
 
     def clear(self):
         logger.info("Clearing history")
         for turn in self.history:
             del turn
-        return self.render_history()
+        return self.render_story()
     
     def submit(self, model: str = None, message: str = "", system_message: str = None, type: str = "normal"):
         """
@@ -88,7 +100,7 @@ class Game:
         if len(self.history) == 0 or len(self.history[-1].raw[1]) > 0:
             self.history.append(Turn({}, model, [message, complete_user_message], complete_system_message, type))
 
-        return [""] + self.render_history()
+        return [""] + self.render_story()
     
     def get_raw_history(self):
         return [turn.raw for turn in self.history]
@@ -174,4 +186,4 @@ class Game:
 
             # yield self.history[-1].raw, self.history[-1].display, self.history[-1].stats, self.history[-1].combat
 
-            yield self.render_history()
+            yield self.render_story()
