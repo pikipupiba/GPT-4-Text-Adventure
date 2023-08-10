@@ -11,7 +11,7 @@ from PythonClasses.LLM import LLM
 
 # EACH GAME HAS ITS OWN INSTANCE OF SPEECH
 
-# arrays and fifo
+# arrays and pop
 
 # 
 
@@ -27,12 +27,18 @@ class Speech:
     def __init__(self):
         self.sentences = []
         self.audios = []
+        self.ssml = []
         
+    def add_sentence(self, text: str):
+        self.sentences.append(text)
 
-    def get_ssml():
-        text = self.text
+
+
+    def get_ssml(self):
         system = "You convert the user message from plaintext to SSML.\n\nDo not respond stating what you are doing, simply do."
-        self.ssml = LLM.oneshot(system_message = system, user_message = text)
+        for sentence in self.sentences:
+            text = sentence
+            self.ssml.append(LLM.oneshot(system_message = system, user_message = text))
 
     def get_speech_response(self, voice: str = "Brian", type="ssml"):
         text = self.text if self.ssml is None else self.ssml
