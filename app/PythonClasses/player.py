@@ -18,167 +18,62 @@
 # 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
-from PythonClasses.Game.Game import Game
-
-game = Game()
-
 import gradio as gr
-from PythonClasses.game_master import system_message
-
-
-
-
 
 # PLAYER TAB
-with gr.Blocks() as player_tab:
+with gr.Blocks(title="AI Adventure Academy") as player_tab:
     # STORY AREA
     with gr.Row(variant="compact") as story_area:
         # CHAT AREA
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
-            with gr.Row() as history_area:
-                display_history = gr.Chatbot(height=600)
-            # # COMBAT AREA
-            # with gr.Row() as combat_area:
-            #     combat_box = gr.Textbox(label="Combat", interactive=False)
-            # USER INPUT
-            with gr.Group():
-                with gr.Row() as user_area:
-                    # MESSAGE
-                    player_message = gr.Textbox(value="what are my stats", lines=1, label="Player Message", interactive=True, scale=20)
-                    # BUTTONS
-                    submit = gr.Button(value="Do it!", scale=1, size="sm")
-                    
-        # TEAM/STATS AREA
-        with gr.Column(scale=1, variant="compact") as stats_area:
-            # GAME NAME
-            with gr.Group():
-                with gr.Row():
-                    game_name = gr.Textbox(value="BAH", lines=1, label="Game Name", interactive=True)
-                    save_game = gr.Button(value="Save", size="sm")
-                    load_game = gr.Button(value="Load", size="sm")
-                    delete_game = gr.Button(value="Delete", size="sm")
-            # STATS
-            with gr.Group():
-                day_box = gr.Textbox(lines=1, label="Game Time", interactive=False)
-                item_box = gr.Textbox(lines=5, label="Items", interactive=False)
-                relationship_box = gr.Textbox(lines=10, label="Friend Stats", interactive=False)
+            display_history = gr.Chatbot(
+                value="", 
+            )
 
-    # DEBUG AREA
-    with gr.Column(variant="compact") as debug_area:
-        # with gr.Row():
-        #     token_jsons = []
-        #     for model_name,tracker in TokenTracker.trackers.items():
-        #         token_jsons.append(gr.JSON(label=f"{model_name} Token Tracker", interactive=False))
-        execution_json = gr.JSON(label="Execution Info")
-        game_state_json = gr.JSON(label="Game State")
+            # USER MESSAGE AREA
+            with gr.Row(variant="compact") as user_message_area:
+                user_message = gr.Textbox(
+                    value="",
+                    placeholder="What will you do?",
+                    lines=1,
+                    label="Next Action",
+                    interactive=True,
+                    scale=20,
+                    visible=False,
+                )
 
+                submit = gr.Button(
+                    value="Do it!",
+                    scale=1,
+                    size="sm",
+                    visible=False,
+                )
+                
 
-    #--------------------------------------------------------------
-    #                      PLAYER TAB FUNCTIONS
-    #--------------------------------------------------------------
-    # Array to update the interface from the game state. Contains all changeable interface elements.
-    render_array = [
-        # game_name,
+                new_game_name = gr.Textbox(
+                    value="",
+                    placeholder="What is your team name?",
+                    lines=1,
+                    label="Enter Team Name",
+                    interactive=True,
+                    scale=20,
+                    visible=True,
+                )
 
-        # player_message,
-        display_history,
+                start_game = gr.Button(
+                    value="Begin Adventure!",
+                    scale=1,
+                    size="sm",
+                    visible=True,
+                )
+                
+        with gr.Column(
+                scale=1,
+                variant="compact",
+                visible=False,
+            ) as stats_area:
 
-        # combat_box,
-        day_box,
-        item_box,
-        relationship_box,
-
-        execution_json,
-        game_state_json,
-    ]
-    #--------------------------------------------------------------
-    # SUBMIT FUNCTIONS
-    #--------------------------------------------------------------
-    submit_array = [
-        # Click "Do it!" button
-        submit.click(
-            # Add the player message to the history
-            fn=game.submit, 
-            inputs=[model, player_message, system_message],
-            outputs=[player_message] + render_array,
-            queue=False
-        ),
-        # Press enter key
-        player_message.submit(
-            # Add the player message to the history
-            fn=game.submit, 
-            inputs=[model, player_message, system_message],
-            outputs=[player_message] + render_array,
-            queue=False
-        ),
-        # Click "Retry" button
-        retry.click(
-            # Remove the last assistant message from the history
-            fn=game.retry,
-            inputs=[],
-            outputs=render_array,
-            queue=False
-        ),
-        # Restart the game
-            clear.click(
-            fn=game.clear,
-            inputs=[],
-            outputs=render_array,
-        ),
-    ]
-    
-    # What happens after the player submits a message
-    for submit_item in submit_array:
-        # Generate the assistant message
-        submit_item.then(
-            fn=game.stream_prediction,
-            inputs=[],
-            outputs=render_array,
-            queue=True
-        )
-    
-    #--------------------------------------------------------------
-    # AUXILIARY FUNCTIONS
-    #--------------------------------------------------------------
-    # Undo the last user and assistant message
-    undo.click(
-        fn=game.undo,
-        inputs=[],
-        outputs=render_array,
-        queue=False
-    )
-
-    # Delete the game
-    delete_game.click(
-        fn=game.delete_history,
-        inputs=[game_name],
-        outputs=render_array,
-        queue=False
-    )
-
-    # Load the game on enter
-    game_name.submit(
-        fn=game.load_history,
-        inputs=[game_name],
-        outputs=render_array,
-        queue=False
-    )
-
-    # Load the game on button click
-    load_game.click(
-        fn=game.load_history,
-        inputs=[game_name],
-        outputs=render_array,
-        queue=False
-    )
-
-    # Save the game on button click
-    save_game.click(
-        fn=game.save_history,
-        inputs=[game_name],
-        outputs=[],
-        queue=False
-    )
-
-    
+            day_box = gr.Textbox(lines=1, label="Today", interactive=False)
+            item_box = gr.Textbox(lines=5, label="Items", interactive=False)
+            relationship_box = gr.Textbox(lines=10, label="Relationships", interactive=False)

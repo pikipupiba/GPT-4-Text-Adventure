@@ -9,9 +9,9 @@ class FileManager:
     SYSTEM_MESSAGE_FOLDER = os.path.join(os.getcwd(), "data", "system_message")
     EXAMPLE_HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "example_history")
 
-    def save_system_message(system_message_name: str):
+    def save_system_message(system_message_name: str, system_message: str):
         logger.info(f"Saving system message | {system_message_name}")
-        FileManager.save_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt")
+        FileManager.save_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", system_message)
 
     def load_system_message(system_message_name: str):
         logger.info(f"Loading system message | {system_message_name}")
