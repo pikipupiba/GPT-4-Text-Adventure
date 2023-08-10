@@ -17,6 +17,11 @@ from PythonClasses.LLM import LLM
 
 
 class Speech:
+# The `Speech` class is a Python class that provides functionality for converting text to speech
+# using the Amazon Polly service. It initializes with a directory where the audio files will be
+# saved and provides methods for adding sentences, converting the sentences to SSML format, and
+# generating speech responses using the Amazon Polly service.
+
     config = Config(
         region_name="us-east-1",
         signature_version="v4",
@@ -24,10 +29,14 @@ class Speech:
     )
     client = boto3.client("polly", config=config)
 
+<<<<<<< HEAD
     def __init__(self):
         self.input_stream = ""
+=======
+    def __init__(self, directory: str):
+        self.directory = directory
+>>>>>>> c1237ddf7eeb21e2ab37665937d35765b692ae67
         self.sentences = []
-        self.audios = []
         self.ssml = []
         
     def add_sentence(self, text: str):

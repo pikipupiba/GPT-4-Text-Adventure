@@ -25,6 +25,8 @@ logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", l
 
 # --------------------------------------------------------------
 
+
+
 # #--------------------------------------------------------------
 # #                      PLAYER TAB FUNCTIONS
 # #--------------------------------------------------------------
@@ -49,7 +51,7 @@ story_interface_array = [
 with player_tab:
     start_game.click(
         fn=Game,
-        inputs=[game_name ],
+        inputs=[game_name],
         outputs=[],
         queue=False,
     ).then(
@@ -167,18 +169,18 @@ with config_tab:
 
 
 
-
+game_area = gr.TabbedInterface(
+    [player_tab, gm_tab, config_tab],
+    ["Player", "Game Master", "Config"],
+    title="AI Adventure Academy",
+)
 
 
 
 
 # --------------------------------------------------------------
 
-game_area = gr.TabbedInterface(
-    [player_tab, gm_tab, config_tab],
-    ["Player", "Game Master", "Config"],
-    title="AI Adventure Academy",
-)
+
 
 share_mode_string = os.getenv("SHARE_MODE", "false")
 share_mode = share_mode_string.lower() == 'true'

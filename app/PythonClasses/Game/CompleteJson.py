@@ -2,6 +2,12 @@ import json
 from loguru import logger
 
 class CompleteJson:
+# The `CompleteJson` class is a Python class that provides a method called `complete_json`. This
+# method takes a string as input and attempts to complete any incomplete JSON structures in the
+# string. It uses a finite state machine (FSM) approach to parse the input string and identify
+# the incomplete JSON structures. It then adds the necessary closing brackets or quotes to
+# complete the structures.
+
     def complete_json(data):
 
         try:

@@ -28,7 +28,7 @@ with gr.Blocks() as player_tab:
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
-                value="", 
+                value=[[None, "Welcome to AI Adventure Academy, where every day is an opportunity for a new adventure."]], 
             )
 
             # USER MESSAGE AREA

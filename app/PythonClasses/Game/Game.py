@@ -20,6 +20,11 @@ from PythonClasses.Game.CompleteJson import CompleteJson
 
 
 class Game:
+# The `Game` class  represents a game session. It keeps track of the game
+# state, history of turns, and provides methods for interacting with the game. It also includes
+# methods for rendering the game story, undoing turns, retrying turns, clearing the history,
+# restarting the game, and submitting user messages. Additionally, it includes a method for
+# streaming predictions from the language model.
 
     START, STOP, PREDICTING = range(3)
 

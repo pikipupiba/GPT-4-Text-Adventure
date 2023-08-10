@@ -5,6 +5,8 @@ from loguru import logger
 from PythonClasses.Helpers.helpers import generate_dice_string
 
 class UserMessage:
+# The `UserMessage` class is a Python class that provides a method called `build`. This method
+# takes a user message as input and performs several operations on it.
     
     def build(user_message: str):
 
