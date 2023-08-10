@@ -15,7 +15,16 @@ import openai
 
 
 class LLM:
-
+    def oneshot(system_message: str, user_message: str, model: str = "gpt-4"):
+        chat = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message},
+            ],
+        )
+        return chat.choices[0].message["content"]
+    
     def build_openai_history_array(raw_history):
 
         logger.debug("Building history OpenAI format")
