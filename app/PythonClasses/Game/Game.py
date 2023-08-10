@@ -5,6 +5,8 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
+import json
+
 import gradio as gr
 from loguru import logger
 from PythonClasses.Helpers.helpers import randomish_words
@@ -191,6 +193,7 @@ class Game:
 
         streaming_json = ""
         in_streaming_json = False
+        found_schema = False
         did_append_combat = False
         last_combat_string = ""
         Game._last_raw(game_name)[1] = ""
@@ -254,6 +257,7 @@ class Game:
                     Game._last_turn(game_name).stats = data["Stats_Schema"]
 
                 if complete:
+                    logger.info(json.dumps(data, indent=4))
                     if did_append_combat == True:
                         did_append_combat = False
                     streaming_json = ""

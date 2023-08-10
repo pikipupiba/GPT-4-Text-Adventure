@@ -79,9 +79,9 @@ with gr.Blocks() as player_tab:
 
                 game_name = gr.Textbox(
                     value="",
-                    placeholder="Character Name",
+                    placeholder="Bobby Hill",
                     lines=1,
-                    label="Enter Team Name",
+                    label="Enter Character Name",
                     interactive=True,
                     scale=20,
                     visible=True,
