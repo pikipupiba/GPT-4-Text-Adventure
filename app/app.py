@@ -9,6 +9,7 @@ from PythonClasses.player import *
 from PythonClasses.game_master import *
 from PythonClasses.config import *
 
+#FIXME - Redefining signal from outer scope
 def shutdown(signal, frame):
     # Perform any necessary cleanup or shutdown tasks here
     sys.exit(0)
@@ -19,7 +20,9 @@ logger.info("Starting app.py")
 uid = uuid.uuid4()
 logger.remove(0)
 logger.add(sys.stdout, level="INFO")
-logger.add(f"logs/{uid}"+"_{time:YYYY-MM-DD}_info.log", format="{time:YYYY-MM-DD HH:mm:ss} {level} {message}", level="INFO")
+logger.add(
+    f"logs/{uid}"+"_{time:YYYY-MM-DD}_info.log",
+    format="{time:YYYY-MM-DD HH:mm:ss} {level} {message}", level="INFO")
 logger.level("md",21)
 logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", level="md")
 
