@@ -6,14 +6,14 @@ def generate_dice_string(num_dice:int):
 # uses the `random.randint` function to generate a random number between 1 and 20 for each dice
 # roll. The function then constructs a string in the format "intRollArray:[roll1, roll2, ...,
 # rollN]" where roll1, roll2, ..., rollN are the randomly generated dice rolls.
-    dice_string = "intRollArray:["
+    dice_string = "{rolls:["
 
     for i in range(num_dice):
         dice_string += str(random.randint(1,20))
         if i != num_dice-1:
             dice_string += ","
         else:
-            dice_string += "]"
+            dice_string += "]}"
 
     return dice_string
 

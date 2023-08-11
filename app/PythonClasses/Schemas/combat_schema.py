@@ -26,7 +26,7 @@ combat_schema={
             },
             "modifierRationale":{
                 "type":"string",
-                "description":"rationale for roll modifier to allow for positive or negative externalities.",
+                "description":"rationale for roll modifier to allow for positive or negative externalities. Using the right item for a situation or being creative should give a bonus. Using the wrong item for a situation or being distracted or weak should give a penalty",
                 # "examples":[
                 #     "character is distracted",
                 #     "The character is very weak",
@@ -39,7 +39,7 @@ combat_schema={
             },
             "modifier":{
                 "type":"integer",
-                "description":"+/- to the roll based on modifier rationale"
+                "description":"+/- to the roll based on modifierRationale"
             },
             "numPreviousRolls":{
                 "type":"integer",
@@ -47,7 +47,7 @@ combat_schema={
             },
             "roll":{
                 "type":"integer",
-                "description":"the user will send an array of dice rolls with each turn called intRollArray[]. use intRollArray[numPreviousRolls] for this value"
+                "description":"the user will send an array of dice rolls with each turn called rolls[]. use rolls[numPreviousRolls] for this value"
             },
             "result":{
                 "type":"integer",
@@ -56,6 +56,10 @@ combat_schema={
             "success":{
                 "type":"boolean",
                 "description":"whether the action succeeds or not. True if result >= dc, False otherwise"
+            },
+            "elapsedTime":{
+                "type":"integer",
+                "description":"Minutes consumed by the combat. Be realistic and precise about how long the events described would take. For example, high fiving 10 people may only take 5 minutes or less, but playing a game of soccer might take more than 20 minutes."
             }
         }
     }

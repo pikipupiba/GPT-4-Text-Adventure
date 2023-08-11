@@ -12,6 +12,7 @@ class FileManager:
 
     DATA_FOLDER = os.path.join(os.getcwd(), "data")
     HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "history")
+    AUDIO_FOLDER = os.path.join(os.getcwd(), "data", "audio")
     SYSTEM_MESSAGE_FOLDER = os.path.join(os.getcwd(), "data", "system_message")
     EXAMPLE_HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "example_history")
 

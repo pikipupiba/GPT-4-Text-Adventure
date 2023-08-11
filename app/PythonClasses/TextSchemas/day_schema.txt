@@ -1,0 +1,1 @@
+"..DAY..{day of week} with {time remaining} minutes left. {some smart comment on the amount of time remaining}..DAY.."
