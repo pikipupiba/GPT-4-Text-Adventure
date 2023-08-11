@@ -58,6 +58,18 @@ class LLMModel:
         },
     ]
 
+    def get_cost(model:str, prompt_tokens:int, completion_tokens:int):
+
+        logger.trace(f"Getting price for model {model}")
+
+        get_price = LLMModel.get_price(model)
+
+        prompt_cost = prompt_tokens * get_price["prompt"]
+        completion_cost = completion_tokens * get_price["completion"]
+        total_cost = prompt_cost + completion_cost
+        
+        return prompt_cost, completion_cost, total_cost
+
     def get_price(model:str):
 
         logger.trace(f"Getting price for model {model}")
@@ -112,11 +124,7 @@ class LLMModel:
         
         logger.trace(f"Found model info for model {model}")
         
-        return {
-            "encoding": encoding,
-            "tokens_per_message": tokens_per_message,
-            "tokens_per_name": tokens_per_name,
-        }
+        return encoding, tokens_per_message, tokens_per_name,
     
     def num_tokens_from_text(model:str = None, text:str = None):
         """Return the number of tokens used by a string of text."""
@@ -138,7 +146,7 @@ class LLMModel:
 
         return num_tokens
 
-    def num_tokens_from_messages(messages, model:str = None):
+    def num_tokens_from_messages(model:str = None, messages: [] = None):
         """Return the number of tokens used by a list of messages."""
 
         logger.trace(f"Getting number of tokens from messages for model {model}")

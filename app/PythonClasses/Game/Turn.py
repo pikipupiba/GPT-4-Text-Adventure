@@ -10,6 +10,26 @@ class Turn:
     """
     This class represents the state of a game, including the message, history, raw history, stats, combat, and team name.
     """
+    DEFAULT_EXECUTION = {  
+        "model": None,
+        "time": {
+            "start": None,      # datetime
+            "end": None,        # datetime
+            "elapsed": None,    # HH:MM:SS
+        },
+        "tokens": {
+            "prompt": None,
+            "completion": None,
+            "total": None,
+            "TPM": None,
+        },
+        "cost": {
+            "prompt": None,
+            "completion": None,
+            "total": None,
+            "CPM": None,
+        },
+    }
 
     # defaults = {
     #     "type": None,           # enum ["normal", "example", "debug"]
@@ -60,6 +80,11 @@ class Turn:
                         if value[i] is "":
                             value[i] = None
                 setattr(self, key, value)
+
+            if self.combat is None:
+                self.combat = []
+            if self.execution is None or self.execution == {}:
+                self.execution = Turn.DEFAULT_EXECUTION
             return
 
         if len(args) == 3:
@@ -104,8 +129,11 @@ class Turn:
         if len(self.raw[0]) == 0:
             self.raw[0] = None
         
-        self.combat = []
-        self.execution = {}
+        if self.combat is None:
+            self.combat = []
+        if self.execution is None or self.execution == {}:
+            self.execution = Turn.DEFAULT_EXECUTION
+
         # Fill in stats, combat, and execution after response
 
     def has_stats(self):
@@ -121,7 +149,7 @@ class Turn:
             "raw": getattr(self, "raw", []),
             "stats": getattr(self, "stats", {}),
             "combat": getattr(self, "combat", []),
-            "execution": getattr(self, "execution", {}),
+            "execution": getattr(self, "execution", Turn.DEFAULT_EXECUTION),
         }
     
     

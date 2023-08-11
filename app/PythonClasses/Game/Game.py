@@ -6,6 +6,7 @@
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
 import json,re,os
+from datetime import datetime
 
 import gradio as gr
 from loguru import logger
@@ -15,6 +16,7 @@ from PythonClasses.Helpers.helpers import generate_dice_string
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.UserMessage import UserMessage
+from PythonClasses.LLM.LLMModel import LLMModel
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
@@ -148,6 +150,8 @@ class Game:
         # Sent to config tab for debugging
         turn_dict = Game._last_turn(game_name).__dict__()
 
+        execution_json = Game._last_turn(game_name).execution
+
         # Speech
         # speech = Game._audio(game_name).get_next_audio()
 
@@ -157,6 +161,7 @@ class Game:
             item_box,
             relationship_box,
             turn_dict,
+            execution_json,
             # speech,
         ]
     
@@ -251,6 +256,10 @@ class Game:
         system_message = current_turn.system_message
         raw_history = Game._raw_history(game_name)
 
+        prompt_tokens = LLMModel.num_tokens_from_messages(model, LLM.build_openai_history_array(Game._raw_history(game_name)))
+
+        start_time = datetime.now()
+
         Game._last_raw(game_name)[1] = ""
         Game._last_display(game_name)[1] = ""
 
@@ -258,11 +267,13 @@ class Game:
         schema_name = None
         item_index = None
         temp_string = ""
+        
 
         for chunk in LLM.predict(model, system_message, raw_history):
             if len(chunk["choices"][0]["delta"]) == 0:
                 break
 
+            Game._last_turn(game_name).execution["model"] = chunk.get("model", model)
             content = chunk["choices"][0]["delta"]["content"]
             Game._last_raw(game_name)[1] += content
 
@@ -337,3 +348,29 @@ class Game:
                     schema_name = None
 
             yield Game.render_story(game_name)
+
+        real_model = Game._last_turn(game_name).execution["model"]
+
+        end_time = datetime.now()
+        elapsed_time = end_time - start_time
+        Game._last_turn(game_name).execution["time"]["start"] = start_time
+        Game._last_turn(game_name).execution["time"]["end"] = end_time
+        Game._last_turn(game_name).execution["time"]["elapsed"] = elapsed_time
+
+        completion_tokens = LLMModel.num_tokens_from_text(real_model, Game._last_raw(game_name)[1])
+        total_tokens = prompt_tokens + completion_tokens
+        TPM = total_tokens / elapsed_time.total_seconds() * 60
+        Game._last_turn(game_name).execution["tokens"]["prompt"] = prompt_tokens
+        Game._last_turn(game_name).execution["tokens"]["completion"] = completion_tokens
+        Game._last_turn(game_name).execution["tokens"]["total"] = total_tokens
+        Game._last_turn(game_name).execution["tokens"]["TPM"] = TPM
+
+        prompt_cost, completion_cost, total_cost = LLMModel.get_cost(model, prompt_tokens, completion_tokens)
+        CPM = total_cost / elapsed_time.total_seconds() * 60
+
+        Game._last_turn(game_name).execution["cost"]["prompt"] = prompt_cost
+        Game._last_turn(game_name).execution["cost"]["completion"] = completion_cost
+        Game._last_turn(game_name).execution["cost"]["total"] = total_cost
+        Game._last_turn(game_name).execution["cost"]["CPM"] = CPM
+
+        yield Game.render_story(game_name)
