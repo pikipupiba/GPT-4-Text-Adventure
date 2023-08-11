@@ -8,8 +8,9 @@
 # wsl -s Ubuntu
 # wsl -d Ubuntu
 # exit
-# turn off auto start docker-desktop
+# turn off docker-desktop auto start
 # restart computer
+# launch docker-desktop
 
 # TODO: get openai api key from AWS secrets manager
 
