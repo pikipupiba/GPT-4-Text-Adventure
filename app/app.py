@@ -36,6 +36,7 @@ story_render_array = [
     day_box,
     item_box,
     relationship_box,
+    audio_box
 ]
 
 story_interface_array = [
