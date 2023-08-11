@@ -89,7 +89,7 @@ class LLMStreamProcessor:
                 OutputFormat="mp3",
                 VoiceId="Brian",
                 Text=sentence,
-                TextType=type,
+                TextType="ssml",
             )
         if "AudioStream" in response:
             with closing(response["AudioStream"]) as stream:
@@ -106,3 +106,4 @@ class LLMStreamProcessor:
             sentence, self.buffer = self._split_at_first_terminator(
                 self.buffer)
             self._send_to_api(sentence)
+
