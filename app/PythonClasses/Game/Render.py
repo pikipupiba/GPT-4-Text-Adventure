@@ -10,7 +10,7 @@ from PythonClasses.player import *
 
 class Render:
 
-    def render_story(chatbot: [], stats: {}):
+    def render_story(chatbot: [], stats: {}, audio_file):
         """
         This function is called when the game state changes.
         """
@@ -33,6 +33,7 @@ class Render:
             day_box,
             item_box,
             relationship_box,
+            audio_file
         ]
 
     @staticmethod

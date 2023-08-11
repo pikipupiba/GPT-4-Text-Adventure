@@ -5,6 +5,7 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
+import os
 import gradio as gr
 from loguru import logger
 from PythonClasses.Helpers.helpers import randomish_words
@@ -17,6 +18,8 @@ from PythonClasses.Game.UserMessage import UserMessage
 
 from PythonClasses.LLM.LLM import LLM
 from PythonClasses.Game.CompleteJson import CompleteJson
+from PythonClasses.Game.Speech import LLMStreamProcessor
+from PythonClasses.Game.FileManager import FileManager
 
 
 class Game:
@@ -35,6 +38,7 @@ class Game:
         logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
         self.game_name = game_name
+        self.audio = LLMStreamProcessor(os.path.join(FileManager.DATA_FOLDER,"audio", self.game_name))
 
         self.history = []
 
@@ -90,7 +94,8 @@ class Game:
 
     def _(game_name: str):
         return Game.GAMES[game_name]
-    
+    def _audio(game_name: str):
+        return Game._(game_name).audio
     def _last_turn(game_name: str):
         return Game._history(game_name)[-1]
     def _history(game_name: str):
@@ -126,8 +131,9 @@ class Game:
         """
         display_history = Game._display_history(game_name)
         stats = Game._stats(game_name)
+        audio = Game._audio(game_name)
         return Render.render_story(display_history, stats)
-    
+
     def undo(game_name: str):
         logger.info(f"Undoing last turn: {game_name}")
         if len(Game._history(game_name)) > 0:
@@ -210,7 +216,8 @@ class Game:
 
             # All chunks go to the raw history
             Game._last_raw(game_name)[1] += content
-            
+            Game._audio(game_name).process_data(content)
+
             if not in_streaming_json:
                 # Not currently in json stream, add chunk to chatbot
                 if content == "{\"":
