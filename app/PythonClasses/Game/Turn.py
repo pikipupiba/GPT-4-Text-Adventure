@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Tuple, Dict
 
 from loguru import logger
@@ -13,21 +14,30 @@ class Turn:
     DEFAULT_EXECUTION = {  
         "model": None,
         "time": {
-            "start": None,      # datetime
-            "end": None,        # datetime
-            "elapsed": None,    # HH:MM:SS
+            "turn": {
+                "start": None,      # datetime
+                "end": None,        # datetime
+                "elapsed": None,    # HH:MM:SS
+                "TPM": None,
+                "CPM": None,
+            },
+            "api_call": {
+                "start": None,      # datetime
+                "end": None,        # datetime
+                "elapsed": None,    # HH:MM:SS
+                "TPM": None,
+                "CPM": None,
+            },
         },
         "tokens": {
-            "prompt": None,
-            "completion": None,
-            "total": None,
-            "TPM": None,
+            "prompt": 0,
+            "completion": 0,
+            "total": 0,
         },
         "cost": {
-            "prompt": None,
-            "completion": None,
-            "total": None,
-            "CPM": None,
+            "prompt": 0,
+            "completion": 0,
+            "total": 0,
         },
     }
 
@@ -84,7 +94,8 @@ class Turn:
             if self.combat is None:
                 self.combat = []
             if self.execution is None or self.execution == {}:
-                self.execution = Turn.DEFAULT_EXECUTION
+                self.execution = Turn.DEFAULT_EXECUTION.copy()
+                self.execution["time"]["turn"]["start"] = datetime.datetime.now()
             return
 
         if len(args) == 3:
@@ -132,7 +143,8 @@ class Turn:
         if self.combat is None:
             self.combat = []
         if self.execution is None or self.execution == {}:
-            self.execution = Turn.DEFAULT_EXECUTION
+            self.execution = Turn.DEFAULT_EXECUTION.copy()
+            self.execution["time"]["turn"]["start"] = datetime.datetime.now()
 
         # Fill in stats, combat, and execution after response
 

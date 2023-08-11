@@ -33,6 +33,42 @@ class Game:
 
     START, STOP, PREDICTING = range(3)
 
+    TOTAL_EXECUTION = {
+        "model": None,
+        "time": {
+            "total": {
+                "start": None,
+                "end": None,
+                "elapsed": None,
+                "TPM": None,
+                "CPM": None,
+            },
+            "game_average": {
+                "total_tokens": 0,
+                "elapsed": None,
+                "TPM": None,
+                "CPM": None,
+            },
+            "turn_average": {
+                "total_tokens": 0,
+                "elapsed": None,
+                "TPM": None,
+                "CPM": None,
+            },
+        },
+        "tokens": {
+            "prompt": 0,
+            "completion": 0,
+            "total": 0,
+        },
+        "cost": {
+            "prompt": 0,
+            "completion": 0,
+            "total": 0,
+        },
+    }
+
+
     GAMES = {}
 
     # Initialize a new Game object for each active game.
@@ -199,6 +235,17 @@ class Game:
         # if "intRollArray" not in self.raw_history[-1][0]:
         #     self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
 
+        turn_start_time = Game._last_turn(game_name).execution["time"]["turn"]["start"]
+        turn_end_time = datetime.now()
+        turn_elapsed_time = turn_end_time - turn_start_time
+        turn_TPM = Game._last_turn(game_name).execution["tokens"]["total"] / turn_elapsed_time.total_seconds() * 60
+        turn_CPM = Game._last_turn(game_name).execution["cost"]["total"] / turn_elapsed_time.total_seconds() * 60
+
+        Game._last_turn(game_name).execution["time"]["turn"]["end"] = turn_end_time
+        Game._last_turn(game_name).execution["time"]["turn"]["elapsed"] = turn_elapsed_time
+        Game._last_turn(game_name).execution["time"]["turn"]["TPM"] = turn_TPM
+        Game._last_turn(game_name).execution["time"]["turn"]["CPM"] = turn_CPM
+
         if Game._num_turns(game_name) > 2:
             dice_string = generate_dice_string(5)
         else:
@@ -258,7 +305,7 @@ class Game:
 
         prompt_tokens = LLMModel.num_tokens_from_messages(model, LLM.build_openai_history_array(Game._raw_history(game_name)))
 
-        start_time = datetime.now()
+        api_start_time = datetime.now()
 
         Game._last_raw(game_name)[1] = ""
         Game._last_display(game_name)[1] = ""
@@ -351,26 +398,27 @@ class Game:
 
         real_model = Game._last_turn(game_name).execution["model"]
 
-        end_time = datetime.now()
-        elapsed_time = end_time - start_time
-        Game._last_turn(game_name).execution["time"]["start"] = start_time
-        Game._last_turn(game_name).execution["time"]["end"] = end_time
-        Game._last_turn(game_name).execution["time"]["elapsed"] = elapsed_time
+        api_end_time = datetime.now()
+        api_elapsed_time = api_end_time - api_start_time
+        Game._last_turn(game_name).execution["time"]["api_call"]["start"] = api_start_time
+        Game._last_turn(game_name).execution["time"]["api_call"]["end"] = api_end_time
+        Game._last_turn(game_name).execution["time"]["api_call"]["elapsed"] = api_elapsed_time
 
         completion_tokens = LLMModel.num_tokens_from_text(real_model, Game._last_raw(game_name)[1])
         total_tokens = prompt_tokens + completion_tokens
-        TPM = total_tokens / elapsed_time.total_seconds() * 60
+        TPM = total_tokens / api_elapsed_time.total_seconds() * 60
         Game._last_turn(game_name).execution["tokens"]["prompt"] = prompt_tokens
         Game._last_turn(game_name).execution["tokens"]["completion"] = completion_tokens
         Game._last_turn(game_name).execution["tokens"]["total"] = total_tokens
-        Game._last_turn(game_name).execution["tokens"]["TPM"] = TPM
 
         prompt_cost, completion_cost, total_cost = LLMModel.get_cost(model, prompt_tokens, completion_tokens)
-        CPM = total_cost / elapsed_time.total_seconds() * 60
+        CPM = total_cost / api_elapsed_time.total_seconds() * 60
 
         Game._last_turn(game_name).execution["cost"]["prompt"] = prompt_cost
         Game._last_turn(game_name).execution["cost"]["completion"] = completion_cost
         Game._last_turn(game_name).execution["cost"]["total"] = total_cost
-        Game._last_turn(game_name).execution["cost"]["CPM"] = CPM
+
+        Game._last_turn(game_name).execution["time"]["api_call"]["TPM"] = TPM
+        Game._last_turn(game_name).execution["time"]["api_call"]["CPM"] = CPM
 
         yield Game.render_story(game_name)
