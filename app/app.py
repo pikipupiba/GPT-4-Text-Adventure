@@ -51,6 +51,7 @@ story_interface_array = [
 
 
 with player_tab:
+    
     audio_box.stop(
         fn=Game.get_next_audio,
         inputs=[game_name],
