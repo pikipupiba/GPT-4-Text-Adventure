@@ -6,11 +6,12 @@
     "docwriter.progress.trackFunctions": true,
     "docwriter.style": "Auto-detect",
     "cSpell.words": [
-        "oneshot",
-        "openai",
-        "SSML",
         "boto",
         "boto3",
-        "botocore"
+        "botocore",
+        "loguru",
+        "oneshot",
+        "openai",
+        "SSML"
     ]
 }

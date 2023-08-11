@@ -17,15 +17,6 @@ import openai
 
 class LLM:
     """`LLM` is a class that provides methods for interacting with the OpenAI API. It includes
-methods for generating responses in a chat-like format (`oneshot`), building the history array
-in the required OpenAI format (`build_openai_history_array`), building the system message in
-the required OpenAI format (`build_openai_system_message`), predicting the next response based
-on the model, system message, and history (`predict`), and summarizing text (`summarize`).
-
-    Returns:
-        _type_: _description_
-    """
-    """`LLM` is a class that provides methods for interacting with the OpenAI API. It includes
     methods for generating responses in a chat-like format (`oneshot`), building the history array
     in the required OpenAI format (`build_openai_history_array`), building the system message in
     the required OpenAI format (`build_openai_system_message`), predicting the next response based
