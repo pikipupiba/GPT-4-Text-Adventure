@@ -2,6 +2,9 @@ import os
 from typing import List, Tuple
 from loguru import logger
 
+from PythonClasses.LLM.LLMModel import LLMModel
+from PythonClasses.LLM.LLMToken import LLMToken
+
 import openai
 
 # # set Open AI API Key

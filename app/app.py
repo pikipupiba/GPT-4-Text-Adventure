@@ -37,6 +37,7 @@ story_render_array = [
     item_box,
     relationship_box,
     turn_json,
+    execution_json,
     # audio_box,
 ]
 

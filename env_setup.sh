@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Update and install required packages
-apt-get update
-apt-get install -y git awscli jq
+yum update
+yum install -y git awscli jq
 
 # Fetch the OPENAI_API_KEY from AWS Secrets Manager
 SECRET_NAME="OPENAI_API_KEY"

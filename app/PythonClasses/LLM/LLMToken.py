@@ -1,5 +1,5 @@
 from loguru import logger
-from PythonClasses.OpenAI.LLMModel import LLMModel
+from PythonClasses.LLM.LLMModel import LLMModel
 
 class LLMToken:
 # The `LLMToken` class is a Python class that represents a token in a language model. It has
