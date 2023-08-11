@@ -202,6 +202,12 @@ class Game:
         setattr(Game._last_turn(game_name), "stats", {})
         setattr(Game._last_turn(game_name), "execution", {})
 
+        format_strings = {
+            "day": "..DAY..{day of week} with {time remaining: integer} minutes left. {some short smart comment on the amount of time remaining: <5 words}..DAY..",
+            "item": "..ITEM..{item name} ({item condition, status: <10 words})..ITEM..",
+            "relationship": "..RELATIONSHIP..{relationship type}: {number of NPCs of this type: integer} ({relationship status: <10 words})..RELATIONSHIP..",
+        }
+
         for chunk in LLM.predict(model, system_message, raw_history):
 
             if len(chunk["choices"][0]["delta"]) == 0:
