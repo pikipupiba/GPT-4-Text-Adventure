@@ -36,6 +36,8 @@ story_render_array = [
     day_box,
     item_box,
     relationship_box,
+    turn_json,
+    audio_box,
 ]
 
 story_interface_array = [
@@ -49,7 +51,38 @@ story_interface_array = [
 
 
 with player_tab:
+    audio_box.stop(
+        fn=Game.get_next_audio,
+        inputs=[game_name],
+        outputs=[audio_box],
+        queue=False,
+        # every=5,
+    )
+
     start_game.click(
+        fn=Game,
+        inputs=[game_name, chatbot, system_message],
+        outputs=[],
+        queue=False,
+    ).then(
+        fn= Game.start,
+        inputs=[game_name],
+        outputs=story_render_array + story_interface_array,
+        queue=False,
+    ).then(
+        # Add the player message to the history
+        fn=Game.submit,
+        inputs=[game_name, user_message, system_message, select_model],
+        outputs=[user_message] + story_render_array,
+        queue=False
+    ).then(
+        fn=Game.stream_prediction,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=True
+    )
+
+    game_name.submit(
         fn=Game,
         inputs=[game_name, chatbot, system_message],
         outputs=[],

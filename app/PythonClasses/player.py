@@ -41,7 +41,7 @@ Every 'day' in the game lasts for an hour, and actions consume time. Make sure t
 
 Finally, if you are confused or don’t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.
 
-Start by telling me what your character's name is!
+With all that out of the way, let’s get started! What is your name?
         '''
         ]
     ]
@@ -75,7 +75,7 @@ with gr.Blocks() as player_tab:
                     size="sm",
                     visible=False,
                 )
-                
+
 
                 game_name = gr.Textbox(
                     value="",
@@ -92,6 +92,16 @@ with gr.Blocks() as player_tab:
                     scale=1,
                     size="sm",
                     visible=True,
+                )
+
+                audio_box = gr.Audio(
+                    # value="/path/to/intro.mp3",
+                    label="Audio",
+                    type="numpy",
+                    scale=1,
+                    visible=True,
+                    interactive=False,
+                    autoplay=True,
                 )
                 
         with gr.Column(

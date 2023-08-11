@@ -103,8 +103,7 @@ class Turn:
             self.display[0] = None
         if len(self.raw[0]) == 0:
             self.raw[0] = None
-
-        self.stats = {}
+        
         self.combat = []
         self.execution = {}
         # Fill in stats, combat, and execution after response
