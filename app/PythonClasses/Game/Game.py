@@ -17,6 +17,7 @@ from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.UserMessage import UserMessage
 from PythonClasses.LLM.LLMModel import LLMModel
+from PythonClasses.LLM.TokenTracker import TokenTracker
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
@@ -34,7 +35,6 @@ class Game:
     START, STOP, PREDICTING = range(3)
 
     TOTAL_EXECUTION = {
-        "model": None,
         "time": {
             "total": {
                 "start": None,
@@ -68,7 +68,6 @@ class Game:
         },
     }
 
-
     GAMES = {}
 
     # Initialize a new Game object for each active game.
@@ -77,6 +76,9 @@ class Game:
         self.state = Game.START
         self.game_name = game_name
         # self.audio = LLMStreamProcessor(game_name)
+
+        self.execution = {}
+        self.execution["total"]["start"] = datetime.now()
 
         self.history = []
 
@@ -118,6 +120,65 @@ class Game:
         
         Game.GAMES[game_name] = self
 
+    def calculate_game_execution(self):
+        logger.info("Calculating total execution")
+
+        start_time = self.execution["start"]
+        end_time = datetime.now()
+        elapsed_time = end_time - start_time
+
+        self.execution["time"]["total"]["end"] = end_time
+        self.execution["time"]["total"]["elapsed"] = elapsed_time
+
+        self.execution["models"] = {}
+
+        for turn in self.history:
+            turn_model = turn.execution["model"]
+            if turn_model not in self.execution["models"]:
+                self.execution["models"][turn_model] = {
+                    "time": {
+                        "elapsed": 0,
+                        "TPM": 0,
+                        "CPM": 0,
+                    },
+                    "tokens": {
+                        "prompt": 0,
+                        "completion": 0,
+                        "total": 0,
+                    },
+                    "cost": {
+                        "prompt": 0,
+                        "completion": 0,
+                        "total": 0,
+                    },
+                }
+
+            turn_prompt_tokens = turn.execution["tokens"]["prompt"]
+            turn_completion_tokens = turn.execution["tokens"]["completion"]
+            turn_total_tokens = turn.execution["tokens"]["total"]
+
+            turn_prompt_cost = turn.execution["cost"]["prompt"]
+            turn_completion_cost = turn.execution["cost"]["completion"]
+            turn_total_cost = turn.execution["cost"]["total"]
+
+            turn_elapsed_time = turn.execution["time"]["api_call"]["elapsed"].total_seconds()
+            turn_TPM = turn.execution["time"]["turn"]["TPM"]
+            turn_CPM = turn.execution["time"]["turn"]["CPM"]
+
+            game_prompt_tokens += self.execution["tokens"]["prompt"]
+
+
+            self.execution["models"][model]["total_tokens"] += turn.execution["tokens"]["total"]
+            self.execution["models"][model]["total_cost"] += turn.execution["cost"]["total"]
+            self.execution["models"][model]["total_time"] += turn.execution["time"]["api_call"]["elapsed"].total_seconds()
+
+
+
+
+
+        Game.TOTAL_EXECUTION = {
+
+        }
 
     def start(game_name: str):
         logger.info(f"Starting Game: {game_name}")

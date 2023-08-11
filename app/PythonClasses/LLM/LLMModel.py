@@ -9,6 +9,8 @@ class LLMModel:
 # their corresponding prices.
     # Class for looking up information about LLM models
 
+    ACTIVE_MODELS = {}
+
     AVAILABLE_MODELS = [
         # GPT-3.5 Turbo
         "gpt-3.5-turbo",
@@ -35,7 +37,7 @@ class LLMModel:
         # "code-davinci-002",
     ]
 
-    prices = [
+    PRICES = [
         {
             "models": ["gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-0613"],
             "prompt": 0.0000015,
@@ -58,19 +60,32 @@ class LLMModel:
         },
     ]
 
+    def __init__(self, model:str = None):
+
+        self.model = model
+
+        if model not in LLMModel.ACTIVE_MODELS:
+            LLMModel.ACTIVE_MODELS[model] = self
+
+        self.encoding, self.tokens_per_message, self.tokens_per_name = LLMModel._encoding(model)
+        self.price = LLMModel._price(model)
+        
+
     def get_cost(model:str, prompt_tokens:int, completion_tokens:int):
 
         logger.trace(f"Getting price for model {model}")
 
-        get_price = LLMModel.get_price(model)
+        
 
-        prompt_cost = prompt_tokens * get_price["prompt"]
+        price = LLMModel.ACTIVE_MODELS[model].price
+
+        prompt_cost = prompt_tokens * self.price["prompt"]
         completion_cost = completion_tokens * get_price["completion"]
         total_cost = prompt_cost + completion_cost
         
         return prompt_cost, completion_cost, total_cost
 
-    def get_price(model:str):
+    def _price(model:str):
 
         logger.trace(f"Getting price for model {model}")
 
@@ -82,7 +97,7 @@ class LLMModel:
         logger.error(f"Model {model} not found in price list.")
         return None
     
-    def get_model_info(model:str):
+    def _encoding(model:str):
         logger.trace(f"Getting model info for model {model}")
         if model is None:
             logger.error("Model not specified.")
@@ -113,10 +128,10 @@ class LLMModel:
             tokens_per_name = -1  # if there's a name, the role is omitted
         elif "gpt-3.5-turbo" in model:
             # print("Warning: gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
-            return LLMModel.get_model_info(model="gpt-3.5-turbo-0613")
+            return LLMModel._encoding(model="gpt-3.5-turbo-0613")
         elif "gpt-4" in model:
             # print("Warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
-            return LLMModel.get_model_info(model="gpt-4-0613")
+            return LLMModel._encoding(model="gpt-4-0613")
         else:
             raise NotImplementedError(
                 f"""num_tokens_from_messages() is not implemented for model {model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens."""
@@ -134,7 +149,7 @@ class LLMModel:
             logger.error("Text not specified.")
             return None
 
-        encoding, tokens_per_message, tokens_per_name = LLMModel.get_model_info(model)
+        encoding, tokens_per_message, tokens_per_name = LLMModel._encoding(model)
 
         if encoding is None:
             logger.error(f"Encoding not found for model {model}")
@@ -151,7 +166,7 @@ class LLMModel:
 
         logger.trace(f"Getting number of tokens from messages for model {model}")
 
-        encoding, tokens_per_message, tokens_per_name = LLMModel.get_model_info(model)
+        encoding, tokens_per_message, tokens_per_name = LLMModel._encoding(model)
 
         if None in (encoding, tokens_per_message, tokens_per_name):
             logger.error(f"Model info not found for model {model}")

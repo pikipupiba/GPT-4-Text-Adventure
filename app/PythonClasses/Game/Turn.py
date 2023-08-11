@@ -17,14 +17,12 @@ class Turn:
             "turn": {
                 "start": None,      # datetime
                 "end": None,        # datetime
-                "elapsed": None,    # HH:MM:SS
                 "TPM": None,
                 "CPM": None,
             },
             "api_call": {
                 "start": None,      # datetime
                 "end": None,        # datetime
-                "elapsed": None,    # HH:MM:SS
                 "TPM": None,
                 "CPM": None,
             },
@@ -32,12 +30,10 @@ class Turn:
         "tokens": {
             "prompt": 0,
             "completion": 0,
-            "total": 0,
         },
         "cost": {
             "prompt": 0,
             "completion": 0,
-            "total": 0,
         },
     }
 

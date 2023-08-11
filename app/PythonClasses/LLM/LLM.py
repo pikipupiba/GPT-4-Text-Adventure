@@ -3,7 +3,7 @@ from typing import List, Tuple
 from loguru import logger
 
 from PythonClasses.LLM.LLMModel import LLMModel
-from PythonClasses.LLM.LLMToken import LLMToken
+from PythonClasses.LLM.TokenTracker import TokenTracker
 
 import openai
 
