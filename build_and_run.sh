@@ -1,4 +1,15 @@
 #!/bin/bash
+# Troubleshooting:
+
+# wsl create process not expected to return
+
+# wsl --install Ubuntu
+# exit
+# wsl -s Ubuntu
+# wsl -d Ubuntu
+# exit
+# turn off auto start docker-desktop
+# restart computer
 
 # TODO: get openai api key from AWS secrets manager
 
