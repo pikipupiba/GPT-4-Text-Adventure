@@ -54,7 +54,7 @@ with gr.Blocks() as player_tab:
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
-                value=intro, 
+                value=intro,
             )
 
             # USER MESSAGE AREA
@@ -75,7 +75,6 @@ with gr.Blocks() as player_tab:
                     size="sm",
                     visible=False,
                 )
-                
 
                 game_name = gr.Textbox(
                     value="",
@@ -93,7 +92,15 @@ with gr.Blocks() as player_tab:
                     size="sm",
                     visible=True,
                 )
-                
+
+                audio_box = gr.Audio(
+                    value="",
+                    label="Audio",
+                    type="file",
+                    scale=1,
+                    visible=False,
+                )
+
         with gr.Column(
                 scale=1,
                 variant="compact",

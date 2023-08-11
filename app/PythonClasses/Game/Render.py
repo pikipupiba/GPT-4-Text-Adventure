@@ -35,8 +35,9 @@ class Render:
             relationship_box,
         ]
 
+    @staticmethod
     def render_stats(stats = {}):
-        if (stats == {}):
+        if stats == {}:
             return [
                 "??? --- ??? minutes left",
                 "???",
@@ -70,6 +71,7 @@ class Render:
             relationships_string,
         ]
 
+    @staticmethod
     def render_combat(combat: {}):
         logger.trace("RENDERING COMBAT!!!")
         combat_string=""
@@ -93,7 +95,7 @@ class Render:
         #     if combat["success"] == True:
         #         combat_string += f'\n---> | Success! |'
         #     else:
-        #         combat_string += f'\n---> | Failure! |' 
+        #         combat_string += f'\n---> | Failure! |'
 
         logger.trace("DONE RENDERING COMBAT!!!")
 
