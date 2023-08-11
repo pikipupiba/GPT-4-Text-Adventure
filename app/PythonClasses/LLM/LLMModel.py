@@ -60,30 +60,32 @@ class LLMModel:
         },
     ]
 
-    def __init__(self, model:str = None):
+    def __init__(self, model_name:str = None):
 
-        self.model = model
+        if model_name in LLMModel.ACTIVE_MODELS:
+            logger.trace(f"Model {model_name} already loaded. Returning existing model.")
+            return LLMModel.ACTIVE_MODELS[model_name]
+        
+        self.name = model_name
+        self.price = LLMModel._price(model_name)
 
-        if model not in LLMModel.ACTIVE_MODELS:
-            LLMModel.ACTIVE_MODELS[model] = self
+        self.encoding = LLMModel._encoding(model_name)
+        self.num_tokens_from_text = LLMModel._num_tokens_from_text(model_name)
+        self.num_tokens_from_messages = LLMModel._num_tokens_from_messages(model_name)
 
-        self.encoding, self.tokens_per_message, self.tokens_per_name = LLMModel._encoding(model)
-        self.price = LLMModel._price(model)
+        LLMModel.ACTIVE_MODELS[model_name] = self
         
 
-    def get_cost(model:str, prompt_tokens:int, completion_tokens:int):
+    def cost(self, model:str, prompt_tokens:int = 0, completion_tokens:int = 0):
 
         logger.trace(f"Getting price for model {model}")
 
-        
-
         price = LLMModel.ACTIVE_MODELS[model].price
 
-        prompt_cost = prompt_tokens * self.price["prompt"]
-        completion_cost = completion_tokens * get_price["completion"]
-        total_cost = prompt_cost + completion_cost
+        prompt_cost = prompt_tokens * price["prompt"]
+        completion_cost = completion_tokens * price["completion"]
         
-        return prompt_cost, completion_cost, total_cost
+        return prompt_cost, completion_cost
 
     def _price(model:str):
 
@@ -141,7 +143,7 @@ class LLMModel:
         
         return encoding, tokens_per_message, tokens_per_name,
     
-    def num_tokens_from_text(model:str = None, text:str = None):
+    def _num_tokens_from_text(model:str = None, text:str = None):
         """Return the number of tokens used by a string of text."""
         logger.trace(f"Getting number of tokens from messages for model {model}")
 
@@ -161,7 +163,7 @@ class LLMModel:
 
         return num_tokens
 
-    def num_tokens_from_messages(model:str = None, messages: [] = None):
+    def _num_tokens_from_messages(model:str = None, messages: [] = None):
         """Return the number of tokens used by a list of messages."""
 
         logger.trace(f"Getting number of tokens from messages for model {model}")

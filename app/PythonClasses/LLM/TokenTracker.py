@@ -1,12 +1,37 @@
+from typing import List
 from datetime import datetime
 
 from loguru import logger
 from PythonClasses.LLM.LLMModel import LLMModel
 
+
+
+
 class LilToken:
-    def __init__(self, prompt: int = None, completion: int = None):
+    def __init__(self, model: str, prompt: int = None, completion: int = None):
+        self.model = LLMModel(model)
+
         self.prompt = prompt
         self.completion = completion
+
+    def set(self, prompt: int = None, completion: int = None):
+        if prompt is not None:
+            self.prompt = prompt
+        if completion is not None:
+            self.completion = completion
+
+    def tokens(self):
+        return self.prompt, self.completion
+    
+    def total_tokens(self):
+        return self.prompt + self.completion
+
+    def cost(self):
+        return self.model.cost(self.prompt, self.completion)
+    
+    def total_cost(self):
+        prompt_cost, completion_cost = self.model.cost(self.prompt, self.completion)
+        return prompt_cost + completion_cost
 
     def __add__(self, other):
         logger.trace(f"Adding tokens from models {self.model} and {other.model}")
@@ -14,52 +39,26 @@ class LilToken:
             logger.error("Cannot add tokens from different models.")
             return None
         
-        return TokenTracker(
+        return LilToken(
+            self.model.name,
             self.prompt + other.prompt,
-            self.completion + other.completion,
-            self.total + other.total
+            self.completion + other.completion
         )
 
 class TokenTracker:
-# The `LLMToken` class is a Python class that represents a token in a language model. It has
-# attributes such as `prompt`, `completion`, and `total` which represent the number of tokens in
-# the prompt, completion, and the total number of tokens respectively.
+
 
     def __init__(self, model: str, prompt: int = None, completion: int = None):
         self.model = LLMModel(model)
 
-        self.time = {
-            "start": datetime.now(),
-            "end": None,
-            "elapsed": None,
-        }
+        self.start = datetime.now()
+        self.end = None
 
         # Total amounts of each token type
-        self.tokens = {
-            "prompt": prompt,
-            "completion": completion,
-        }
-        self.cost = {
-            "prompt": None,
-            "completion": None,
-        }
-        self.tpm = {
-            "prompt": None,
-            "completion": None,
-        }
-        self.cpm = {
-            "prompt": None,
-            "completion": None,
-        }
+        self.tokens = LilToken(model, prompt, completion)
 
-
-        
-        if self.prompt and self.completion:
-            self.total = self.prompt + self.completion
-
-        self.calculate_cost()
     
-    def total(self):
+    def _rate(self):
 
         total_time = self.time["end"] - self.time["start"]
         total_tokens = self.tokens["prompt"] + self.tokens["completion"]
@@ -106,9 +105,8 @@ class TokenTracker:
 
         self.calculate_cost()
     
-    def calculate_cost(self, model: LLMModel = None):
-        if model is None:
-            model = self.model
-
+    def calculate_cost(self):
+        
+        self.model.
         
         return model.cost(self.total)
