@@ -3,6 +3,8 @@ from typing import List, Tuple, Dict
 
 from loguru import logger
 
+from PythonClasses.LLM.TokenTracker import TokenTracker
+
 class Turn:
 # The `Turn` class represents the state of a game turn. It includes attributes such as the
 # model, user message, system message, type, display, raw, stats, combat, and execution. The
@@ -92,6 +94,8 @@ class Turn:
             if self.execution is None or self.execution == {}:
                 self.execution = Turn.DEFAULT_EXECUTION.copy()
                 self.execution["time"]["turn"]["start"] = datetime.datetime.now()
+
+            self.token_tracker = TokenTracker(model, prompt, completion)
             return
 
         if len(args) == 3:
