@@ -1,11 +1,8 @@
 from loguru import logger
-from PythonClasses.OpenAI.LLMModel import LLMModel
+from PythonClasses.LLM.LLMModel import LLMModel
 
 class LLMToken:
-# The `LLMToken` class is a Python class that represents a token in a language model. It has
-# attributes such as `prompt`, `completion`, and `total` which represent the number of tokens in
-# the prompt, completion, and the total number of tokens respectively.
-
+    """`LLMToken` is for tracking model token usage"""
     def __init__(self, *args, **kwargs):
         if "usage" in kwargs:
             self.prompt = kwargs["usage"]["prompt_tokens"]
@@ -14,31 +11,31 @@ class LLMToken:
         else:
             self.prompt = args[0]
             self.completion = args[1]
-            if len(args) > 2:
-                self.total = args[2]
-            else:
-                self.total = self.prompt + self.completion
-
+            self.total = args[2] if len(args) > 2 else self.prompt + self.completion
         self.model = kwargs.get("model", None)
-
         self.calculate_cost()
-        
 
     def __add__(self, other):
         logger.trace(f"Adding tokens from models {self.model} and {other.model}")
         if self.model != other.model:
             logger.error("Cannot add tokens from different models.")
             return None
-        
         return LLMToken(
             self.prompt + other.prompt,
             self.completion + other.completion,
             self.total + other.total
             )
-    
+
     def calculate_cost(self, model: LLMModel = None):
+        """
+        Calculates the cost using a given model or the default model if none is provided.
+        
+        :param model: an instance of the `LLMModel` class. It is an optional parameter 
+        and has a default value of `None`. If no value is provided for `model`, the method will
+        use the `self.model` attribute as the default value
+        :type model: LLMModel
+        :return: the cost calculated by the model.
+        """
         if model is None:
             model = self.model
-
-        
         return model.cost(self.total)
