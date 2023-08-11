@@ -37,7 +37,7 @@ story_render_array = [
     item_box,
     relationship_box,
     turn_json,
-    audio_box,
+    # audio_box,
 ]
 
 story_interface_array = [
@@ -52,13 +52,13 @@ story_interface_array = [
 
 with player_tab:
     
-    audio_box.stop(
-        fn=Game.get_next_audio,
-        inputs=[game_name],
-        outputs=[audio_box],
-        queue=False,
-        # every=5,
-    )
+    # audio_box.stop(
+    #     fn=Game.get_next_audio,
+    #     inputs=[game_name],
+    #     outputs=[audio_box],
+    #     queue=False,
+    #     # every=5,
+    # )
 
     start_game.click(
         fn=Game,

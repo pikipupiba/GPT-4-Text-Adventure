@@ -94,15 +94,15 @@ with gr.Blocks() as player_tab:
                     visible=True,
                 )
 
-                audio_box = gr.Audio(
-                    # value="/path/to/intro.mp3",
-                    label="Audio",
-                    type="numpy",
-                    scale=1,
-                    visible=True,
-                    interactive=False,
-                    autoplay=True,
-                )
+                # audio_box = gr.Audio(
+                #     # value="/path/to/intro.mp3",
+                #     label="Audio",
+                #     type="numpy",
+                #     scale=1,
+                #     visible=True,
+                #     interactive=False,
+                #     autoplay=True,
+                # )
                 
         with gr.Column(
                 scale=1,

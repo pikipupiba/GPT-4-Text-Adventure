@@ -16,7 +16,7 @@ from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.UserMessage import UserMessage
 
-from PythonClasses.Game.Speech import LLMStreamProcessor
+# from PythonClasses.Game.Speech import LLMStreamProcessor
 
 from PythonClasses.LLM.LLM import LLM
 from PythonClasses.Game.CompleteJson import CompleteJson
@@ -38,7 +38,7 @@ class Game:
         logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
         self.game_name = game_name
-        self.audio = LLMStreamProcessor(game_name)
+        # self.audio = LLMStreamProcessor(game_name)
 
         self.history = []
 
@@ -99,11 +99,11 @@ class Game:
     # Access the game object by name
     def _(game_name: str):
         return Game.GAMES[game_name]
-    # Access audio object
-    def _audio(game_name: str):
-        return Game._(game_name).audio
-    def get_next_audio(game_name: str):
-        return Game._audio(game_name).get_next_audio()
+    # # Access audio object
+    # def _audio(game_name: str):
+    #     return Game._(game_name).audio
+    # def get_next_audio(game_name: str):
+    #     return Game._audio(game_name).get_next_audio()
     
     # Access the game history by name
     def _history(game_name: str):
@@ -149,9 +149,16 @@ class Game:
         turn_dict = Game._last_turn(game_name).__dict__()
 
         # Speech
-        speech = Game._audio(game_name).get_next_audio()
+        # speech = Game._audio(game_name).get_next_audio()
 
-        return [display_history, day_box, item_box, relationship_box, turn_dict, speech]
+        return [
+            display_history,
+            day_box,
+            item_box,
+            relationship_box,
+            turn_dict,
+            # speech,
+        ]
     
     def undo(game_name: str):
         logger.info(f"Undoing last turn: {game_name}")
@@ -262,7 +269,7 @@ class Game:
             # If not streaming, look for opening tag in the unprocessed content
             if not schema_name:
                 Game._last_display(game_name)[1] += content
-                Game._audio(game_name).process_data(content)
+                # Game._audio(game_name).process_data(content)
 
                 opening_match = re.search(schema_delimiter, Game._last_display(game_name)[1])
                 if opening_match:
