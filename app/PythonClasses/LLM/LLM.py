@@ -14,13 +14,46 @@ import openai
 # openai.api_key = api_key
 
 
-# `LLM` is a class that provides methods for interacting with the OpenAI API. It includes
-# methods for generating responses in a chat-like format (`oneshot`), building the history array
-# in the required OpenAI format (`build_openai_history_array`), building the system message in
-# the required OpenAI format (`build_openai_system_message`), predicting the next response based
-# on the model, system message, and history (`predict`), and summarizing text (`summarize`).
+
 class LLM:
-    def oneshot(system_message: str, user_message: str, model: str = "gpt-4"):
+    """`LLM` is a class that provides methods for interacting with the OpenAI API. It includes
+methods for generating responses in a chat-like format (`oneshot`), building the history array
+in the required OpenAI format (`build_openai_history_array`), building the system message in
+the required OpenAI format (`build_openai_system_message`), predicting the next response based
+on the model, system message, and history (`predict`), and summarizing text (`summarize`).
+
+    Returns:
+        _type_: _description_
+    """
+    """`LLM` is a class that provides methods for interacting with the OpenAI API. It includes
+    methods for generating responses in a chat-like format (`oneshot`), building the history array
+    in the required OpenAI format (`build_openai_history_array`), building the system message in
+    the required OpenAI format (`build_openai_system_message`), predicting the next response based
+    on the model, system message, and history (`predict`), and summarizing text (`summarize`).
+    
+    Returns:
+        _type_: _description_
+    
+    Raises:
+        _type_: _description_
+    
+    Examples:
+        >>> from app.PythonClasses.LLM import LLM
+        >>> LLM.oneshot("You're nice", "Hi")
+        'Hi, how are you?'
+    
+    """
+    @staticmethod
+    def oneshot(system_message: str, user_message: str, model: str = "gpt-3.5"):
+        """Send a single message to the OpenAI API and return the response.
+        
+        Args:
+            system_message (str): system message
+            user_message (str): user message
+            model (str, optional): _description_. Defaults to "gpt-3.5".
+        
+        Returns:
+            (str): OpenAi response"""
         chat = openai.ChatCompletion.create(
             model=model,
             messages=[
@@ -29,15 +62,23 @@ class LLM:
             ],
         )
         return chat.choices[0].message["content"]
-    
+
+    @staticmethod
     def build_openai_history_array(raw_history):
+        """Build the history array in the required OpenAI format.
+        
+        Args:
+            raw_history (List[Tuple[str, str]]): raw history
+            
+        Returns:
+            (List[Dict[str, str]]): history in OpenAI format"""
 
         logger.debug("Building history OpenAI format")
 
-        if raw_history == None:
+        if raw_history is None:
             logger.warning("No history provided. Returning None.")
             return None
-        
+
         history_openai_format = []
 
         # Convert history to OpenAI format
@@ -49,7 +90,7 @@ class LLM:
 
         return history_openai_format
 
-
+    @staticmethod
     def build_openai_system_message(system_message: str = None, model: str = "gpt-4"):
 
         logger.debug("Building system message OpenAI format")
@@ -74,7 +115,7 @@ class LLM:
 
         return system_message_openai_format
 
-
+    @staticmethod
     def predict(model: str = None, system_message: str = None, raw_history: List[any] = None):
 
         if model == None:

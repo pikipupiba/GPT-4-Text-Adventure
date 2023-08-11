@@ -1,6 +1,16 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.autopep8"
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    "docwriter.progress.trackFunctions": true,
+    "docwriter.style": "Auto-detect",
+    "cSpell.words": [
+        "oneshot",
+        "openai",
+        "SSML",
+        "boto",
+        "boto3",
+        "botocore"
+    ]
 }
