@@ -56,12 +56,12 @@ class History:
                 # If the system message has changed, update it.
                 if self.current_system_message is None or self.current_system_message.content[0] != other.content[0]:  # Assuming the first index (0) is for SYSTEM content
                     self.current_system_message = other
-            self.append(other)
+            self.messages.append(other)
         elif isinstance(other, list):
             for message in other:
                 if not isinstance(message, ChatMessage):
                     raise ValueError("The list should only contain ChatMessage objects.")
-                self.append(message)
+                self.messages.append(message)
         elif isinstance(other, History):
             self.messages.extend(other.messages)
         else:
@@ -196,3 +196,21 @@ class HistoryFilter(History):
         if hasattr(self, 'last_system_message') and self.last_system_message:
             recent_messages.append(self.last_system_message.context)
         return recent_messages
+    
+    def __iadd__(self, other: Union[ChatMessage, List[ChatMessage], 'History']) -> 'History':
+        if isinstance(other, ChatMessage):
+            if other.role == Role.SYSTEM:
+                # If the system message has changed, update it.
+                if self.current_system_message is None or self.current_system_message.content[0] != other.content[0]:  # Assuming the first index (0) is for SYSTEM content
+                    self.current_system_message = other
+            self.messages.append(other)
+        elif isinstance(other, list):
+            for message in other:
+                if not isinstance(message, ChatMessage):
+                    raise ValueError("The list should only contain ChatMessage objects.")
+                self.messages.append(message)
+        elif isinstance(other, History):
+            self.messages.extend(other.messages)
+        else:
+            raise ValueError("You can only add a ChatMessage, a list of ChatMessages, or another History to History.")
+        return self

@@ -17,7 +17,7 @@ from PythonClasses.Helpers.helpers import generate_dice_string
 from PythonClasses.LLM.OpenAI import OpenAIModel, OpenAIInterface
 from PythonClasses.LLM.LilToken import LilToken, BiglyToken
 from PythonClasses.Game.ChatMessage import Role
-from PythonClasses.Game.ChatMessage import ChatMessage, SystemMessage, UserMessage
+from PythonClasses.Game.ChatMessage import ChatMessage, SystemMessage
 from PythonClasses.Game.History import HistoryFilter, TurnState
 
 
