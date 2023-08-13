@@ -54,6 +54,7 @@
         "danielsanmedium.dscodegpt",
         "alefragnani.bookmarks",
         "ms-python.black-formatter",
-        "aaron-bond.better-comments"
+        "aaron-bond.better-comments",
+        "littlefoxteam.vscode-python-test-adapter"
     ]
 }

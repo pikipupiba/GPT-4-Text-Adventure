@@ -1,5 +1,8 @@
 import random
 
+def get_nth_or_value(value, n=0):
+    return value[n] if isinstance(value, (list, tuple)) and len(value) > n else value
+
 def generate_dice_string(num_dice:int):
 # The `generate_dice_string` function generates a string representation of a list of random dice
 # rolls. It takes an input `num_dice` which specifies the number of dice rolls to generate. It

@@ -3,3 +3,4 @@ gradio
 loguru
 tiktoken
 aioboto3
+reliablegpt

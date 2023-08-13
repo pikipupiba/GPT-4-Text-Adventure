@@ -53,7 +53,7 @@ with gr.Blocks() as config_tab:
     with gr.Column(variant="compact") as debug_area:
         # with gr.Row():
         #     token_jsons = []
-        #     for model_name,tracker in TokenTracker.trackers.items():
+        #     for model_name,tracker in LilToken.trackers.items():
         #         token_jsons.append(gr.JSON(label=f"{model_name} Token Tracker", interactive=False))
         execution_json = gr.JSON(label="Execution Info")
         turn_json = gr.JSON(label="Game State")

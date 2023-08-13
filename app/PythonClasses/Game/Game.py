@@ -13,15 +13,15 @@ from loguru import logger
 from PythonClasses.Helpers.helpers import randomish_words
 from PythonClasses.Helpers.helpers import generate_dice_string
 
+from PythonClasses.LLM.OpenAI import OpenAIModel, OpenAIInterface
+from PythonClasses.LLM.LilToken import LilToken
+from PythonClasses.Game.ChatMessage import History, ChatMessage, SystemMessage, UserMessage
 from PythonClasses.Game.Turn import Turn
-from PythonClasses.Game.SystemMessage import SystemMessage
-from PythonClasses.Game.UserMessage import UserMessage
-from PythonClasses.LLM.LLMModel import LLMModel
-from PythonClasses.LLM.TokenTracker import TokenTracker
+
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
-from PythonClasses.LLM.LLM import LLM
+from PythonClasses.LLM.OpenAI import OpenAIModel, OpenAIInterface
 from PythonClasses.Game.CompleteJson import CompleteJson
 
 
@@ -32,42 +32,10 @@ class Game:
 # restarting the game, and submitting user messages. Additionally, it includes a method for
 # streaming predictions from the language model.
 
+    # Token Trackers for all games.
+    TOKEN_TRACKERS = {model.name: LilToken(model) for model in OpenAIModel}
+
     START, STOP, PREDICTING = range(3)
-
-    TOTAL_EXECUTION = {
-        "time": {
-            "total": {
-                "start": None,
-                "end": None,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-            "game_average": {
-                "total_tokens": 0,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-            "turn_average": {
-                "total_tokens": 0,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-        },
-        "tokens": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0,
-        },
-        "cost": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0,
-        },
-    }
-
     GAMES = {}
 
     # Initialize a new Game object for each active game.
@@ -77,26 +45,13 @@ class Game:
         self.game_name = game_name
 
         # self.audio = LLMStreamProcessor(game_name)
+        # Token trackers for each game.
+        self.token_trackers = {model.name: LilToken(model) for model in OpenAIModel}
 
-        self.execution = {}
-        self.execution["total"]["start"] = datetime.now()
+        self.history = History()
 
-        self.history = []
+        
 
-        intro_json = {
-            "type": "normal",
-            "model": "gpt-4-0613",
-            "system_message": system_message,
-            "display": history[0],
-            "raw": history[0],
-            "stats": {
-                "DAY": "Monday",
-                "ITEM": [],
-                "RELATIONSHIP": [],
-            },
-            "combat": [],
-            "execution": {},
-        }
 
         self.history.append(Turn(intro_json))
 

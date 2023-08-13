@@ -1,1 +1,1 @@
-__all__ = ['Game', 'OpenAI', 'Helpers', 'Schemas', 'gm_tab', 'player_tab']
+__all__ = ['Game', 'LLM', 'Helpers', 'Schemas', 'gm_tab', 'player_tab']
