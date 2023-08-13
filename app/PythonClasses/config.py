@@ -6,9 +6,9 @@ from PythonClasses.Game.FileManager import FileManager
 from PythonClasses.Game.Game import Game
 
 use_models = [
-    "gpt-4-0613",
-    "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-16k-0613"
+    "GPT_4",
+    "GPT_3_5_TURBO",
+    "GPT_3_5_TURBO_16k"
 ]
 
 with gr.Blocks() as config_tab:

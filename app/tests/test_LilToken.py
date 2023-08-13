@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from PythonClasses.LLM.LilToken import LilToken
 from PythonClasses.LLM.OpenAI import OpenAIModel
-from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.ChatMessage import Role, DisplayType, ChatMessage
 from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 # Mocking the OpenAIModel for testing purposes

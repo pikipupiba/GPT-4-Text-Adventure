@@ -7,9 +7,8 @@ import tiktoken
 
 from loguru import logger
 
-from PythonClasses.LLM.openai_helpers import build_openai_history, build_openai_system_message
-from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
-from PythonClasses.Game.History import TurnState, History, HistoryFilter
+from PythonClasses.Game.ChatMessage import ChatMessage
+from PythonClasses.Game.History import History, HistoryFilter
 
 class OpenAIModel(Enum):
     '''Enum for model types.'''
@@ -39,6 +38,12 @@ class OpenAIModel(Enum):
         self.tokens_per_message = 3
         self.tokens_per_name = 1
         self.tokens_per_response = 3
+    
+    def get_model_by_name(model_name):
+        for model in OpenAIModel:
+            if model.value[0] == model_name:
+                return model
+        raise ValueError(f"Model {model_name} not found in OpenAIModel Enum.")
 
     def __str__(self):
         return self.model_name

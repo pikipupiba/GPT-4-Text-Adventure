@@ -1,5 +1,5 @@
 import pytest
-from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.ChatMessage import Role, DisplayType, ChatMessage
 from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 def test_init():
@@ -60,9 +60,9 @@ def test_iadd():
 
 def test_get_messages():
     history = History([chat_msg1, chat_msg2, chat_msg3])
-    msgs = history.get_messages(RoleType.USER, DisplayType.DISPLAY)
+    msgs = history.get_messages(Role.USER, DisplayType.DISPLAY)
     assert len(msgs[DisplayType.DISPLAY]) == 1
-    assert msgs[DisplayType.DISPLAY][0]['role'] == RoleType.USER
+    assert msgs[DisplayType.DISPLAY][0]['role'] == Role.USER
 
 def test_last_system_message():
     history = History([chat_msg1, chat_msg2, chat_msg3])
@@ -70,19 +70,19 @@ def test_last_system_message():
 
 def test_get_last_message_of_type():
     history = History([chat_msg1, chat_msg2, chat_msg3])
-    last_msg, index = history.get_last_message_of_type(RoleType.USER)
+    last_msg, index = history.get_last_message_of_type(Role.USER)
     assert last_msg == chat_msg1
     assert index == 0
 
 def test_last_role():
     history = History([chat_msg1, chat_msg2])
-    assert history.last_role == RoleType.ASSISTANT
+    assert history.last_role == Role.ASSISTANT
 
 def test_turn_state():
     history = History([chat_msg1, chat_msg2])
     assert history.turn_state == TurnState.AWAITING_USER
 
 # Setup
-chat_msg1 = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi"})
-chat_msg2 = ChatMessage(RoleType.ASSISTANT, {DisplayType.DISPLAY: "Hello"})
-chat_msg3 = ChatMessage(RoleType.SYSTEM, {DisplayType.DISPLAY: "Welcome"})
+chat_msg1 = ChatMessage(Role.USER, {DisplayType.DISPLAY: "Hi"})
+chat_msg2 = ChatMessage(Role.ASSISTANT, {DisplayType.DISPLAY: "Hello"})
+chat_msg3 = ChatMessage(Role.SYSTEM, {DisplayType.DISPLAY: "Welcome"})

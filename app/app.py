@@ -63,7 +63,7 @@ with player_tab:
 
     start_game.click(
         fn=Game,
-        inputs=[game_name, chatbot, system_message],
+        inputs=[game_name, select_model, chatbot, system_message],
         outputs=[],
         queue=False,
     ).then(
@@ -86,7 +86,7 @@ with player_tab:
 
     game_name.submit(
         fn=Game,
-        inputs=[game_name, chatbot, system_message],
+        inputs=[game_name, select_model, chatbot, system_message],
         outputs=[],
         queue=False,
     ).then(

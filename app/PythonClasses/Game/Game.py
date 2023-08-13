@@ -16,9 +16,9 @@ from PythonClasses.Helpers.helpers import generate_dice_string
 
 from PythonClasses.LLM.OpenAI import OpenAIModel, OpenAIInterface
 from PythonClasses.LLM.LilToken import LilToken, BiglyToken
-from PythonClasses.Game.ChatMessage import RoleType, DisplayType
+from PythonClasses.Game.ChatMessage import Role
 from PythonClasses.Game.ChatMessage import ChatMessage, SystemMessage, UserMessage
-from PythonClasses.Game.History import History, HistoryFilter, TurnState
+from PythonClasses.Game.History import HistoryFilter, TurnState
 
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
@@ -56,16 +56,16 @@ class Game:
             "display_distance": 60,
         })
 
-        self.model = OpenAIModel[model_name]
+        self.model = OpenAIModel.get_model_by_name(model_name)
 
-        self.history += ChatMessage(self.model, RoleType.SYSTEM, [SystemMessage.inject_schemas(system_message)])
+        self.history += ChatMessage(self.model, Role.SYSTEM, [SystemMessage.inject_schemas(system_message)])
         
 
         # Intro Assistant Message
-        self.history += ChatMessage(self.model, RoleType.Assistant, [chatbot[0][1]])
+        self.history += ChatMessage(self.model, Role.Assistant, [chatbot[0][1]])
         # User entered their character name. Now ask them to choose items.
         choose_items_string = game_name + "\n" + "{Greet me and ask me to choose items}"
-        self.history += ChatMessage(self.model, RoleType.USER, [game_name, choose_items_string])
+        self.history += ChatMessage(self.model, Role.USER, [game_name, choose_items_string])
         
         Game.GAMES[game_name] = self
 
@@ -163,9 +163,9 @@ class Game:
         system_message = SystemMessage.inject_schemas(system_message)
 
         # Update model, system message, and history
-        Game._(game_name).model = OpenAIModel[model_name]
-        Game._(game_name).history += ChatMessage(Game._(game_name).model, RoleType.SYSTEM, [SystemMessage.inject_schemas(system_message)])
-        Game._(game_name).history += ChatMessage(Game._(game_name).model, RoleType.USER, [user_message, complete_user_message])
+        Game._(game_name).model = OpenAIModel.get_model_by_name(model_name)
+        Game._(game_name).history += ChatMessage(Game._(game_name).model, Role.SYSTEM, [SystemMessage.inject_schemas(system_message)])
+        Game._(game_name).history += ChatMessage(Game._(game_name).model, Role.USER, [user_message, complete_user_message])
 
         # Clear input box and render story
         return [""] + Game.render_story(game_name)
@@ -177,7 +177,7 @@ class Game:
 
         next_day_message = "{Begin the next day}"
 
-        Game._(game_name).history += ChatMessage(Game._(game_name).model, RoleType.USER, ["", next_day_message])
+        Game._(game_name).history += ChatMessage(Game._(game_name).model, Role.USER, ["", next_day_message])
 
         return Game.stream_prediction(game_name)
     
@@ -185,7 +185,7 @@ class Game:
         logger.info("Streaming prediction")
        
 
-        response_message = ChatMessage(Game._(game_name).model, RoleType.ASSISTANT, ["", ""])
+        response_message = ChatMessage(Game._(game_name).model, Role.ASSISTANT, ["", ""])
         Game._(game_name).history += response_message
 
         schema_delimiter = r'\.\.[A-Z]+\.\.'  # regex pattern to find schema delimiters

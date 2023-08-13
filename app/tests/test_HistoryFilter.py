@@ -1,14 +1,14 @@
-from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.ChatMessage import Role, DisplayType, ChatMessage
 from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 import pytest
 
 def create_sample_messages():
     return [
-        ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "User 1", DisplayType.CONTEXT: "Context User 1"}),
-        ChatMessage(RoleType.ASSISTANT, {DisplayType.DISPLAY: "Assistant 1", DisplayType.CONTEXT: "Context Assistant 1", DisplayType.SUMMARY: "Summary Assistant 1"}),
-        ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "User 2", DisplayType.CONTEXT: "Context User 2", DisplayType.SUMMARY: "Summary User 2"}),
-        ChatMessage(RoleType.SYSTEM, {DisplayType.DISPLAY: "System 1", DisplayType.CONTEXT: "Context System 1"})
+        ChatMessage(Role.USER, {DisplayType.DISPLAY: "User 1", DisplayType.CONTEXT: "Context User 1"}),
+        ChatMessage(Role.ASSISTANT, {DisplayType.DISPLAY: "Assistant 1", DisplayType.CONTEXT: "Context Assistant 1", DisplayType.SUMMARY: "Summary Assistant 1"}),
+        ChatMessage(Role.USER, {DisplayType.DISPLAY: "User 2", DisplayType.CONTEXT: "Context User 2", DisplayType.SUMMARY: "Summary User 2"}),
+        ChatMessage(Role.SYSTEM, {DisplayType.DISPLAY: "System 1", DisplayType.CONTEXT: "Context System 1"})
     ]
 
 @pytest.fixture
@@ -62,14 +62,14 @@ def test_history_filter_with_no_messages():
     assert len(hf.api_call_context()) == 0
 
 def test_history_filter_only_summary_used_in_context():
-    msg = ChatMessage(RoleType.USER, {DisplayType.SUMMARY: "Summary User"})
+    msg = ChatMessage(Role.USER, {DisplayType.SUMMARY: "Summary User"})
     hf = HistoryFilter([msg])
     context = hf.context_history()
     assert context[0]["content"] == "Summary User"
 
 def test_history_filter_both_context_and_summary():
-    msg1 = ChatMessage(RoleType.USER, {DisplayType.CONTEXT: "Context User"})
-    msg2 = ChatMessage(RoleType.USER, {DisplayType.SUMMARY: "Summary User"})
+    msg1 = ChatMessage(Role.USER, {DisplayType.CONTEXT: "Context User"})
+    msg2 = ChatMessage(Role.USER, {DisplayType.SUMMARY: "Summary User"})
     hf = HistoryFilter([msg1, msg2])
     context = hf.context_history()
     assert context[0]["content"] == "Context User"
@@ -82,9 +82,9 @@ def test_history_filter_context_history_role_ordering(sample_history):
 
 def test_history_filter_display_history_multiple_assistant_msgs():
     messages = [
-        ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "User 1"}),
-        ChatMessage(RoleType.ASSISTANT, {DisplayType.DISPLAY: "Assistant 1"}),
-        ChatMessage(RoleType.ASSISTANT, {DisplayType.DISPLAY: "Assistant 2"})
+        ChatMessage(Role.USER, {DisplayType.DISPLAY: "User 1"}),
+        ChatMessage(Role.ASSISTANT, {DisplayType.DISPLAY: "Assistant 1"}),
+        ChatMessage(Role.ASSISTANT, {DisplayType.DISPLAY: "Assistant 2"})
     ]
     hf = HistoryFilter(messages)
     display_history = hf.display_history()
@@ -93,8 +93,8 @@ def test_history_filter_display_history_multiple_assistant_msgs():
 
 def test_history_filter_context_history_with_only_context():
     messages = [
-        ChatMessage(RoleType.USER, {DisplayType.CONTEXT: "Context User 1"}),
-        ChatMessage(RoleType.ASSISTANT, {DisplayType.CONTEXT: "Context Assistant 1"})
+        ChatMessage(Role.USER, {DisplayType.CONTEXT: "Context User 1"}),
+        ChatMessage(Role.ASSISTANT, {DisplayType.CONTEXT: "Context Assistant 1"})
     ]
     hf = HistoryFilter(messages)
     context_history = hf.context_history()
@@ -105,19 +105,19 @@ def test_history_filter_last_system_message_context(sample_history):
     assert sample_history.last_system_message[DisplayType.CONTEXT] == "Context System 1"
 
 def test_history_filter_summary_priority_over_context():
-    msg = ChatMessage(RoleType.USER, {DisplayType.CONTEXT: "Context User", DisplayType.SUMMARY: "Summary User"})
+    msg = ChatMessage(Role.USER, {DisplayType.CONTEXT: "Context User", DisplayType.SUMMARY: "Summary User"})
     hf = HistoryFilter([msg], summary_distance=0)
     context = hf.context_history()
     assert context[0]["content"] == "Summary User"
 
 def test_history_filter_empty_message():
-    msg = ChatMessage(RoleType.USER, {})
+    msg = ChatMessage(Role.USER, {})
     hf = HistoryFilter([msg])
     assert len(hf.context_history()) == 0
 
 def test_history_filter_add_and_pop(sample_history):
     hf = HistoryFilter()
-    msg = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi"})
+    msg = ChatMessage(Role.USER, {DisplayType.DISPLAY: "Hi"})
     hf.append(msg)
     assert len(hf) == 1
     popped_msg = hf.pop()

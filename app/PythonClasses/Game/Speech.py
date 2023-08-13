@@ -4,7 +4,7 @@ import aioboto3
 from contextlib import closing
 from botocore.config import Config
 from loguru import logger
-from PythonClasses.LLM.LLM import LLM
+from PythonClasses.LLM.OpenAI import OpenAIInterface
 
 class LLMStreamProcessor:
 
