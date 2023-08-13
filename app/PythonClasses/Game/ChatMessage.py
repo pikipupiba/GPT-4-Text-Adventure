@@ -131,25 +131,23 @@ class History:
         if not isinstance(display_types, list):
             display_types = [display_types]
 
-        # Handle ANY type using list comprehensions
-        if RoleType.ANY in roles:
-            roles = [mt for mt in RoleType if mt != RoleType.ANY]
-        if DisplayType.ANY in display_types:
-            display_types = [dt for dt in DisplayType if dt != DisplayType.ANY]
+        # Filter messages using list comprehension
+        filtered_messages = [msg for msg in self.messages[start_index:end_index] if msg.role in roles and any(key in msg.content for key in display_types)]
 
-        messages_to_process = self.messages[start_index:end_index if end_index is not None else None]
-        
         results = {dtype: [] for dtype in display_types}
-        for msg in messages_to_process:
-            if msg.role in roles:
-                for dtype in display_types:
-                    content_for_dtype = msg[dtype]
-                    if content_for_dtype:
-                        message_dict = {
-                            'role': msg.role,
-                            'content': content_for_dtype
-                        }
-                        results[dtype].append(message_dict)
+        for msg in filtered_messages:
+            for dtype in display_types:
+                content_for_dtype = msg.content.get(dtype)
+                if content_for_dtype:
+                    message_dict = {
+                        'role': msg.role,
+                        'content': content_for_dtype
+                    }
+                    results[dtype].append(message_dict)
+
+        # Filter out DisplayType keys with empty lists
+        results = {dtype: val for dtype, val in results.items() if val}
+
         return results
 
 
@@ -191,63 +189,57 @@ class History:
 class HistoryFilter(History):
     def __init__(self, messages: Optional[List[ChatMessage]] = None, **kwargs):
         super().__init__(messages)
-        self.context_distance = kwargs.get("context_distance", None)
-        self.summary_distance = kwargs.get("summary_distance", None)
-        self.display_distance = kwargs.get("display_distance", None)
+        self._context_distance = kwargs.get("context_distance")
+        self._summary_distance = kwargs.get("summary_distance")
+        self._display_distance = kwargs.get("display_distance")
 
     def _filter_messages_by_role_and_type(self, roles: List[RoleType], display_types: List[DisplayType], distance: Optional[int] = None) -> List[ChatMessage]:
+        """Filter messages based on roles, display types, and distance."""
         messages = [msg for msg in self.messages if msg.role in roles and any(key in msg.content for key in display_types)]
         return messages[-distance:] if distance is not None else messages
 
     def display_history(self, display_distance: Optional[int] = None) -> List[List[Optional[str]]]:
-        # Use method's argument if provided, else use the instance variable
-        display_distance = display_distance or self.display_distance
-
-        messages = self._filter_messages_by_role_and_type([RoleType.USER, RoleType.ASSISTANT], [DisplayType.DISPLAY], self.display_distance)
-
-        # Initialize lists to hold extracted messages.
-        user_messages = []
-        assistant_messages = []
-
-        # Populate the user_messages and assistant_messages lists.
+        """Return paired user and assistant display messages."""
+        display_distance = display_distance if display_distance is not None else self._display_distance
+        messages = self._filter_messages_by_role_and_type([RoleType.USER, RoleType.ASSISTANT], [DisplayType.DISPLAY], display_distance)
+        
+        user_messages, assistant_messages = [], []
         for message in messages:
+            content = message.content.get(DisplayType.DISPLAY)
             if message.role == RoleType.USER:
-                user_messages.append(message[DisplayType.DISPLAY])
-                assistant_messages.append(None)  # Placeholder for potential assistant response.
-            else:  # message.role == RoleType.ASSISTANT
+                user_messages.append(content)
+                assistant_messages.append(None)
+            else:
                 if assistant_messages and assistant_messages[-1] is None:
-                    assistant_messages[-1] = message[DisplayType.DISPLAY]
+                    assistant_messages[-1] = content
                 else:
-                    user_messages.append(None)  # Placeholder for missing user message.
-                    assistant_messages.append(message[DisplayType.DISPLAY])
+                    user_messages.append(None)
+                    assistant_messages.append(content)
 
-        # Pair the user and assistant messages together.
-        paired_messages = list(zip(user_messages, assistant_messages))
-        return paired_messages
+        return list(zip(user_messages, assistant_messages))
 
     def context_history(self, context_distance: Optional[int] = None, summary_distance: Optional[int] = None) -> List[Dict[str, str]]:
-        # Use method's arguments if provided, else use the instance variables
-        context_distance = context_distance if context_distance is not None else self.context_distance
-        summary_distance = summary_distance if summary_distance is not None else self.summary_distance
+        """Return context or summary of recent messages."""
+        context_distance = context_distance if context_distance is not None else self._context_distance
+        summary_distance = summary_distance if summary_distance is not None else self._summary_distance
 
-        user_and_assistant_roles = [RoleType.USER, RoleType.ASSISTANT]
-        messages = self._filter_messages_by_role_and_type(user_and_assistant_roles, [DisplayType.CONTEXT, DisplayType.SUMMARY], context_distance)
+        messages = self._filter_messages_by_role_and_type([RoleType.USER, RoleType.ASSISTANT], [DisplayType.CONTEXT, DisplayType.SUMMARY], context_distance)
         context = []
-
-        for idx, msg in enumerate(reversed(messages)):
+        for idx, msg in enumerate(messages[::-1]):  # Single reversal here
             if summary_distance is None or idx < summary_distance:
-                content = msg[DisplayType.CONTEXT] if DisplayType.CONTEXT in msg.content else msg[DisplayType.SUMMARY]
+                content = msg.content.get(DisplayType.CONTEXT) or msg.content.get(DisplayType.SUMMARY)
             else:
-                content = msg[DisplayType.SUMMARY] if DisplayType.SUMMARY in msg.content else msg[DisplayType.CONTEXT]
-                
+                content = msg.content.get(DisplayType.SUMMARY) or msg.content.get(DisplayType.CONTEXT)
+
             context.append({"role": msg.role.name.lower(), "content": content})
 
-        return list(reversed(context))
+        return context
 
     def api_call_context(self) -> List[str]:
+        """Return context for API calls."""
         recent_messages = self.context_history()
-        if self.last_system_message:
-            recent_messages.append(self.last_system_message[DisplayType.CONTEXT])
+        if hasattr(self, 'last_system_message') and self.last_system_message:
+            recent_messages.append(self.last_system_message.content.get(DisplayType.CONTEXT))
         return recent_messages
 
 
