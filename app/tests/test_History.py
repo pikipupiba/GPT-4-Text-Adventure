@@ -1,5 +1,6 @@
 import pytest
-from PythonClasses.Game.ChatMessage import TurnState, RoleType, DisplayType, ChatMessage, History, HistoryFilter
+from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 def test_init():
     history = History()

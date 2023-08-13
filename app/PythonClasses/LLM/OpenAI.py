@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Dict
 from enum import Enum
 
 import openai
@@ -8,7 +8,8 @@ import tiktoken
 from loguru import logger
 
 from PythonClasses.LLM.openai_helpers import build_openai_history, build_openai_system_message
-from PythonClasses.Game.ChatMessage import HistoryFilter, History, ChatMessage
+from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 class OpenAIModel(Enum):
     '''Enum for model types.'''
@@ -42,28 +43,23 @@ class OpenAIModel(Enum):
     def __str__(self):
         return self.model_name
 
-    def cost(self, input: Union[str, list, tuple, dict, ChatMessage, History, HistoryFilter] = None, type: str = None):
-        '''
-        Needs a tuple with (type, messages)
-        type = either "prompt" or "completion"
-        messages = any nested list or tuple of strings
-        returns a tuple in the same order as the input
-        '''
+    def cost(self, input: Union[str, list, tuple, dict, ChatMessage, History, HistoryFilter] = None,cost_type: str = None):
+
         if input is None:
             logger.warning("Cost | input == None | Returning 0.")
             return 0
 
         # Handling ChatMessage
         if isinstance(input, ChatMessage):
-            return (self.num_tokens(input.context) if input.context else 0) * self.price[type]
+            return (self.num_tokens(input.context) if input.context else 0) * self.price[cost_type]
 
         # Handling History
         if isinstance(input, History):
-            return sum(self.num_tokens(message.context) for message in input.messages) * self.price[type]
+            return sum(self.num_tokens(message.context) for message in input.messages) * self.price[cost_type]
 
         # Handling HistoryFilter
         if isinstance(input, HistoryFilter):
-            return sum(self.num_tokens(item['content']) for item in input.context_history()) * self.price[type]
+            return sum(self.num_tokens(item['content']) for item in input.context_history()) * self.price[cost_type]
 
         if isinstance(input, dict):
             cost_dict = {key: self.cost(value) for key, value in input.items()}
@@ -83,27 +79,22 @@ class OpenAIModel(Enum):
             return sum(self.cost(message) if self.cost(message) is not None else 0 for message in input)
         
     def total_cost(self, input: Union[str, list, tuple, ChatMessage, History, HistoryFilter] = None):
-        '''
-        Needs a tuple with (type, messages)
-        type = either "prompt" or "completion"
-        messages = any nested list of strings
-        returns a tuple in the same order as the input
-        '''
+
         # Handling ChatMessage
         if isinstance(input, ChatMessage):
-            return self.num_tokens(input.context) * self.price[type]
+            return self.num_tokens(input.context) * self.price[cost_type]
 
         # Handling History
         if isinstance(input, History):
-            return sum(self.num_tokens(message.context) for message in input.messages) * self.price[type]
+            return sum(self.num_tokens(message.context) for message in input.messages) * self.price[cost_type]
 
         # Handling HistoryFilter
         if isinstance(input, HistoryFilter):
-            return sum(self.num_tokens(item['content']) for item in input.context_history()) * self.price[type]
+            return sum(self.num_tokens(item['content']) for item in input.context_history()) * self.price[cost_type]
 
         if isinstance(input, tuple):
-            type = input[0]
-            return self.num_tokens(input) * self.price[type]
+            cost_type = input[0]
+            return self.num_tokens(input) * self.price[cost_type]
 
         if isinstance(input, list):
             return sum(self.cost(message) for message in input)
@@ -148,10 +139,10 @@ class OpenAIModel(Enum):
 class OpenAIInterface:
 
 
-    def __init__(self):
-        from PythonClasses.LLM.LilToken import LilToken
-        # Token trackers for each game.
-        self.token_trackers = {model.model_name: LilToken(model) for model in OpenAIModel}
+    # def __init__(self):
+    #     from PythonClasses.LLM.LilToken import LilToken
+    #     # Token trackers for each game.
+    #     self.token_trackers = {model.model_name: LilToken(model) for model in OpenAIModel}
 
 
 
@@ -169,7 +160,7 @@ class OpenAIInterface:
     
 
     def predict(
-        model: str = None, system_message: str = None, raw_history: List[any] = None
+        model: str = None, system_message: Union[str, List] = None, context_history: List[Dict[str, str]] = None
     ):
         if model == None:
             logger.warning("No model provided. Returning [].")
@@ -179,28 +170,23 @@ class OpenAIInterface:
             logger.warning("No system message provided. Returning [].")
             return []
 
-        if raw_history == None:
+        if context_history == None:
             logger.warning("No history provided. Returning [].")
             return []
 
         logger.info(
-            f"Predicting with model: {model} | User message: {raw_history[-1][0]}"
+            f"Predicting with model: {model} | User message: {context_history[-1]['content']}"
         )
 
-        openai_system_message = system_message
-        openai_history = raw_history
+        if isinstance(system_message, str):
+            system_message = [system_message]
 
-        messages_openai_format = []
-        # Append system message to history
-        if openai_system_message != None:
-            messages_openai_format.append(openai_system_message)
-        if openai_history != None:
-            messages_openai_format += openai_history
+        openai_messages = system_message + context_history
 
         # OpenAI API call
         # openai.ChatCompletion.create = reliableGPT(openai.ChatCompletion.create, user_email='ishaan@berri.ai')
         return openai.ChatCompletion.create(
-            model=model, messages=messages_openai_format, temperature=1.0, stream=True
+            model=model, messages=openai_messages, temperature=1.0, stream=True
         )
 
     def summarize(self, text: str = None, model: str = "gpt-4"):

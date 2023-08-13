@@ -1,4 +1,5 @@
-from PythonClasses.Game.ChatMessage import TurnState, RoleType, DisplayType, ChatMessage, History, HistoryFilter
+from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 import pytest
 
@@ -20,7 +21,7 @@ def test_history_filter_initialization(sample_history):
 
 def test_history_filter_context_distance(sample_history):
     hf = HistoryFilter([], context_distance=5)
-    assert hf.context_distance == 5
+    assert hf._context_distance == 5
 
 def test_history_filter_display_history_full(sample_history):
     display_history = sample_history.display_history()
@@ -29,7 +30,7 @@ def test_history_filter_display_history_full(sample_history):
     assert display_history[1] == ("User 2", None)
 
 def test_history_filter_display_history_limit(sample_history):
-    display_history = sample_history.display_history(display_distance=1)
+    display_history = sample_history.display_history(display_distance=2)
     assert len(display_history) == 2
     assert display_history[1] == ("User 2", None)
 

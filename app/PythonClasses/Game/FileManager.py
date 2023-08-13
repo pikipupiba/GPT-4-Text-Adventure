@@ -1,7 +1,6 @@
 import os, json
 from loguru import logger
 
-from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.Game import Game
 class FileManager:
 # The `FileManager` class is responsible for managing file operations such as saving, loading,
@@ -30,10 +29,11 @@ class FileManager:
         FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", Game._history_to_dict(game_name))
     
     def load_history(history_name: str):
-        logger.info(f"Loading history | {history_name}")
-        history_dict_array = FileManager.load_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", default=[])
-        history = [Turn(turn) for turn in history_dict_array]
-        return history
+        # logger.info(f"Loading history | {history_name}")
+        # history_dict_array = FileManager.load_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", default=[])
+        # history = [Turn(turn) for turn in history_dict_array]
+        # return history
+        pass
     
     def delete_history(history_name: str):
         if history_name is None: return

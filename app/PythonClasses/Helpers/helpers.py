@@ -1,4 +1,32 @@
+from datetime import datetime
 import random
+
+def min_max_or_none(start1: datetime = None, end1: datetime = None, start2: datetime = None, end2: datetime = None) -> tuple:
+    # The `min_max_or_none` function takes in two date ranges and returns the minimum start date and
+    # maximum end date of the two ranges. If both ends or both starts are None, the function returns
+    # None for that key.
+    # Logic for combined_start
+    if start1 is not None and start2 is not None:
+        combined_start = min(start1, start2)
+    elif start1 is not None:
+        combined_start = start1
+    elif start2 is not None:
+        combined_start = start2
+    else:
+        combined_start = None
+
+    # Logic for combined_end
+    if end1 is not None and end2 is not None:
+        combined_end = max(end1, end2)
+    elif end1 is not None:
+        combined_end = end1
+    elif end2 is not None:
+        combined_end = end2
+    else:
+        combined_end = None
+
+    return combined_start, combined_end
+
 
 def get_nth_or_value(value, n=0):
     return value[n] if isinstance(value, (list, tuple)) and len(value) > n else value

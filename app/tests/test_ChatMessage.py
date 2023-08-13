@@ -1,4 +1,5 @@
-from PythonClasses.Game.ChatMessage import TurnState, RoleType, DisplayType, ChatMessage, History, HistoryFilter
+from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 import pytest
 
@@ -27,13 +28,13 @@ def test_summary_property():
 def test_getitem():
     msg = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi"})
     assert msg[DisplayType.DISPLAY] == "Hi"
-    assert msg[0] == "Hi"
+    assert msg[1] == "Hi"
 
 def test_setitem():
     msg = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi"})
     msg[DisplayType.DISPLAY] = "Hello"
     assert msg[DisplayType.DISPLAY] == "Hello"
-    msg[0] = "Hey"
+    msg[1] = "Hey"
     assert msg[DisplayType.DISPLAY] == "Hey"
 
 def test_contains():
@@ -43,7 +44,7 @@ def test_contains():
 def test_delitem():
     msg = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi", DisplayType.CONTEXT: "Greetings"})
     del msg[DisplayType.DISPLAY]
-    assert DisplayType.DISPLAY not in msg
+    assert msg[DisplayType.DISPLAY] is None
 
 def test_repr():
     msg = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hi"})

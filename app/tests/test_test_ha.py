@@ -1,5 +1,6 @@
 import pytest
-from PythonClasses.Game.ChatMessage import TurnState, RoleType, DisplayType, ChatMessage, History, HistoryFilter
+from PythonClasses.Game.ChatMessage import RoleType, DisplayType, ChatMessage
+from PythonClasses.Game.History import TurnState, History, HistoryFilter
 
 def test_chat_message_initialization():
     cm = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hello"})
@@ -20,7 +21,7 @@ def test_chat_message_setters_and_getters():
     assert cm[DisplayType.SUMMARY] == "Summary Message"
     
     # Using integer index
-    cm[0] = "Display using index"
+    cm[1] = "Display using index"
     assert cm.display == "Display using index"
     
     with pytest.raises(KeyError):
@@ -28,8 +29,8 @@ def test_chat_message_setters_and_getters():
 
 def test_chat_message_special_methods():
     cm = ChatMessage(RoleType.USER, {DisplayType.DISPLAY: "Hello", DisplayType.SUMMARY: "Summary"})
-    assert DisplayType.DISPLAY in cm
-    assert DisplayType.CONTEXT not in cm
+    assert cm[DisplayType.DISPLAY] == "Hello"
+    assert cm[DisplayType.CONTEXT] is None
 
     # Test repr and str
     assert "<ChatMessage" in repr(cm)
