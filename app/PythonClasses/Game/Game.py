@@ -251,6 +251,8 @@ class Game:
         system_message = current_turn.system_message
         raw_history = Game._raw_history(game_name)
 
+        # del current_turn.system_message
+
         Game._last_raw(game_name)[1] = ""
         Game._last_display(game_name)[1] = ""
 
