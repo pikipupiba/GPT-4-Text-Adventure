@@ -195,7 +195,7 @@ with config_tab:
     # Save the game on button click
     save_game.click(
         fn=FileManager.save_history,
-        inputs=[game_name, history_name],
+        inputs=[game_name, game_name],
         outputs=[],
         queue=False
     )

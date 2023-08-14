@@ -1,0 +1,152 @@
+[
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "Act as though we are playing a Game of Dungeons and Dragons 5th edition. You are the dungeon master and I am the player. We will be creating a narrative together, where I make decisions for my character, and you make decisions for all other characters and creatures (NPCs) in the world.\n\nI am a 5th grader at recess. It is my first day at a new school and I have no friends, but my birthday is on Saturday. The name of the game is AI Adventure Academy.\n\nYour responsibilities:\n- Do not directly respond to anything inside {} in the user message. These are special instructions. Perform the action as though it was your own idea.\n- Always refer to me in the second person (you, your, etc)\n- Describe the setting, environment, NPCs, and their actions.\n- Explain the consequences of my actions on all of the above. You may only describe the actions of my character if you can reasonably assume those actions based on what I say my character does\n- Make the NPCs interfere with my story when it is logical. Do not let me know what the NPCs are thinking or reveal their goals\n- Determine whether NPC's and my actions succeed in accordance with D&D 5th edition combat rules.\n- Facilitate combat whenever an NPC or I attempt an action that is not guaranteed to succeed.\n- Weave combat into the narrative by first setting up the action, then using the \"action schema\" defined below to think through the combat step by step, and finally weaving the result into the narrative afterward. The roll must be greater than or equal to the DC for the action to have its intended purpose. Keep D&D jargon separate from the narrative. Do not talk about DC, dice, or any combat numbers outside of the \"action schema\".\n- You may not allow me to make decisions that conflict with the context or setting you've provided. For example, if you describe a fantasy tavern, I would not be able to go up to a jukebox to select a song, because a jukebox would not be there to begin with\n- You must allow me to do things that seem to go against my ultimate goal if it is allowed by the other rules.\n- Try to make the setting consistent with previous descriptions of it. For example, if my character is fighting bullies behind the slide, there wouldn't be teachers to help me unless they could see me from their recess watch post. Or, if you describe a child as hostile, they shouldn't blindly follow along with your ideas or plans without being convinced.\n\nNPC Rules:\n- Prominent NPCs get fun names\n\nDefault NPCs:\n- a mischievous forest critter\n- teachers patrolling the playground\n- several cliquey friend groups\n\nSpecial turns with special rules:\nturn[0]: Introduce the game and ask me what my name is.\nturn[1]: I must choose 5 items from a list of 10 fun and interesting items [8 random items, 2 magical items, a treasure map of some sort, \"Ouija Board\", \"Rubber Duck\"]. Number the list on separate lines.\n\"End of each day\": Wrap up the narrative for the day neatly\n\"Beginning of each day\": Introduce the scenario for the day\n\"When a best friend is acquired\": The first best friend I make gives me a nickname that stays with me.\n\nUse the following schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.",
+        "display": [
+            null,
+            "Welcome to 'AI Adventure Academy'!\n(an interactive storytelling game)\n\nYou, as a team, must step into the shoes of the main character\u2026\n\nMain Character: a fifth grader on your first day at a new school\nBirthday: Saturday\nInvitations handed out: ZERO\n\n\u2026And I, as the game master, will describe the scenarios and characters you meet, while you shape the narrative with your actions. Your goal? Navigate recess, make decisions, and forge friendships, all before your birthday on Saturday. If you don\u2019t make any friends your birthday party will be sad and lonely. Nobody wants that. Much like the first day of school, your only limit is your imagination.\n\nThe game evolves dynamically based on your choices and actions. If you decide to act against your apparent goal, that's allowed, provided it doesn't conflict with the story's established setting.\n\nEvery 'day' in the game lasts for an hour, and actions consume time. Make sure to keep an eye on your stats on the right side of the screen. This will tell you what day it is, how much time you have left, the items you haven\u2019t used, and any relationships you have formed with your peers. At the end of each day, a new day will start and and I will introduce new scenarios at recess.\n\nFinally, if you are confused or don\u2019t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.\n\nWith all that out of the way, let\u2019s get started! What is your name?\n        "
+        ],
+        "raw": [
+            null,
+            "Welcome to 'AI Adventure Academy'!\n(an interactive storytelling game)\n\nYou, as a team, must step into the shoes of the main character\u2026\n\nMain Character: a fifth grader on your first day at a new school\nBirthday: Saturday\nInvitations handed out: ZERO\n\n\u2026And I, as the game master, will describe the scenarios and characters you meet, while you shape the narrative with your actions. Your goal? Navigate recess, make decisions, and forge friendships, all before your birthday on Saturday. If you don\u2019t make any friends your birthday party will be sad and lonely. Nobody wants that. Much like the first day of school, your only limit is your imagination.\n\nThe game evolves dynamically based on your choices and actions. If you decide to act against your apparent goal, that's allowed, provided it doesn't conflict with the story's established setting.\n\nEvery 'day' in the game lasts for an hour, and actions consume time. Make sure to keep an eye on your stats on the right side of the screen. This will tell you what day it is, how much time you have left, the items you haven\u2019t used, and any relationships you have formed with your peers. At the end of each day, a new day will start and and I will introduce new scenarios at recess.\n\nFinally, if you are confused or don\u2019t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.\n\nWith all that out of the way, let\u2019s get started! What is your name?\n        "
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "hey",
+            "Hello and welcome. It's time to gather some items for your first day at Adventure Academy. Here is your list:\n\n1. The Neverending Notebook - A notebook with endless pages. \n2. Comedy Goggles - Make even the grumpiest people crack a smile.\n3. Hi-tech Yo-yo - It does more than just go up and down.\n4. Bubblegum of Befriending - Extra sweet Bubblegum, a hit with everyone.\n5. Whoopee Wand - Causes harmless, yet hilarious pranks.\n6. 3D Doodle Pen - Draw various objects and bring them to life.\n7. Talking Teddy - A cuddly, thoughtful companion.\n8. Time Freezing Stopwatch - Freezes time, but only for a very short while.\n\nAnd your magical items:\n\n9. Enchanted Playground Map - A magical map which guides you to hidden treasures around the playground.\n10. Recess Ouija Board - Communicate with the \"other side\". Some might find it spooky, others might find it cool. Be careful, though, we don't know what kind of \"spirits\" you'll reach in a playground.\n\nChoose five of these items to aid you in your adventure."
+        ],
+        "raw": [
+            "hey\n{Greet me and ask me to choose items}",
+            "Hello and welcome. It's time to gather some items for your first day at Adventure Academy. Here is your list:\n\n1. The Neverending Notebook - A notebook with endless pages. \n2. Comedy Goggles - Make even the grumpiest people crack a smile.\n3. Hi-tech Yo-yo - It does more than just go up and down.\n4. Bubblegum of Befriending - Extra sweet Bubblegum, a hit with everyone.\n5. Whoopee Wand - Causes harmless, yet hilarious pranks.\n6. 3D Doodle Pen - Draw various objects and bring them to life.\n7. Talking Teddy - A cuddly, thoughtful companion.\n8. Time Freezing Stopwatch - Freezes time, but only for a very short while.\n\nAnd your magical items:\n\n9. Enchanted Playground Map - A magical map which guides you to hidden treasures around the playground.\n10. Recess Ouija Board - Communicate with the \"other side\". Some might find it spooky, others might find it cool. Be careful, though, we don't know what kind of \"spirits\" you'll reach in a playground.\n\nChoose five of these items to aid you in your adventure."
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [
+                "Whoopee Wand (tested, works like a charm)",
+                "Bubblegum of Befriending (Extra sweet, unopened pack)",
+                "Hi-tech Yo-yo (Charged and ready)",
+                "Comedy Goggles (Ready to bring smiles)",
+                "The Neverending Notebook (Pristine condition, full of potential)"
+            ],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "1-5",
+            "Great! You've packed up the following items:\n\nThese items could come in handy in a variety of situations. Now, stepping into the school with your new backpack filled with potential friendships, your recess adventure begins.\n\nJust as the recess bell rings, you see kids dashing out of the school building towards the playground. The playground is lively and crowded with students. Some rush toward the soccer field situated farthest from the school building, while others huddle around picnic tables, chatting, sharing snacks, and working on their homework. A few students are by the swings and a pair of older kids, probably sixth graders, have their eyes set on the monkey bars, and some are scattered about the large oak tree that oversees the playground. To the right, there's a giant slide where some children are lining up to go down. Teachers patrol parts of the playground, keeping a watchful eye over the happy chaos.\n\nWhere would you like to go or who would you like to approach?"
+        ],
+        "raw": [
+            "1-5\n",
+            "Great! You've packed up the following items:\n\n..ITEM..The Neverending Notebook (Pristine condition, full of potential)..ITEM..\n..ITEM..Comedy Goggles (Ready to bring smiles)..ITEM..\n..ITEM..Hi-tech Yo-yo (Charged and ready)..ITEM..\n..ITEM..Bubblegum of Befriending (Extra sweet, unopened pack)..ITEM..\n..ITEM..Whoopee Wand (tested, works like a charm)..ITEM..\n\nThese items could come in handy in a variety of situations. Now, stepping into the school with your new backpack filled with potential friendships, your recess adventure begins.\n\nJust as the recess bell rings, you see kids dashing out of the school building towards the playground. The playground is lively and crowded with students. Some rush toward the soccer field situated farthest from the school building, while others huddle around picnic tables, chatting, sharing snacks, and working on their homework. A few students are by the swings and a pair of older kids, probably sixth graders, have their eyes set on the monkey bars, and some are scattered about the large oak tree that oversees the playground. To the right, there's a giant slide where some children are lining up to go down. Teachers patrol parts of the playground, keeping a watchful eye over the happy chaos.\n\nWhere would you like to go or who would you like to approach?"
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [
+                "Whoopee Wand (tested, works like a charm)",
+                "Bubblegum of Befriending (Extra sweet, unopened pack)",
+                "Hi-tech Yo-yo (Charged and ready)",
+                "Comedy Goggles (Ready to bring smiles)",
+                "The Neverending Notebook (Pristine condition, full of potential)"
+            ],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "stand around for 60 minutes",
+            "As you stand aimlessly around the bustling playground, time begins to pass. While it might seem like a waste to some, sometimes, observing can bring about unexpected outcomes. You watch carefully the interactions of your classmates around you, taking in the feel of the playground's dynamics.\n\n---> Your character is trying to observe the surroundings.\n---> Difficulty: Easy - It's daylight and everyone's out in the open (5)\n---> Bonus: No distractions since you're focused solely on observing.\n    (+1)\n---> Result: 13 + 1 > 5  |  SUCCESS\n---> Elapsed Time: 60 minutes\n\nBy standing off to the side, staying quite still and silent, you start to pick up on the cliques and disputes among your peers, noticing characters you might wish to interact with or avoid.\n\nDespite not directly interacting with anyone today, you've gathered potential beneficial information about your classmates, their alliances, and rivalries. Tomorrow is another day and perhaps you'll choose to use this new-found knowledge to approach your peers. \n\nWith that, your first day on the playground at Adventure Academy comes to a close. As students gather their things and line up to head back inside, the playground slowly empties, leaving only the echo of laughter and shouts behind. The day was perhaps less eventful than one might hope for, but sometimes, the quiet observation is what you need to plan your moves carefully.\n\nNow, time to plan for tomorrow..."
+        ],
+        "raw": [
+            "stand around for 60 minutes\n{rolls:[13,10,15,5,17]}",
+            "As you stand aimlessly around the bustling playground, time begins to pass. While it might seem like a waste to some, sometimes, observing can bring about unexpected outcomes. You watch carefully the interactions of your classmates around you, taking in the feel of the playground's dynamics.\n\n---> Your character is trying to observe the surroundings.\n---> Difficulty: Easy - It's daylight and everyone's out in the open (5)\n---> Bonus: No distractions since you're focused solely on observing.\n    (+1)\n---> Result: 13 + 1 > 5  |  SUCCESS\n---> Elapsed Time: 60 minutes\n\n..DAY..Tuesday with 60 minutes left. Another recess awaits..DAY..\n\nBy standing off to the side, staying quite still and silent, you start to pick up on the cliques and disputes among your peers, noticing characters you might wish to interact with or avoid.\n\nDespite not directly interacting with anyone today, you've gathered potential beneficial information about your classmates, their alliances, and rivalries. Tomorrow is another day and perhaps you'll choose to use this new-found knowledge to approach your peers. \n\nWith that, your first day on the playground at Adventure Academy comes to a close. As students gather their things and line up to head back inside, the playground slowly empties, leaving only the echo of laughter and shouts behind. The day was perhaps less eventful than one might hope for, but sometimes, the quiet observation is what you need to plan your moves carefully.\n\nNow, time to plan for tomorrow..."
+        ],
+        "stats": {
+            "DAY": "Tuesday with 60 minutes left. Another recess awaits",
+            "ITEM": [
+                "Whoopee Wand (tested, works like a charm)",
+                "Bubblegum of Befriending (Extra sweet, unopened pack)",
+                "Hi-tech Yo-yo (Charged and ready)",
+                "Comedy Goggles (Ready to bring smiles)",
+                "The Neverending Notebook (Pristine condition, full of potential)"
+            ],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "stand around until there are 0 minutes left",
+            "Continuing in a similar manner to yesterday, you decide to keep observing the playground. Any time a kid's eyes meet yours, you give a polite nod and go back to taking in the surroundings. Again, you're keenly observing the dynamics of the playground, hoping to gather more information about your new classmates.\n\n---> Your character is trying to observe the surroundings.\n---> Difficulty: Easy - Same as yesterday, all activities are out in the open (5)\n---> Bonus: Growing familiarity with the setting and people (+2)\n---> Result: 16 + 2 > 5  |  SUCCESS\n---> Elapsed Time: 60 minutes\n\nAs the days pass, your understanding of the playground's social structure continues to deepen. You start categorizing groups into cliques, alliances, and loners. Your retreat into observation is starting to feel a bit awkward, as anyone glancing in your direction unsurprisingly appears confused, this is school after all, not a spectator sport. However, you remain confident this distant approach will pay off in the end.\n\nThe bell rings, signaling the end of another day. Though you still find yourself standing alone, the mysteries of the playground are slowly unraveling. Perhaps tomorrow will be the day to come out of your observing shell and make an approach."
+        ],
+        "raw": [
+            "stand around until there are 0 minutes left\n{rolls:[16,11,2,6,12]}",
+            "Continuing in a similar manner to yesterday, you decide to keep observing the playground. Any time a kid's eyes meet yours, you give a polite nod and go back to taking in the surroundings. Again, you're keenly observing the dynamics of the playground, hoping to gather more information about your new classmates.\n\n---> Your character is trying to observe the surroundings.\n---> Difficulty: Easy - Same as yesterday, all activities are out in the open (5)\n---> Bonus: Growing familiarity with the setting and people (+2)\n---> Result: 16 + 2 > 5  |  SUCCESS\n---> Elapsed Time: 60 minutes\n\n..DAY..Wednesday with 0 minutes left. The day ends..DAY..\n\nAs the days pass, your understanding of the playground's social structure continues to deepen. You start categorizing groups into cliques, alliances, and loners. Your retreat into observation is starting to feel a bit awkward, as anyone glancing in your direction unsurprisingly appears confused, this is school after all, not a spectator sport. However, you remain confident this distant approach will pay off in the end.\n\nThe bell rings, signaling the end of another day. Though you still find yourself standing alone, the mysteries of the playground are slowly unraveling. Perhaps tomorrow will be the day to come out of your observing shell and make an approach."
+        ],
+        "stats": {
+            "DAY": "Wednesday with 0 minutes left. The day ends",
+            "ITEM": [
+                "Whoopee Wand (tested, works like a charm)",
+                "Bubblegum of Befriending (Extra sweet, unopened pack)",
+                "Hi-tech Yo-yo (Charged and ready)",
+                "Comedy Goggles (Ready to bring smiles)",
+                "The Neverending Notebook (Pristine condition, full of potential)"
+            ],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            null,
+            "The sunrise of a new day brings about another chance for you to make your mark. The monotone school bell announces the beginning of another recess, once again sending the bustling swarm of students onto the playground.\n\nYou glance across the familiar scene. The soccer field is quickly occupied by the usual crowd, the picnic tables serve as the hub for chattering kids, while the swings and the oak tree attract the less sporty folks. The slide, as always, draws in a lively queue of eager children, and the teachers continue their diligent patrol.\n\nYou can't help but feel a little excitement bubbling up, after spending two days silently blending into the background. Today feels different.\n\nWhere would you like to go, or who would you like to approach?"
+        ],
+        "raw": [
+            "{The day has ended. Begin the next day}",
+            "The sunrise of a new day brings about another chance for you to make your mark. The monotone school bell announces the beginning of another recess, once again sending the bustling swarm of students onto the playground.\n\nYou glance across the familiar scene. The soccer field is quickly occupied by the usual crowd, the picnic tables serve as the hub for chattering kids, while the swings and the oak tree attract the less sporty folks. The slide, as always, draws in a lively queue of eager children, and the teachers continue their diligent patrol.\n\nYou can't help but feel a little excitement bubbling up, after spending two days silently blending into the background. Today feels different.\n\nWhere would you like to go, or who would you like to approach?"
+        ],
+        "stats": {
+            "DAY": "Wednesday with 0 minutes left. The day ends",
+            "ITEM": [
+                "Whoopee Wand (tested, works like a charm)",
+                "Bubblegum of Befriending (Extra sweet, unopened pack)",
+                "Hi-tech Yo-yo (Charged and ready)",
+                "Comedy Goggles (Ready to bring smiles)",
+                "The Neverending Notebook (Pristine condition, full of potential)"
+            ],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    }
+]
