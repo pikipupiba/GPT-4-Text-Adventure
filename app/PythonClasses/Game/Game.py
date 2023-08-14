@@ -171,7 +171,7 @@ class Game:
         Game._last_raw(game_name)[1] = None
         Game._last_turn(game_name).stats = Game._prev_turn(game_name).stats
         Game._last_turn(game_name).combat = []
-        Game._last_turn(game_name).tokens = {}
+        Game._last_turn(game_name).execution = {}
         return Game.render_story(game_name)
     def clear(game_name: str):
         logger.info("Clearing history")
@@ -318,9 +318,13 @@ class Game:
                 # Check if the start of any item in the array matches the content
                 matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.startswith(temp_string)]
                 if len(matching_indices) == 0:
-                    # If no match, append the content to the end of the array
-                    item_index = len(Game._last_turn(game_name).stats[schema_name])
-                    Game._last_turn(game_name).stats[schema_name].append(temp_string)
+                    # # If no match, append the content to the end of the array
+                    # item_index = len(Game._last_turn(game_name).stats[schema_name])
+                    # Game._last_turn(game_name).stats[schema_name].append(temp_string)
+
+                    # If no match, insert the content at the beginning of the array
+                    item_index = 0
+                    Game._last_turn(game_name).stats[schema_name].insert(item_index, temp_string)
                 elif len(matching_indices) == 1 and len(temp_string) > 4:
                     # If a match is found, replace the item at the first matching index
                     item_index = matching_indices[0]
@@ -332,6 +336,15 @@ class Game:
                 closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
                 if closing_match:
                     Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()]
+
+                    if schema_name == "RELATIONSHIP":
+                        first_line  = Game._last_turn(game_name).stats[schema_name][item_index].split('\n', 1)[0]
+                        numbers = re.findall(r'\d+', first_line)
+                        if numbers:
+                            last_number = int(numbers[-1])
+                            if last_number == 0:
+                                del Game._last_turn(game_name).stats[schema_name][item_index]
+
                     item_index = None
                     temp_string = ""
                     schema_name = None

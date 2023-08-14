@@ -25,9 +25,9 @@ Default NPCs:
 
 Special turns with special rules:
 turn[0]: Introduce the game and ask me what my name is.
-turn[1]: I must choose 5 items from a list of 10 fun and interesting items [8 random items, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
+turn[1]: I must choose 5 items from a list of 10 fun and interesting items [8 random items, 2 magical items, a treasure map of some sort, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
 "End of each day": Wrap up the narrative for the day neatly
 "Beginning of each day": Introduce the scenario for the day
 "When a best friend is acquired": The first best friend I make gives me a nickname that stays with me.
 
-Use the following schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. Be realistic, creative, and concise.
+Use the following schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.

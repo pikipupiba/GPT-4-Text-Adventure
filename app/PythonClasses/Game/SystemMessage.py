@@ -24,16 +24,16 @@ schemas = {
         "format": "..ITEM..{name} ({status})..ITEM.."
     },
     "relationship": {
-        "use": "When the number or attitude of NPCs of a certain type changes or they react to something you do.",
-        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change.",
+        "use": "When the number or attitude of NPCs of a certain relationship level changes.",
+        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative.",
         "variables": {
-            "level": "Creative relationship levels. This is a spectrum: Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
+            "level": "Creative relationship levels. Indicates the level of closeness. with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
             "change": "change to the number of NPCs in this level, includes the sign: +/- int",
             "count": "number of NPCs of this type after change, should remain self consistent: int",
             "rationale": "rationale for the change in the number of NPCs of this type: <20 words",
             "info": "current relevant information about NPCs of this type such as names, sentiment, and/or reasoning: <20 words",
         },
-        "format": "..RELATIONSHIP..{type} | {change} | {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
+        "format": "..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
     },
     "action": {
         "use": "When an action is taken.",
