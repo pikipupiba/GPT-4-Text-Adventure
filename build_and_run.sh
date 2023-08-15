@@ -48,6 +48,18 @@ while [[ $# -gt 0 ]]; do
       shift
       shift
       ;;
+    -a|--azure-key)
+      echo "Azure OpenAI API key set"
+      AZURE_OPENAI_API_KEY="$2"
+      shift
+      shift
+      ;;
+    -b|--azure-base)
+      echo "Azure OpenAI API base set"
+      AZURE_OPENAI_API_BASE="$2"
+      shift
+      shift
+      ;;
     -n|--name)
       echo "Name set to $2"
       NAME="$2"
