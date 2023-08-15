@@ -57,7 +57,7 @@ With all that out of the way, let’s get started! What is your name?
     ]
 
 # PLAYER TAB
-with gr.Blocks(title="AI Adventure Academy") as combined:
+with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined:
     gr.HTML("<h1 style='text-align: center;'>AI Adventure Academy</h1>")
     # with gr.Tab("Player") as player_tab:
         # STORY AREA
@@ -184,13 +184,6 @@ with gr.Blocks(title="AI Adventure Academy") as combined:
                 game_average_gpt_3_5_turbo_json = gr.JSON(label="game average gpt 3.5 turbo", interactive=False)
                 game_average_gpt_3_5_turbo_16_json = gr.JSON(label="game average gpt 3.5 turbo 16k", interactive=False)
             turn_json = gr.JSON(label="Game State")
-
-
-
-        config_render_array = [
-            execution_json,
-            turn_json,
-        ]
 
 
 # with gr.Tab(" "):

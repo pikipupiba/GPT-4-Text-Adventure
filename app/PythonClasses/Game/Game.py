@@ -311,7 +311,7 @@ class Game:
             Game._last_raw(game_name)[1] = ""
             Game._last_display(game_name)[1] = ""
 
-            schema_delimiter = r'\.\.[A-Z]+\.\.'  # regex pattern to find schema delimiters
+            schema_delimiter = r'\.\.\s*[A-Z]+\s*\.\.'  # regex pattern to find schema delimiters
             schema_name = None
             item_index = None
             temp_string = ""
