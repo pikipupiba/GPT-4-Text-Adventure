@@ -57,7 +57,7 @@ class Turn:
             for key, value in load_obj.items():
                 if key == "display" or key == "raw":
                     for i in range(len(value)):
-                        if value[i] is "":
+                        if value[i] == "":
                             value[i] = None
                 setattr(self, key, value)
             return

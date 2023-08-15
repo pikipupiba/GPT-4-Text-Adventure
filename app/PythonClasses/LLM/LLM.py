@@ -19,8 +19,9 @@ use_azure = True
 openai.api_type = "azure"
 openai.api_version = "2023-05-15"
 
-openai.api_key = os.environ['AZURE_OPENAI_API_KEY']
-openai.api_base = os.environ['AZURE_OPENAI_API_BASE']
+openai.api_key = os.getenv('AZURE_OPENAI_API_KEY')
+openai.api_base = os.getenv('AZURE_OPENAI_API_BASE')
+logger.warning(f"Using Azure API: {openai.api_base}")
 
 
 model_deployment_name_35 = "Q3-dpt-meeting-35"
