@@ -5,15 +5,26 @@ from PythonClasses.LLM.LLMModel import LLMModel
 
 import openai
 
-# # set Open AI API Key
+# set Open AI API Key
 # api_key = os.getenv('OPENAI_API_KEY')
 
 # if (api_key is None) or (len(api_key) == 0):
 #     api_key = os.environ['OPENAI_API_KEY']
-
 # assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
+
 # openai.api_key = api_key
 
+use_azure = True
+
+openai.api_type = "azure"
+openai.api_version = "2023-05-15"
+
+openai.api_key = os.environ['AZURE_OPENAI_API_KEY']
+openai.api_base = os.environ['AZURE_OPENAI_API_BASE']
+
+
+model_deployment_name_35 = "Q3-dpt-meeting-35"
+model_deployment_name_4 = "Q3-dpt-meeting-4"
 
 # `LLM` is a class that provides methods for interacting with the OpenAI API. It includes
 # methods for generating responses in a chat-like format (`oneshot`), building the history array
@@ -129,9 +140,18 @@ class LLM:
 
         llm_model.num_tokens_from_messages(model, messages_openai_format)
 
+        if use_azure:
+            if "gpt-4" in model:
+                model = model_deployment_name_4
+            elif "gpt-3.5" in model:
+                model = model_deployment_name_35
+
         # OpenAI API call
         return openai.ChatCompletion.create(
-            model=model, messages=messages_openai_format, temperature=1.0, stream=True
+            engine=model,
+            messages=messages_openai_format,
+            temperature=1.0,
+            stream=True
         )
 
     def summarize(self, text: str = None, model: str = "gpt-4"):

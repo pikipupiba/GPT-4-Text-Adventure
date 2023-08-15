@@ -94,7 +94,7 @@ if docker build -t "$IMAGE_NAME" .; then
   echo "Running new container..."
 
   # Run the container, mapping port 8000 inside the container to port 8000 on the host
-  docker run \
+  docker start \
     --name "$CONTAINER_NAME" \
     -p "$PORT":"$PORT" \
     -e OPENAI_API_KEY="$OPENAI_API_KEY" \
