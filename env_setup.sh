@@ -27,12 +27,14 @@ if [ -d "$CLONE_DIR" ]; then
     cd "$CLONE_DIR" || return
     sudo git reset --hard origin/master
     sudo git clean -fxd
-    sudo git pull
+    PULL_OUTPUT=$(sudo git pull)
+    echo "$PULL_OUTPUT"
 else
     # If it doesn't exist, clone the repo
     echo "Directory $CLONE_DIR does not exist, cloning $REPO_URL"
     sudo git clone "$REPO_URL" "$CLONE_DIR"
     cd "$CLONE_DIR" || return
+    PULL_OUTPUT="New clone"
 fi
 
 sudo chmod +x "$REPO_DIR/build_and_run.sh"
@@ -40,4 +42,7 @@ sudo chmod +x "$REPO_DIR/build_and_run.sh"
 # Navigate to the repo
 cd "$REPO_DIR" || return
 
-sudo bash ./build_and_run.sh -k "$OPENAI_API_KEY"
+# Only run the script if the repo was not already up-to-date
+if [[ ! "$PULL_OUTPUT" == *"Already up to date"* ]]; then
+    sudo bash ./build_and_run.sh -k "$OPENAI_API_KEY"
+fi

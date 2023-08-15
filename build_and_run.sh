@@ -12,11 +12,10 @@
 # restart computer
 # launch docker-desktop
 
-# TODO: get openai api key from AWS secrets manager
-
 # Function to stop the container
 cleanup() {
-  echo "Stopping container..."
+  echo "Saving data and stopping container..."
+  docker cp "$CONTAINER_NAME":/app/data/history /home/ubuntu/game_data
   docker stop "$CONTAINER_NAME"
   docker rm "$CONTAINER_NAME"
 trap cleanup INT
@@ -83,10 +82,20 @@ CONTAINER_NAME=${NAME}_container
 if docker build -t "$IMAGE_NAME" .; then
   echo "Image successfully built!"
 
+  if docker inspect "$CONTAINER_NAME" &> /dev/null; then
+    echo "Container $CONTAINER_NAME already exists. Saving data and stopping container..."
+    docker cp "$CONTAINER_NAME":/app/data/history /home/ubuntu/game_data
+    docker stop "$CONTAINER_NAME"
+    docker rm "$CONTAINER_NAME"
+  else
+    echo "Container $CONTAINER_NAME does not exist."
+  fi
+
+  echo "Running new container..."
+
   # Run the container, mapping port 8000 inside the container to port 8000 on the host
   docker run \
     --name "$CONTAINER_NAME" \
-    -it \
     -p "$PORT":"$PORT" \
     -e OPENAI_API_KEY="$OPENAI_API_KEY" \
     -e GRADIO_SERVER_NAME="0.0.0.0" \

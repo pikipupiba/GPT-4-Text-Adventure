@@ -311,15 +311,18 @@ class LLMModel:
         self.tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
         self.tokens[model]["completion"]["tpm"] = self.tokens[model]["completion"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
         self.tokens[model]["completion"]["cpm"] = self.tokens[model]["completion"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
-        total_tokens[model]["completion"]["count"] += num_tokens
-        total_tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
-        total_tokens[model]["completion"]["tpm"] = total_tokens[model]["completion"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
-        total_tokens[model]["completion"]["cpm"] = total_tokens[model]["completion"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
 
         self.tokens[model]["total"]["count"] += num_tokens
         self.tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
         self.tokens[model]["total"]["tpm"] = self.tokens[model]["total"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
         self.tokens[model]["total"]["cpm"] = self.tokens[model]["total"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+
+
+        total_tokens[model]["completion"]["count"] += num_tokens
+        total_tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
+        total_tokens[model]["completion"]["tpm"] = total_tokens[model]["completion"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
+        total_tokens[model]["completion"]["cpm"] = total_tokens[model]["completion"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
+
         total_tokens[model]["total"]["count"] += num_tokens
         total_tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
         total_tokens[model]["total"]["tpm"] = total_tokens[model]["total"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
@@ -357,15 +360,18 @@ class LLMModel:
         self.tokens[model]["prompt"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
         self.tokens[model]["prompt"]["tpm"] = self.tokens[model]["prompt"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
         self.tokens[model]["prompt"]["cpm"] = self.tokens[model]["prompt"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+        
+        self.tokens[model]["total"]["count"] += num_tokens
+        self.tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
+        self.tokens[model]["total"]["tpm"] = self.tokens[model]["total"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
+        self.tokens[model]["total"]["cpm"] = self.tokens[model]["total"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+
+
         total_tokens[model]["prompt"]["count"] += num_tokens
         total_tokens[model]["prompt"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
         total_tokens[model]["prompt"]["tpm"] = total_tokens[model]["prompt"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
         total_tokens[model]["prompt"]["cpm"] = total_tokens[model]["prompt"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
 
-        self.tokens[model]["total"]["count"] += num_tokens
-        self.tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
-        self.tokens[model]["total"]["tpm"] = self.tokens[model]["total"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
-        self.tokens[model]["total"]["cpm"] = self.tokens[model]["total"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
         total_tokens[model]["total"]["count"] += num_tokens
         total_tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
         total_tokens[model]["total"]["tpm"] = total_tokens[model]["total"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
