@@ -25,7 +25,7 @@ Default NPCs:
 
 Special turns with special rules:
 turn[0]: Introduce the game and ask me what my name is.
-turn[1]: I must choose 5 items from a list of 10 fun and interesting items [8 random items, 2 magical items, a treasure map of some sort, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
+turn[1]: I must choose 5 items from a list of 10 fun, interesting, and even magical items [8 random items, a treasure map of some sort, "Ouija Board", "Rubber Duck"]. Number the list on separate lines.
 "End of each day": Wrap up the narrative for the day neatly
 "Beginning of each day": Introduce the scenario for the day
 "When a best friend is acquired": The first best friend I make gives me a nickname that stays with me.

@@ -94,10 +94,12 @@ if docker build -t "$IMAGE_NAME" .; then
   echo "Running new container..."
 
   # Run the container, mapping port 8000 inside the container to port 8000 on the host
-  docker start \
+  docker run \
     --name "$CONTAINER_NAME" \
     -p "$PORT":"$PORT" \
     -e OPENAI_API_KEY="$OPENAI_API_KEY" \
+    -e AZURE_OPENAI_API_KEY="$AZURE_OPENAI_API_KEY" \
+    -e AZURE_OPENAI_API_BASE="$AZURE_OPENAI_API_BASE" \
     -e GRADIO_SERVER_NAME="0.0.0.0" \
     -e GRADIO_SERVER_PORT="$PORT" \
     -e SHARE_MODE="$SHARE_MODE" \
