@@ -19,6 +19,16 @@
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 
 import gradio as gr
+from PythonClasses.Game.FileManager import FileManager
+
+from PythonClasses.Game.Game import Game
+
+use_models = [
+    "gpt-4-0613",
+    "gpt-4-32k-0613",
+    "gpt-3.5-turbo-0613",
+    "gpt-3.5-turbo-16k-0613"
+]
 
 intro = [
     [
@@ -47,14 +57,17 @@ With all that out of the way, let’s get started! What is your name?
     ]
 
 # PLAYER TAB
-with gr.Blocks() as player_tab:
-    # STORY AREA
+with gr.Blocks(title="AI Adventure Academy") as combined:
+    gr.HTML("<h1 style='text-align: center;'>AI Adventure Academy</h1>")
+    # with gr.Tab("Player") as player_tab:
+        # STORY AREA
     with gr.Row(variant="compact").style(equal_height=True) as story_area:
         # CHAT AREA
         with gr.Column(scale=10, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
-                value=intro, 
+                value=intro,
+                height=600,
             )
 
             # USER MESSAGE AREA
@@ -113,3 +126,181 @@ with gr.Blocks() as player_tab:
             day_box = gr.Textbox(lines=1, label="Today", interactive=False)
             item_box = gr.Textbox(lines=5, label="Items", interactive=False)
             relationship_box = gr.Textbox(lines=10, label="Relationships", interactive=False)
+
+
+# with gr.Tab(" "):
+    with gr.Box(visible=False) as config_tab:
+        with gr.Group():
+            with gr.Row():
+                # SELECT MODEL
+                select_model = gr.Radio(
+                    choices=use_models,
+                    label="Select Model",
+                    value=use_models[0],
+                    scale=1,
+                )
+                retry = gr.Button(value="Retry", size="sm")
+                undo = gr.Button(value="Undo", size="sm")
+                clear = gr.Button(value="Clear", size="sm")
+                restart = gr.Button(value="Restart", size="sm")
+                render = gr.Button(value="Render", size="sm")
+
+        # GAME NAME
+        with gr.Group():
+            with gr.Row():
+                history_name = gr.Textbox(
+                    value="BAH",
+                    lines=1,
+                    label="History Name",
+                    interactive=True,
+                    scale=1,
+                )
+                
+                save_game = gr.Button(value="Save", size="sm")
+                delete_game = gr.Button(value="Delete", size="sm")
+                load_game = gr.Button(value="Load", size="sm")
+                
+                select_history_name = gr.Dropdown(
+                    choices=FileManager.get_file_names(FileManager.HISTORY_FOLDER),
+                    show_label=True,
+                    label="Select History",
+                    scale=1,
+                )
+
+        # DEBUG AREA
+        with gr.Column(variant="compact") as debug_area:
+            # with gr.Row():
+            #     token_jsons = []
+            #     for model_name,tracker in TokenTracker.trackers.items():
+            #         token_jsons.append(gr.JSON(label=f"{model_name} Token Tracker", interactive=False))
+            with gr.Row() as total_token_jsons:
+                gpt_4_json = gr.JSON(label="gpt 4", interactive=False)
+                gpt_4_32_json = gr.JSON(label="gpt 4 32k", interactive=False)
+                gpt_3_5_turbo_json = gr.JSON(label="gpt 3.5 turbo", interactive=False)
+                gpt_3_5_turbo_16_json = gr.JSON(label="gpt 3.5 turbo 16k", interactive=False)
+            with gr.Row() as game_average_token_jsons:
+                game_average_gpt_4_json = gr.JSON(label="game average gpt 4", interactive=False)
+                game_average_gpt_4_32_json = gr.JSON(label="game average gpt 4 32k", interactive=False)
+                game_average_gpt_3_5_turbo_json = gr.JSON(label="game average gpt 3.5 turbo", interactive=False)
+                game_average_gpt_3_5_turbo_16_json = gr.JSON(label="game average gpt 3.5 turbo 16k", interactive=False)
+            turn_json = gr.JSON(label="Game State")
+
+
+
+        config_render_array = [
+            execution_json,
+            turn_json,
+        ]
+
+
+# with gr.Tab(" "):
+    with gr.Box(visible=False) as gm_tab:
+
+        with gr.Group():
+            # SAVE/LOAD SESSION
+            with gr.Row():
+                system_message_name = gr.Textbox(
+                    value="NEW",
+                    lines=1,
+                    show_label=True,
+                    label="System Message Name",
+                    interactive=True,
+                    scale=2,
+                )
+
+                save_system_message = gr.Button(value="Save", scale=1, size="sm")
+                load_system_message = gr.Button(value="Load", scale=1, size="sm")
+
+                select_system_message = gr.Dropdown(
+                    choices=FileManager.get_file_names(FileManager.SYSTEM_MESSAGE_FOLDER),
+                    show_label=True,
+                    label="Select System Message",
+                    value="BEST_system_message",
+                    scale=2,
+                )
+                
+            # with gr.Row():
+            #     example_history_name = gr.Textbox(
+            #         value="",
+            #         lines=1,
+            #         show_label=True,
+            #         label="Example History Name",
+            #         interactive=True,
+            #         scale=2,
+            #     )
+
+            #     save_example_history = gr.Button(value="Save", scale=1, size="sm")
+            #     load_example_history = gr.Button(value="Load", scale=1, size="sm")
+
+            #     select_example_history = gr.Dropdown(
+            #         choices=FileManager.get_file_names(FileManager.EXAMPLE_HISTORY_FOLDER),
+            #         show_label=True,
+            #         label="Select Example History",
+            #         scale=2,
+            #     )
+
+        load_mode = gr.Radio(
+                choices=["Overwrite", "Prepend", "Append"],
+                show_label=False,
+                value="Overwrite",
+                scale=2)
+            
+        # SYSTEM MESSAGE
+        system_message = gr.Textbox(
+                            lines=40,
+                            label="System",
+                            interactive=True,
+                            scale=1,
+                            value=FileManager.load_system_message("NEW"),
+                        )
+        
+        # example_history = gr.Code(
+        #                     lines=40,
+        #                     label="Example History",
+        #                     interactive=True,
+        #                     scale=1,
+        #                     value="",
+        #                     language="json")
+
+        # GM TAB FUNCTIONS
+        save_system_message.click(
+            fn=FileManager.save_system_message,
+            inputs=[system_message_name, system_message],
+            outputs=[],
+            queue=False
+        )
+        
+        load_system_message.click(
+            fn=FileManager.load_system_message,
+            inputs=[select_system_message],
+            outputs=[system_message],
+            queue=False
+        )
+
+        select_system_message.change(
+            fn=FileManager.load_system_message,
+            inputs=[select_system_message],
+            outputs=[system_message],
+            queue=False
+        )
+
+        save_system_message.click(
+            fn=FileManager.save_system_message,
+            inputs=[system_message_name, system_message],
+            outputs=[],
+            queue=False
+        )
+        
+        # load_example_history.click(
+        #     fn=FileManager.load_example_history,
+        #     inputs=[select_example_history],
+        #     outputs=[example_history],
+        #     queue=False
+        # )
+
+        # select_example_history.change(
+        #     fn=FileManager.load_example_history,
+        #     inputs=[select_example_history],
+        #     outputs=[example_history],
+        #     queue=False
+        # )

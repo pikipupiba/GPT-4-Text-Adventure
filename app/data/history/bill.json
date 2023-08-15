@@ -25,99 +25,15 @@
         "system_message": "",
         "display": [
             "bill",
-            "Nice to meet you, Bill!\n\nIt's time to choose your starting gear. Below is a list of interesting items that might be useful in the playground. Some might seem a bit mundane, some are quite peculiar, and a couple of them might be magical!\n\n1. Colorful stickers\n2. A pack of tasty fruit gummies\n3. An intriguing geode\n4. Tiny mirror\n5. Bouncy ball\n6. A treasure map of the playground\n7. Cool spyglass\n8. Stainless-steel canteen\n9. Fantastical Ouija board\n10. Rubber duck\n\nFrom this list, you can choose five items."
+            "Alright, Bill. It's time to gear up and prepare yourself for an exciting journey at the AI Adventure Academy. Here are the required items you can choose from. You can pick any 5 items to keep with you through the journey. Choose wisely, as each item could open up unique opportunities.\n\n1. A couple of baseball cards\n2. A shiny 'Rubber Duck'.\n3. A Spy Kids Gadget Lunch Box\n4. An intriguing 'Ouija Board'\n5. A pack of rainbow highlighters\n6. A seemingly ordinary treasure map\n7. A secret decoder ring\n8. A 'lucky' rabbit\u2019s foot\n9. A brand new, fully charged Game Boy\n10. A very polished Yoyo\n\nWhich five would you like to take?"
         ],
         "raw": [
             "bill\n{Greet me and ask me to choose items}",
-            "Nice to meet you, Bill!\n\nIt's time to choose your starting gear. Below is a list of interesting items that might be useful in the playground. Some might seem a bit mundane, some are quite peculiar, and a couple of them might be magical!\n\n1. Colorful stickers\n2. A pack of tasty fruit gummies\n3. An intriguing geode\n4. Tiny mirror\n5. Bouncy ball\n6. A treasure map of the playground\n7. Cool spyglass\n8. Stainless-steel canteen\n9. Fantastical Ouija board\n10. Rubber duck\n\nFrom this list, you can choose five items."
+            "Alright, Bill. It's time to gear up and prepare yourself for an exciting journey at the AI Adventure Academy. Here are the required items you can choose from. You can pick any 5 items to keep with you through the journey. Choose wisely, as each item could open up unique opportunities.\n\n1. A couple of baseball cards\n2. A shiny 'Rubber Duck'.\n3. A Spy Kids Gadget Lunch Box\n4. An intriguing 'Ouija Board'\n5. A pack of rainbow highlighters\n6. A seemingly ordinary treasure map\n7. A secret decoder ring\n8. A 'lucky' rabbit\u2019s foot\n9. A brand new, fully charged Game Boy\n10. A very polished Yoyo\n\nWhich five would you like to take?"
         ],
         "stats": {
             "DAY": "Monday",
-            "ITEM": [
-                "Bouncy Ball (Bouncy as ever)",
-                "Tiny Mirror (Shiny and clean)",
-                "Intriguing Geode (Untouched)",
-                "Fruit Gummies (Unopened pack)",
-                "Colorful Stickers (Brand new pack)"
-            ],
-            "RELATIONSHIP": []
-        },
-        "combat": [],
-        "execution": {}
-    },
-    {
-        "type": "normal",
-        "model": "gpt-4-0613",
-        "system_message": "",
-        "display": [
-            "1-5",
-            "Excellent choices, Bill! You now have:\n\n1. Colorful stickers\n2. A pack of tasty fruit gummies\n3. An intriguing geode\n4. A tiny mirror\n5. A bouncy ball\n\nRemember, these items can be of great use in the playground. Use them wisely to make the most of your recess time. Let's get started with your new adventure at the AI Adventure Academy!"
-        ],
-        "raw": [
-            "1-5\n",
-            "Excellent choices, Bill! You now have:\n\n1. Colorful stickers\n2. A pack of tasty fruit gummies\n3. An intriguing geode\n4. A tiny mirror\n5. A bouncy ball\n\n..ITEM..Colorful Stickers (Brand new pack)..ITEM..\n..ITEM..Fruit Gummies (Unopened pack)..ITEM..\n..ITEM..Intriguing Geode (Untouched)..ITEM..\n..ITEM..Tiny Mirror (Shiny and clean)..ITEM..\n..ITEM..Bouncy Ball (Bouncy as ever)..ITEM..\n\nRemember, these items can be of great use in the playground. Use them wisely to make the most of your recess time. Let's get started with your new adventure at the AI Adventure Academy!"
-        ],
-        "stats": {
-            "DAY": "Monday",
-            "ITEM": [
-                "Bouncy Ball (Bouncy as ever)",
-                "Tiny Mirror (Shiny and clean)",
-                "Intriguing Geode (Untouched)",
-                "Fruit Gummies (Unopened pack)",
-                "Colorful Stickers (Brand new pack)"
-            ],
-            "RELATIONSHIP": []
-        },
-        "combat": [],
-        "execution": {}
-    },
-    {
-        "type": "normal",
-        "model": "gpt-4-0613",
-        "system_message": "",
-        "display": [
-            "jump",
-            "---> Bill is trying to jump.\n---> Difficulty: Moderate - Decently high jump for a fifth grader (DC 12)\n---> 'Bonus': High energy level on first day at a new school (+2)\n---> Result: 18 + 2 >=12 | SUCCESS\n---> Elapsed Time: 2 minutes\n\nWith a hop, skip, and a jump, you spring off the ground. Your vibrant energy catches the attention of many kids around the playground, including a group of children playing with a bouncy castle near the swings. A good start to your first day at new school.\n\n"
-        ],
-        "raw": [
-            "jump\n{rolls:[18,8,8,6,11]}",
-            "---> Bill is trying to jump.\n---> Difficulty: Moderate - Decently high jump for a fifth grader (DC 12)\n---> 'Bonus': High energy level on first day at a new school (+2)\n---> Result: 18 + 2 >=12 | SUCCESS\n---> Elapsed Time: 2 minutes\n\nWith a hop, skip, and a jump, you spring off the ground. Your vibrant energy catches the attention of many kids around the playground, including a group of children playing with a bouncy castle near the swings. A good start to your first day at new school.\n\n..DAY..Monday with 58 minutes left. Off to a flying start..DAY.."
-        ],
-        "stats": {
-            "DAY": "Monday with 58 minutes left. Off to a flying start",
-            "ITEM": [
-                "Bouncy Ball (Bouncy as ever)",
-                "Tiny Mirror (Shiny and clean)",
-                "Intriguing Geode (Untouched)",
-                "Fruit Gummies (Unopened pack)",
-                "Colorful Stickers (Brand new pack)"
-            ],
-            "RELATIONSHIP": []
-        },
-        "combat": [],
-        "execution": {}
-    },
-    {
-        "type": "normal",
-        "model": "gpt-4-0613",
-        "system_message": "",
-        "display": [
-            "stand around for 58 minutes",
-            "---> Bill is trying to simply stand around.\n---> Difficulty: Easy - Not much effort required to stand still (DC 2)\n---> 'Bonus': No distractions, allowing focus and balance (+0)\n---> Result: 15 + 0 >=2 | SUCCESS\n---> Elapsed Time: 58 minutes\n\nEngulfed in a whirlwind of confusion and newness, you choose to stand there, letting the playground life sweep by you. Some kids seem intrigued by your calm, but most are too engrossed in their games to notice. Time flies when you're... standing around?\n\nAs the bell rings, signaling the end of recess, you watch as the hordes of children return to the school building. Day one at AI Adventure Academy is over. Tomorrow, there will be more opportunities to make friends and have fun.\n\n"
-        ],
-        "raw": [
-            "stand around for 58 minutes\n{rolls:[15,18,5,13,4]}",
-            "---> Bill is trying to simply stand around.\n---> Difficulty: Easy - Not much effort required to stand still (DC 2)\n---> 'Bonus': No distractions, allowing focus and balance (+0)\n---> Result: 15 + 0 >=2 | SUCCESS\n---> Elapsed Time: 58 minutes\n\nEngulfed in a whirlwind of confusion and newness, you choose to stand there, letting the playground life sweep by you. Some kids seem intrigued by your calm, but most are too engrossed in their games to notice. Time flies when you're... standing around?\n\nAs the bell rings, signaling the end of recess, you watch as the hordes of children return to the school building. Day one at AI Adventure Academy is over. Tomorrow, there will be more opportunities to make friends and have fun.\n\n..DAY..Tuesday with 60 minutes left. A fresh start..DAY.."
-        ],
-        "stats": {
-            "DAY": "Tuesday with 60 minutes left. A fresh start",
-            "ITEM": [
-                "Bouncy Ball (Bouncy as ever)",
-                "Tiny Mirror (Shiny and clean)",
-                "Intriguing Geode (Untouched)",
-                "Fruit Gummies (Unopened pack)",
-                "Colorful Stickers (Brand new pack)"
-            ],
+            "ITEM": [],
             "RELATIONSHIP": []
         },
         "combat": [],

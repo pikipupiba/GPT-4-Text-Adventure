@@ -6,6 +6,7 @@
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
 import json,re,os,time
+from datetime import datetime
 
 import gradio as gr
 from loguru import logger
@@ -19,6 +20,7 @@ from PythonClasses.Game.UserMessage import UserMessage
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
 from PythonClasses.LLM.LLM import LLM
+from PythonClasses.LLM.LLMModel import LLMModel, total_tokens
 from PythonClasses.Game.CompleteJson import CompleteJson
 
 
@@ -38,8 +40,11 @@ class Game:
         logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
         self.game_name = game_name
+        self.dev = False
         # self.audio = LLMStreamProcessor(game_name)
 
+        self.llm_model = LLMModel()
+        
         self.history = []
 
         intro_json = {
@@ -141,6 +146,13 @@ class Game:
         display_history = Game._display_history(game_name)
         stats = Game._stats(game_name)
 
+        # for item in stats.get("ITEM", []):
+        #     if '(' in item:
+        #         before_parenthesis, parenthesis, after_parenthesis = item.partition('(')
+        #         return f'<p style="color:green">{before_parenthesis}</p>{parenthesis}{after_parenthesis}'
+        #     else:
+        #         return item 
+
         day_box = stats.get("DAY")
         item_box = '\n'.join(stats.get("ITEM"))
         relationship_box = '\n\n'.join(stats.get("RELATIONSHIP"))
@@ -151,13 +163,58 @@ class Game:
         # Speech
         # speech = Game._audio(game_name).get_next_audio()
 
+        if Game._(game_name).state == Game.AWAITING_USER:
+            submit_button = gr.update(interactive=True, value="Do it!")
+            user_message = gr.update(interactive=True, placeholder="What will you do?")
+        else:
+            submit_button = gr.update(interactive=False, value="Hold on...")
+            user_message = gr.update(interactive=False, placeholder="Predicting...")
+
+        if Game._(game_name).dev == True:
+            gm_tab = gr.update(visible=True)
+            config_tab = gr.update(visible=True)
+        else:
+            gm_tab = gr.update(visible=False)
+            config_tab = gr.update(visible=False)
+
+        # execution_json = Game._(game_name).llm_model.tokens
+
+        num_games = len(Game.GAMES)
+
+        gpt_versions = ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"]
+        categories = ["total", "prompt", "completion"]
+
+        game_average = {}
+
+        for version in gpt_versions:
+            game_average[version] = {}
+            for category in categories:
+                game_average[version][category] = {
+                    "count": total_tokens[version][category]["count"] / num_games,
+                    "cost": total_tokens[version][category]["cost"] / num_games,
+                    "tpm": sum([game.llm_model.tokens[version][category]["tpm"] for game_name, game in Game.GAMES.items()]) / num_games,
+                    "cpm": sum([game.llm_model.tokens[version][category]["cpm"] for game_name, game in Game.GAMES.items()]) / num_games
+                }
+        
+
         return [
             display_history,
             day_box,
             item_box,
             relationship_box,
+            submit_button,
+            user_message,
             turn_dict,
-            # speech,
+            gm_tab,
+            config_tab,
+            total_tokens["gpt-4-0613"],
+            total_tokens["gpt-4-32k-0613"],
+            total_tokens["gpt-3.5-turbo-0613"],
+            total_tokens["gpt-3.5-turbo-16k-0613"],
+            game_average["gpt-4-0613"],
+            game_average["gpt-4-32k-0613"],
+            game_average["gpt-3.5-turbo-0613"],
+            game_average["gpt-3.5-turbo-16k-0613"],
         ]
     
     def undo(game_name: str):
@@ -225,11 +282,21 @@ class Game:
 
     
     def stream_prediction(game_name: str):
+
         new_day = True
+        count_tokens = True
+
+        if "dddeeevvv" in Game._last_display(game_name)[0]:
+            del Game._history(game_name)[-1]
+            Game._(game_name).dev = not Game._(game_name).dev
+            new_day = False
+            count_tokens = False
 
         Game._(game_name).state = Game.PREDICTING
+        new_day_counter = 0
 
-        while(new_day):
+        while(new_day and new_day_counter < 2):
+            new_day_counter += 1
             new_day = False
                 
             logger.info("Streaming prediction")
@@ -239,7 +306,7 @@ class Game:
             system_message = current_turn.system_message
             raw_history = Game._raw_history(game_name)
 
-            del current_turn.system_message
+            current_turn.system_message = ""
 
             Game._last_raw(game_name)[1] = ""
             Game._last_display(game_name)[1] = ""
@@ -248,9 +315,8 @@ class Game:
             schema_name = None
             item_index = None
             temp_string = ""
-            
 
-            for chunk in LLM.predict(model, system_message, raw_history):
+            for chunk in LLM.predict(model, system_message, raw_history, Game._(game_name).llm_model):
                 if len(chunk["choices"][0]["delta"]) == 0:
                     break
 
@@ -267,6 +333,7 @@ class Game:
                         schema_name = opening_match.group(0).strip(" .")
                         Game._last_display(game_name)[1] = Game._last_display(game_name)[1][:opening_match.start()]
                         content = content.rstrip('. \n')
+
                         if schema_name == "DAY":
                             Game._last_turn(game_name).stats["DAY"] = ""
                         elif schema_name == "ITEM":
@@ -343,6 +410,9 @@ class Game:
 
                 yield Game.render_story(game_name)
 
+            if count_tokens:
+                Game._(game_name).llm_model.num_tokens_from_text(model, Game._last_raw(game_name)[1])
+
             from PythonClasses.Game.FileManager import FileManager
             FileManager.save_history(game_name, game_name)
 
@@ -366,5 +436,7 @@ class Game:
                 Game._history(game_name).append(Turn(new_day_json))
 
         Game._(game_name).state = Game.AWAITING_USER
+
+        yield Game.render_story(game_name)
 
         

@@ -24,12 +24,12 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "bah",
+            "Nice to meet you, Bah.\n\nHere is your backpack and a list of items you may want to bring with you to school this week. You can pick FIVE items from this list:\n\n1. A Lunchbox with your favorite meal\n2. Your favorite superhero action figure\n3. A mystery novel that you just can't put down\n4. An umbrella with a duck handle\n5. A pair of binoculars \n6. A sketchpad and colored pencils \n7. A bag of gummy worms\n8. A soccer ball\n9. Magical: A Treasure Map leading to a secret location at the school\n10. Magical: A Ouija Board that communicates messages from a mischievous forest critter \n\nWhat items do you choose?"
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "bah\n{Greet me and ask me to choose items}",
+            "Nice to meet you, Bah.\n\nHere is your backpack and a list of items you may want to bring with you to school this week. You can pick FIVE items from this list:\n\n1. A Lunchbox with your favorite meal\n2. Your favorite superhero action figure\n3. A mystery novel that you just can't put down\n4. An umbrella with a duck handle\n5. A pair of binoculars \n6. A sketchpad and colored pencils \n7. A bag of gummy worms\n8. A soccer ball\n9. Magical: A Treasure Map leading to a secret location at the school\n10. Magical: A Ouija Board that communicates messages from a mischievous forest critter \n\nWhat items do you choose?"
         ],
         "stats": {
             "DAY": "Monday",

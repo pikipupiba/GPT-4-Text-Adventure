@@ -1,6 +1,7 @@
 import os
 from typing import List, Tuple
 from loguru import logger
+from PythonClasses.LLM.LLMModel import LLMModel
 
 import openai
 
@@ -20,6 +21,31 @@ import openai
 # the required OpenAI format (`build_openai_system_message`), predicting the next response based
 # on the model, system message, and history (`predict`), and summarizing text (`summarize`).
 class LLM:
+
+    def __init__(self):
+        tokens = {
+            "gpt-3.5-turbo-0613" : {
+                "prompt": 0,
+                "completion": 0,
+                "tpm": 0,
+            },
+            "gpt-3.5-turbo-16k-0613" : {
+                "prompt": 0,
+                "completion": 0,
+                "tpm": 0,
+            },
+            "gpt-4-0613": {
+                "prompt": 0,
+                "completion": 0,
+                "tpm": 0,
+            },
+            "gpt-4-32k-0613": {
+                "prompt": 0,
+                "completion": 0,
+                "tpm": 0,
+            },
+        }
+
     def oneshot(system_message: str, user_message: str, model: str = "gpt-4"):
         chat = openai.ChatCompletion.create(
             model=model,
@@ -70,8 +96,10 @@ class LLM:
 
         return system_message_openai_format
 
+
+
     def predict(
-        model: str = None, system_message: str = None, raw_history: List[any] = None
+        model: str = None, system_message: str = None, raw_history: List[any] = None, llm_model: LLMModel = None
     ):
         if model == None:
             logger.warning("No model provided. Returning [].")
@@ -98,6 +126,8 @@ class LLM:
             messages_openai_format.append(openai_system_message)
         if openai_history != None:
             messages_openai_format += openai_history
+
+        llm_model.num_tokens_from_messages(model, messages_openai_format)
 
         # OpenAI API call
         return openai.ChatCompletion.create(

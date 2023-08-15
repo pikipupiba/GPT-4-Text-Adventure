@@ -24,12 +24,12 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "lets go",
+            "Absolutely, let's dive right in! Welcome to AI Adventure Academy, your journey begins on the sprawling playground of your new school. Before you get started, please take a look at the list of items below. You can choose 5 of these to take with you to your first day at school.\n\n1. A doodle-filled notebook\n2. A shiny marble\n3. A stapler\n4. A box of colorful pencils\n5. A pack of bubble gum\n6. A secret decoder ring (magical item)\n7. A pet rock\n8. An old comic book\n9. A Rubik\u2019s cube\n10. A whistle\n11. A pirate\u2019s treasure map (magical item)\n12. A Ouija Board\n13. A Rubber Duck.\n\nWhich do you decide to bring with you?"
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "lets go\n{Greet me and ask me to choose items}",
+            "Absolutely, let's dive right in! Welcome to AI Adventure Academy, your journey begins on the sprawling playground of your new school. Before you get started, please take a look at the list of items below. You can choose 5 of these to take with you to your first day at school.\n\n1. A doodle-filled notebook\n2. A shiny marble\n3. A stapler\n4. A box of colorful pencils\n5. A pack of bubble gum\n6. A secret decoder ring (magical item)\n7. A pet rock\n8. An old comic book\n9. A Rubik\u2019s cube\n10. A whistle\n11. A pirate\u2019s treasure map (magical item)\n12. A Ouija Board\n13. A Rubber Duck.\n\nWhich do you decide to bring with you?"
         ],
         "stats": {
             "DAY": "Monday",

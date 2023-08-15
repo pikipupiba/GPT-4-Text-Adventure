@@ -24,12 +24,12 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "asdf",
+            "Nice to meet you, Asdf! As you head out to the playground, you spot a trunk packed with several items you could possibly use. I'll list them out for you to choose from. \n\n1. A shiny and intricate marble set\n2. A yo-yo with a glow-in-the-dark string\n3. A small, friendly looking robot named Beebo\n4. A magic 8-ball with oddly specific answers\n5. A large, beautifully illustrated hardcover book titled 'Untold Myths & Legends'\n6. A seemingly enchanted 'Ouija Board'\n7. A fresh pack of trading cards featuring popular characters\n8. A friendly looking 'Rubber Duck'\n9. A gracefully arched bow and arrow set, albeit toy versions\n10. A treasure map of the playground\n\nFrom this list, please choose 5 items that you would like to take with you for the day."
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "asdf\n{Greet me and ask me to choose items}",
+            "Nice to meet you, Asdf! As you head out to the playground, you spot a trunk packed with several items you could possibly use. I'll list them out for you to choose from. \n\n1. A shiny and intricate marble set\n2. A yo-yo with a glow-in-the-dark string\n3. A small, friendly looking robot named Beebo\n4. A magic 8-ball with oddly specific answers\n5. A large, beautifully illustrated hardcover book titled 'Untold Myths & Legends'\n6. A seemingly enchanted 'Ouija Board'\n7. A fresh pack of trading cards featuring popular characters\n8. A friendly looking 'Rubber Duck'\n9. A gracefully arched bow and arrow set, albeit toy versions\n10. A treasure map of the playground\n\nFrom this list, please choose 5 items that you would like to take with you for the day."
         ],
         "stats": {
             "DAY": "Monday",

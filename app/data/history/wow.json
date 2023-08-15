@@ -24,17 +24,81 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "wow",
+            "Welcome to Adventure Academy, Wow! Today will surely be a day of new beginnings and interesting encounters.\n\nLet's get you ready for the day! In your bag, you can carry only 5 items from the list below. Choose wisely - who knows what kind of adventures you may find yourself in!\n\n1. A set of colorful chalks\n2. A packet of gum\n3. Comic book\n4. A joke book\n5. A roll of duct tape\n6. A bag of jelly beans\n7. A bag of marbles\n8. A sketchpad and pencil\n9. A magical rubber duck that squeaks in riddles\n10. A magic Ouija board that appears to move on its own.\n\nWhat will you choose?\n"
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "wow\n{Greet me and ask me to choose items}",
+            "Welcome to Adventure Academy, Wow! Today will surely be a day of new beginnings and interesting encounters.\n\nLet's get you ready for the day! In your bag, you can carry only 5 items from the list below. Choose wisely - who knows what kind of adventures you may find yourself in!\n\n1. A set of colorful chalks\n2. A packet of gum\n3. Comic book\n4. A joke book\n5. A roll of duct tape\n6. A bag of jelly beans\n7. A bag of marbles\n8. A sketchpad and pencil\n9. A magical rubber duck that squeaks in riddles\n10. A magic Ouija board that appears to move on its own.\n\nWhat will you choose?\n"
         ],
         "stats": {
             "DAY": "Monday",
-            "ITEM": [],
-            "RELATIONSHIP": []
+            "ITEM": [
+                "Roll of Duct Tape (Brand new)\n",
+                "Joke Book (filled with classic jokes that can make anyone laugh)\n",
+                "Comic Book (The latest issue of your favorite comic series)\n",
+                "Packet of Gum (Sealed)\n",
+                "Colorful Chalks (New and unused)\n"
+            ],
+            "RELATIONSHIP": [
+                "Neutral | Change: +5 | Total: 5\n---> Drawing attention to yourself\n---> Kids are now aware of you and waiting to see what you do next"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "1-5",
+            "Great, you have chosen:\n\n \nThese items are now in your backpack. Without a doubt, these are perfect for various fun activities, interesting conversations, or quick fixes that might come up during the day!"
+        ],
+        "raw": [
+            "1-5\n",
+            "Great, you have chosen:\n\n..ITEM..Colorful Chalks (New and unused)\n..ITEM..\n..ITEM..Packet of Gum (Sealed)\n..ITEM..\n..ITEM..Comic Book (The latest issue of your favorite comic series)\n..ITEM..\n..ITEM..Joke Book (filled with classic jokes that can make anyone laugh)\n..ITEM.. \n..ITEM..Roll of Duct Tape (Brand new)\n..ITEM..\n\nThese items are now in your backpack. Without a doubt, these are perfect for various fun activities, interesting conversations, or quick fixes that might come up during the day!"
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [
+                "Roll of Duct Tape (Brand new)\n",
+                "Joke Book (filled with classic jokes that can make anyone laugh)\n",
+                "Comic Book (The latest issue of your favorite comic series)\n",
+                "Packet of Gum (Sealed)\n",
+                "Colorful Chalks (New and unused)\n"
+            ],
+            "RELATIONSHIP": [
+                "Neutral | Change: +5 | Total: 5\n---> Drawing attention to yourself\n---> Kids are now aware of you and waiting to see what you do next"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "run around wildly waving my arms in strangers faces. i try to hypnotize them with my sick mooooooves",
+            "---> Wow is trying to grab the attention of strangers with wild running and arm-waving.\n---> Difficulty: moderate - Winning over the playground can be tough (DC 10).\n---> Bonus: Confusion might work in your favor (+2)\n---> Result: 17 + 2 >= 10  |  SUCCESS\n---> Elapsed Time: 2 minutes\n\nIn the hustle and bustle of the playground, you choose an unorthodox method to break the ice. Against all odds, it seemed the more wildly you waved, the more eyes turned your way. Laughter, pointing, even a few boys mimicking your moves from a safe distance. You had certainly grabbed their attention, for better or worse. Messy and entertaining tactics seemed to make their mark.\n\nAfter your wild display, you took a moment to breathe and take in the reaction of your peers. You've spent only a small portion of your day, and you've already set in motion the whispers and rumors about the \"new kid\" who had arrived.\n\n"
+        ],
+        "raw": [
+            "run around wildly waving my arms in strangers faces. i try to hypnotize them with my sick mooooooves\n{rolls:[17,1,7,12,1]}",
+            "---> Wow is trying to grab the attention of strangers with wild running and arm-waving.\n---> Difficulty: moderate - Winning over the playground can be tough (DC 10).\n---> Bonus: Confusion might work in your favor (+2)\n---> Result: 17 + 2 >= 10  |  SUCCESS\n---> Elapsed Time: 2 minutes\n\nIn the hustle and bustle of the playground, you choose an unorthodox method to break the ice. Against all odds, it seemed the more wildly you waved, the more eyes turned your way. Laughter, pointing, even a few boys mimicking your moves from a safe distance. You had certainly grabbed their attention, for better or worse. Messy and entertaining tactics seemed to make their mark.\n\nAfter your wild display, you took a moment to breathe and take in the reaction of your peers. You've spent only a small portion of your day, and you've already set in motion the whispers and rumors about the \"new kid\" who had arrived.\n\n..RELATIONSHIP..Neutral | Change: +5 | Total: 5\n---> Drawing attention to yourself\n---> Kids are now aware of you and waiting to see what you do next..RELATIONSHIP..\n\n..DAY..Monday with 58 minutes left. What's next?..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 58 minutes left. What's next?",
+            "ITEM": [
+                "Roll of Duct Tape (Brand new)\n",
+                "Joke Book (filled with classic jokes that can make anyone laugh)\n",
+                "Comic Book (The latest issue of your favorite comic series)\n",
+                "Packet of Gum (Sealed)\n",
+                "Colorful Chalks (New and unused)\n"
+            ],
+            "RELATIONSHIP": [
+                "Neutral | Change: +5 | Total: 5\n---> Drawing attention to yourself\n---> Kids are now aware of you and waiting to see what you do next"
+            ]
         },
         "combat": [],
         "execution": {}

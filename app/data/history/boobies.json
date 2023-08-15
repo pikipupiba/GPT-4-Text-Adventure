@@ -24,12 +24,32 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "boobies",
+            "With a little chuckle, I say, \"Alright, Boobies, let's toggle the serious switch on. Now, it's time to choose your inventory. You have been given a box by your parents and told you can only choose 5 items to bring to school. Here's the list:\n\n1. A sticky slime ball\n2. A multi-color pen that writes in four different colors\n3. A yo-yo with a dragon design\n4. A mini sketchbook with a set of color pencils\n5. A fidget spinner\n6. A packet of popping candies\n7. A pouch of magical marbles that sometimes whisper secrets\n8. A stack of superhero trading cards\n9. A mysterious treasure map, sketched on the back of a crumpled, old math test\n10. A friendly ghost Ouija board that says it's only for communicating with nice ghosts\n11. A golden rubber duck that quacks when someone is lying\n\nTake a moment to choose which items you would like to bring with you for your first day at the new school.\""
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "boobies\n{Greet me and ask me to choose items}",
+            "With a little chuckle, I say, \"Alright, Boobies, let's toggle the serious switch on. Now, it's time to choose your inventory. You have been given a box by your parents and told you can only choose 5 items to bring to school. Here's the list:\n\n1. A sticky slime ball\n2. A multi-color pen that writes in four different colors\n3. A yo-yo with a dragon design\n4. A mini sketchbook with a set of color pencils\n5. A fidget spinner\n6. A packet of popping candies\n7. A pouch of magical marbles that sometimes whisper secrets\n8. A stack of superhero trading cards\n9. A mysterious treasure map, sketched on the back of a crumpled, old math test\n10. A friendly ghost Ouija board that says it's only for communicating with nice ghosts\n11. A golden rubber duck that quacks when someone is lying\n\nTake a moment to choose which items you would like to bring with you for your first day at the new school.\""
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "dddeeevvv",
+            "I apologize, but it seems like there was some confusion. Could you please specify which items you would like to choose from the list? Remember, you can only pick five. You can refer to them by their numbers (1 through 11)."
+        ],
+        "raw": [
+            "dddeeevvv\n",
+            "I apologize, but it seems like there was some confusion. Could you please specify which items you would like to choose from the list? Remember, you can only pick five. You can refer to them by their numbers (1 through 11)."
         ],
         "stats": {
             "DAY": "Monday",

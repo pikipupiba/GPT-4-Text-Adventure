@@ -24,12 +24,12 @@
         "model": "gpt-4-0613",
         "system_message": "",
         "display": [
-            "yee",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "sdfh",
+            "Hello sdfh, welcome to your first day at Adventure Academy. Before you head off to recess, there are some items that caught your eye in the classroom's lost and found. You can only choose five items. Which ones would you like?\n\n1. An old, worn-out baseball glove.\n2. A colorful slinky.\n3. A painted pebble.\n4. A \"Marvin the Mischievous Martian\" comic book.\n5. A keychain with an unknown locker key.\n6. A pair of walkie-talkies.\n7. A handheld magnifying glass.\n8. A rubber duck.\n9. An ornate silver locket that holds a tiny compass inside.\n10. An eerie Ouija Board given to the school by a mysterious alumnus. \n\n\nPlease indicate the numbers of the five items you want to choose."
         ],
         "raw": [
-            "yee\n{Greet me and ask me to choose items}",
-            "Hello Yee! Delighted to meet you.\n\nSo, Yee, as you start your first day at the Academy, you are given a choice of items you might want to bring along to school. You can choose from the following list of 10 items:\n\n1. A deck of well-worn playing cards\n2. A colorful marble set\n3. A copy of your favorite comic book\n4. A shiny slingshot\n5. An old treasure map (believed to show the playground's secret passages)\n6. A quirky rubber duck\n7. A mysterious Ouija board\n8. A small ball of yarn\n9. A bag of sour gummy worms\n10. A beautiful glass bottle filled with bioluminescent sand \n\nChoose wisely. You can pick only five items. Which ones will you bring on your first day?"
+            "sdfh\n{Greet me and ask me to choose items}",
+            "Hello sdfh, welcome to your first day at Adventure Academy. Before you head off to recess, there are some items that caught your eye in the classroom's lost and found. You can only choose five items. Which ones would you like?\n\n1. An old, worn-out baseball glove.\n2. A colorful slinky.\n3. A painted pebble.\n4. A \"Marvin the Mischievous Martian\" comic book.\n5. A keychain with an unknown locker key.\n6. A pair of walkie-talkies.\n7. A handheld magnifying glass.\n8. A rubber duck.\n9. An ornate silver locket that holds a tiny compass inside.\n10. An eerie Ouija Board given to the school by a mysterious alumnus. \n\n\nPlease indicate the numbers of the five items you want to choose."
         ],
         "stats": {
             "DAY": "Monday",

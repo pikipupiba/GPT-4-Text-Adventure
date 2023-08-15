@@ -1,5 +1,93 @@
 import tiktoken
 from loguru import logger
+from typing import List
+
+from datetime import datetime
+
+total_start_time = None
+
+total_tokens = {
+    "gpt-3.5-turbo-0613" : {
+        "total": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "prompt": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "completion": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+    },
+    "gpt-3.5-turbo-16k-0613" : {
+        "total": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "prompt": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "completion": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+    },
+    "gpt-4-0613": {
+        "total": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "prompt": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "completion": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+    },
+    "gpt-4-32k-0613": {
+        "total": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "prompt":{
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+        "completion": {
+            "count": 0,
+            "cost": 0,
+            "tpm": 0,
+            "cpm": 0,
+        },
+    }
+}
 
 class LLMModel:
 # The `LLMModel` class is a class for looking up information about language models (LLMs). It
@@ -8,7 +96,6 @@ class LLMModel:
 # messages for a specific LLM model. The class also defines a list of available LLM models and
 # their corresponding prices.
     # Class for looking up information about LLM models
-
     AVAILABLE_MODELS = [
         # GPT-3.5 Turbo
         "gpt-3.5-turbo",
@@ -57,6 +144,93 @@ class LLMModel:
             "completion": 0.00012,
         },
     ]
+
+
+    def __init__(self):
+        self.start_time = datetime.now()
+
+        self.tokens = {
+            "gpt-3.5-turbo-0613" : {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+            },
+            "gpt-3.5-turbo-16k-0613" : {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+            },
+            "gpt-4-0613": {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+            },
+            "gpt-4-32k-0613": {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                    "tpm": 0,
+                    "cpm": 0,
+                },
+            }
+        }
 
     def get_price(model:str):
 
@@ -112,13 +286,10 @@ class LLMModel:
         
         logger.trace(f"Found model info for model {model}")
         
-        return {
-            "encoding": encoding,
-            "tokens_per_message": tokens_per_message,
-            "tokens_per_name": tokens_per_name,
-        }
+        return encoding, tokens_per_message, tokens_per_name,
+
     
-    def num_tokens_from_text(model:str = None, text:str = None):
+    def num_tokens_from_text(self, model:str = None, text:str = None):
         """Return the number of tokens used by a string of text."""
         logger.trace(f"Getting number of tokens from messages for model {model}")
 
@@ -136,10 +307,32 @@ class LLMModel:
 
         logger.trace(f"Found {num_tokens} tokens for model {model}")
 
+        self.tokens[model]["completion"]["count"] += num_tokens
+        self.tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
+        self.tokens[model]["completion"]["tpm"] = self.tokens[model]["completion"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
+        self.tokens[model]["completion"]["cpm"] = self.tokens[model]["completion"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+        total_tokens[model]["completion"]["count"] += num_tokens
+        total_tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
+        total_tokens[model]["completion"]["tpm"] = total_tokens[model]["completion"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
+        total_tokens[model]["completion"]["cpm"] = total_tokens[model]["completion"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
+
+        self.tokens[model]["total"]["count"] += num_tokens
+        self.tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
+        self.tokens[model]["total"]["tpm"] = self.tokens[model]["total"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
+        self.tokens[model]["total"]["cpm"] = self.tokens[model]["total"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+        total_tokens[model]["total"]["count"] += num_tokens
+        total_tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
+        total_tokens[model]["total"]["tpm"] = total_tokens[model]["total"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
+        total_tokens[model]["total"]["cpm"] = total_tokens[model]["total"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
+
         return num_tokens
 
-    def num_tokens_from_messages(messages, model:str = None):
+    def num_tokens_from_messages(self, model:str, messages: List):
         """Return the number of tokens used by a list of messages."""
+
+        global total_start_time
+        if total_start_time is None:
+            total_start_time = datetime.now()
 
         logger.trace(f"Getting number of tokens from messages for model {model}")
 
@@ -160,4 +353,21 @@ class LLMModel:
         num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
 
         logger.trace(f"Found {num_tokens} tokens for model {model}")
+        self.tokens[model]["prompt"]["count"] += num_tokens
+        self.tokens[model]["prompt"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
+        self.tokens[model]["prompt"]["tpm"] = self.tokens[model]["prompt"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
+        self.tokens[model]["prompt"]["cpm"] = self.tokens[model]["prompt"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+        total_tokens[model]["prompt"]["count"] += num_tokens
+        total_tokens[model]["prompt"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
+        total_tokens[model]["prompt"]["tpm"] = total_tokens[model]["prompt"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
+        total_tokens[model]["prompt"]["cpm"] = total_tokens[model]["prompt"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
+
+        self.tokens[model]["total"]["count"] += num_tokens
+        self.tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
+        self.tokens[model]["total"]["tpm"] = self.tokens[model]["total"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
+        self.tokens[model]["total"]["cpm"] = self.tokens[model]["total"]["cost"] / (datetime.now() - self.start_time).total_seconds() * 60
+        total_tokens[model]["total"]["count"] += num_tokens
+        total_tokens[model]["total"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
+        total_tokens[model]["total"]["tpm"] = total_tokens[model]["total"]["count"] / (datetime.now() - total_start_time).total_seconds() * 60
+        total_tokens[model]["total"]["cpm"] = total_tokens[model]["total"]["cost"] / (datetime.now() - total_start_time).total_seconds() * 60
         return num_tokens
