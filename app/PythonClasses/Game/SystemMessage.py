@@ -57,11 +57,44 @@ schemas_full = {
     }
 }
 
-schemas_short = '''Schemas:
-Day: Used when time passes. Format: "..DAY..{day} with {time} minutes left. {quip}..DAY..".
-Item: Use when item's status changes. Format: "..ITEM..{name} ({status})..ITEM..".
-Relationship: Reflect relationship status with NPCs. Format: "..RELATIONSHIP..{type} | Change: {change} | Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP..".
-Action: To describe character actions. Format: "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc} | {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes".'''
+schemas_short = {
+    "day": {
+        "use": "When time passes in a measurable way. Always use after an action.",
+        "description": "Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes.",
+        "variables": {
+            "day": "day name",
+            "time": "time remaining in day: int between 0 and 60",
+            "quip": "short quip time remaining: <5 words",
+        },
+        "format": "..DAY..{day} with {time} minutes left. {quip}..DAY.."
+    },
+    "item": {
+        "use": "Every time an item is used or mentioned.",
+        "description": "Use this format to describe an item and its condition.",
+        "variables": {
+            "name": "name of the item - <5 words",
+            "status": "the current condition, status, or amount remaining of the item: <10 words",
+        },
+        "format": "..ITEM..{name} ({status})..ITEM.."
+    },
+    "relationship": {
+        "use": "Every time you do something that could possibly affect your relationship with any NPC.",
+        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.",
+        "variables": {
+            "level": "Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
+            "change": "change to the number of NPCs in this level: +/- int",
+            "count": "count after change, should remain self consistent: int",
+            "rationale": "rationale for the change: <20 words",
+            "info": "current relevant information about NPCs of this type such as names, sentiment, reasoning, etc: <20 words",
+        },
+        "format": "..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
+    },
+    "action": {
+        "use": "When an action is taken.",
+        "description": "Use this format to describe an action taken by a character. Actions can succeed or fail.",
+        "format": "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes",
+    }
+}
 
 special_turns = '''Special Turns:
 Turn 0: Game introduction & ask user's name.
@@ -89,10 +122,10 @@ class SystemMessage:
 
         logger.debug("Injecting schemas into system message")
 
-        if turn_num > 6:
-            with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "short.txt"), "r") as f:
+        if turn_num > 10:
+            with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "medium.txt"), "r") as f:
                 system_message = f.read()
-                complete_system_message = f"{system_message}\n\n{schemas_short}"
+                complete_system_message = f"{system_message}\n\n{json.dumps(schemas_short, separators=(',', ':'))}"
         else:
             # load full.txt from folder
             with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "long.txt"), "r") as f:

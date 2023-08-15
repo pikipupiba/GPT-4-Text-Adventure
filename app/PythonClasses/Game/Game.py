@@ -403,7 +403,7 @@ class Game:
                     Game._last_turn(game_name).stats[schema_name][item_index] += content
                     closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
                     if closing_match:
-                        Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()]
+                        Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()].strip(". \n")
 
                         if schema_name == "RELATIONSHIP":
                             first_line  = Game._last_turn(game_name).stats[schema_name][item_index].split('\n', 1)[0]
