@@ -27,6 +27,10 @@ class FileManager:
     
     def save_history(game_name: str, history_name: str):
         logger.info(f"Saving history | {game_name} -> {history_name}")
+        history_dict = Game._history_to_dict(game_name)
+        for turn in history_dict[1:]:
+            if hasattr(turn, "system_message"):
+                del turn["system_message"] 
         FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", Game._history_to_dict(game_name))
     
     def load_history(history_name: str):

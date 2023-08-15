@@ -7,7 +7,7 @@ from PythonClasses.Schemas import schema_strings
 schemas = {
     "day": {
         "use": "When time passes in a measurable way. Always use after an action.",
-        "description": "Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes.",
+        "description": "Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes. Always display the number of minutes remaining in the day as an integer. Do not start the next day without being told.",
         "variables": {
             "day": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
             "time": "time remaining in the day in minutes, must include the integer number even if it's 0: int between 0 and 60",
@@ -24,16 +24,16 @@ schemas = {
         "format": "..ITEM..{name} ({status})..ITEM.."
     },
     "relationship": {
-        "use": "When the number or attitude of NPCs of a certain type changes or they react to something you do.",
-        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change.",
+        "use": "When the number or attitude of NPCs of a certain relationship level changes.",
+        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.",
         "variables": {
-            "level": "Creative relationship levels. This is a spectrum: Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
+            "level": "Creative relationship levels. Indicates the level of closeness. with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
             "change": "change to the number of NPCs in this level, includes the sign: +/- int",
             "count": "number of NPCs of this type after change, should remain self consistent: int",
             "rationale": "rationale for the change in the number of NPCs of this type: <20 words",
             "info": "current relevant information about NPCs of this type such as names, sentiment, and/or reasoning: <20 words",
         },
-        "format": "..RELATIONSHIP..{type} | {change} | {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
+        "format": "..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
     },
     "action": {
         "use": "When an action is taken.",
@@ -49,10 +49,10 @@ schemas = {
             "numRolls": "number of dice rolls so far this turn. Starts at 0 every turn and increments by 1 for each roll: int",
             "roll": "the user will send dice rolls with each turn called rolls[]. use rolls[numRolls] for this value: int",
             "result": "roll + modifier: int",
-            "success": "SUCCESS if {result} >= {dc}, else FAILURE. Add an adjective if the difference is great: string",
+            "success": "SUCCESS if {result} >= {dc}, else FAILURE. Add an adjective indicating the level of success or failure depending on the difference between the result and DC: string",
             "elapsedTime": "realistic and precise estimate of how long the action took: int",
         },
-        "format": "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n\n..HIDE..---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes..HIDE..",
+        "format": "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes",
         }
     }
 }

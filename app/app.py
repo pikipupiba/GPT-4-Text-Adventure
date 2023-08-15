@@ -26,7 +26,6 @@ logger.add(f"logs/{uid}_"+"{time:YYYY-MM-DD}_markdown.md", format="{message}", l
 # --------------------------------------------------------------
 
 
-
 # #--------------------------------------------------------------
 # #                      PLAYER TAB FUNCTIONS
 # #--------------------------------------------------------------
@@ -36,8 +35,20 @@ story_render_array = [
     day_box,
     item_box,
     relationship_box,
+    submit,
+    user_message,
     turn_json,
-    execution_json,
+    gm_tab,
+    config_tab,
+    gpt_4_json,
+    gpt_4_32_json,
+    gpt_3_5_turbo_json,
+    gpt_3_5_turbo_16_json,
+    game_average_gpt_4_json,
+    game_average_gpt_4_32_json,
+    game_average_gpt_3_5_turbo_json,
+    game_average_gpt_3_5_turbo_16_json,
+
     # audio_box,
 ]
 
@@ -51,7 +62,8 @@ story_interface_array = [
 ]
 
 
-with player_tab:
+with combined:
+# with player_tab:
     
     # audio_box.stop(
     #     fn=Game.get_next_audio,
@@ -138,7 +150,8 @@ with player_tab:
         queue=True
     )
 
-with config_tab:
+with combined:
+# with config_tab:
     # Click "Retry" button
     retry.click(
         # Remove the last assistant message from the history
@@ -171,6 +184,13 @@ with config_tab:
         queue=False,
     )
 
+    render.click(
+        fn=Game.render_story,
+        inputs=[game_name],
+        outputs=story_render_array,
+        queue=False,
+    )
+
     #--------------------------------------------------------------
     # AUXILIARY FUNCTIONS
     #--------------------------------------------------------------
@@ -196,36 +216,44 @@ with config_tab:
     # Save the game on button click
     save_game.click(
         fn=FileManager.save_history,
-        inputs=[game_name, history_name],
+        inputs=[game_name, game_name],
         outputs=[],
         queue=False
     )
 
-
-
-
-game_area = gr.TabbedInterface(
-    [player_tab, gm_tab, config_tab],
-    ["Player", "Game Master", "Config"],
-    title="AI Adventure Academy",
-)
-
-
-
-
 # --------------------------------------------------------------
 
+# game_area = gr.TabbedInterface(
+#     [player_tab, gm_tab, config_tab],
+#     ["Player", "Game Master", "Config"],
+#     title="AI Adventure Academy",
+# )
 
+# share_mode_string = os.getenv("SHARE_MODE", "false")
+# share_mode = share_mode_string.lower() == 'true'
+
+# if __name__ == "__main__":
+#     game_area.queue(
+#         concurrency_count=5, 
+#         api_open=False,
+#     )
+#     game_area.launch(
+#         inbrowser=True,
+#         show_api=False,
+#         show_error=True,
+#         share=share_mode,
+#     )
+    
 
 share_mode_string = os.getenv("SHARE_MODE", "false")
 share_mode = share_mode_string.lower() == 'true'
 
 if __name__ == "__main__":
-    game_area.queue(
-        concurrency_count=5, 
+    combined.queue(
+        concurrency_count=10, 
         api_open=False,
     )
-    game_area.launch(
+    combined.launch(
         inbrowser=True,
         show_api=False,
         show_error=True,

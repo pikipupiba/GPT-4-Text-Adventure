@@ -5,7 +5,7 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
-import json,re,os
+import json,re,os,time
 from datetime import datetime
 
 import gradio as gr
@@ -16,12 +16,11 @@ from PythonClasses.Helpers.helpers import generate_dice_string
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.UserMessage import UserMessage
-from PythonClasses.LLM.LLMModel import LLMModel
-from PythonClasses.LLM.TokenTracker import TokenTracker
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
 from PythonClasses.LLM.LLM import LLM
+from PythonClasses.LLM.LLMModel import LLMModel, total_tokens
 from PythonClasses.Game.CompleteJson import CompleteJson
 
 
@@ -32,41 +31,7 @@ class Game:
 # restarting the game, and submitting user messages. Additionally, it includes a method for
 # streaming predictions from the language model.
 
-    START, STOP, PREDICTING = range(3)
-
-    TOTAL_EXECUTION = {
-        "time": {
-            "total": {
-                "start": None,
-                "end": None,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-            "game_average": {
-                "total_tokens": 0,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-            "turn_average": {
-                "total_tokens": 0,
-                "elapsed": None,
-                "TPM": None,
-                "CPM": None,
-            },
-        },
-        "tokens": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0,
-        },
-        "cost": {
-            "prompt": 0,
-            "completion": 0,
-            "total": 0,
-        },
-    }
+    START, STOP, PREDICTING, AWAITING_USER = range(4)
 
     GAMES = {}
 
@@ -75,12 +40,11 @@ class Game:
         logger.debug(f"Initializing Game: {game_name}")
         self.state = Game.START
         self.game_name = game_name
-
+        self.dev = False
         # self.audio = LLMStreamProcessor(game_name)
 
-        self.execution = {}
-        self.execution["total"]["start"] = datetime.now()
-
+        self.llm_model = LLMModel()
+        
         self.history = []
 
         intro_json = {
@@ -121,65 +85,6 @@ class Game:
         
         Game.GAMES[game_name] = self
 
-    def calculate_game_execution(self):
-        logger.info("Calculating total execution")
-
-        start_time = self.execution["start"]
-        end_time = datetime.now()
-        elapsed_time = end_time - start_time
-
-        self.execution["time"]["total"]["end"] = end_time
-        self.execution["time"]["total"]["elapsed"] = elapsed_time
-
-        self.execution["models"] = {}
-
-        for turn in self.history:
-            turn_model = turn.execution["model"]
-            if turn_model not in self.execution["models"]:
-                self.execution["models"][turn_model] = {
-                    "time": {
-                        "elapsed": 0,
-                        "TPM": 0,
-                        "CPM": 0,
-                    },
-                    "tokens": {
-                        "prompt": 0,
-                        "completion": 0,
-                        "total": 0,
-                    },
-                    "cost": {
-                        "prompt": 0,
-                        "completion": 0,
-                        "total": 0,
-                    },
-                }
-
-            turn_prompt_tokens = turn.execution["tokens"]["prompt"]
-            turn_completion_tokens = turn.execution["tokens"]["completion"]
-            turn_total_tokens = turn.execution["tokens"]["total"]
-
-            turn_prompt_cost = turn.execution["cost"]["prompt"]
-            turn_completion_cost = turn.execution["cost"]["completion"]
-            turn_total_cost = turn.execution["cost"]["total"]
-
-            turn_elapsed_time = turn.execution["time"]["api_call"]["elapsed"].total_seconds()
-            turn_TPM = turn.execution["time"]["turn"]["TPM"]
-            turn_CPM = turn.execution["time"]["turn"]["CPM"]
-
-            game_prompt_tokens += self.execution["tokens"]["prompt"]
-
-
-            self.execution["models"][model]["total_tokens"] += turn.execution["tokens"]["total"]
-            self.execution["models"][model]["total_cost"] += turn.execution["cost"]["total"]
-            self.execution["models"][model]["total_time"] += turn.execution["time"]["api_call"]["elapsed"].total_seconds()
-
-
-
-
-
-        Game.TOTAL_EXECUTION = {
-
-        }
 
     def start(game_name: str):
         logger.info(f"Starting Game: {game_name}")
@@ -241,6 +146,13 @@ class Game:
         display_history = Game._display_history(game_name)
         stats = Game._stats(game_name)
 
+        # for item in stats.get("ITEM", []):
+        #     if '(' in item:
+        #         before_parenthesis, parenthesis, after_parenthesis = item.partition('(')
+        #         return f'<p style="color:green">{before_parenthesis}</p>{parenthesis}{after_parenthesis}'
+        #     else:
+        #         return item 
+
         day_box = stats.get("DAY")
         item_box = '\n'.join(stats.get("ITEM"))
         relationship_box = '\n\n'.join(stats.get("RELATIONSHIP"))
@@ -248,19 +160,61 @@ class Game:
         # Sent to config tab for debugging
         turn_dict = Game._last_turn(game_name).__dict__()
 
-        execution_json = Game._last_turn(game_name).execution
-
         # Speech
         # speech = Game._audio(game_name).get_next_audio()
+
+        if Game._(game_name).state == Game.AWAITING_USER:
+            submit_button = gr.update(interactive=True, value="Do it!")
+            user_message = gr.update(interactive=True, placeholder="What will you do?")
+        else:
+            submit_button = gr.update(interactive=False, value="Hold on...")
+            user_message = gr.update(interactive=False, placeholder="Predicting...")
+
+        if Game._(game_name).dev == True:
+            gm_tab = gr.update(visible=True)
+            config_tab = gr.update(visible=True)
+        else:
+            gm_tab = gr.update(visible=False)
+            config_tab = gr.update(visible=False)
+
+        # execution_json = Game._(game_name).llm_model.tokens
+
+        num_games = len(Game.GAMES)
+
+        gpt_versions = ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"]
+        categories = ["total", "prompt", "completion"]
+
+        game_average = {}
+
+        for version in gpt_versions:
+            game_average[version] = {}
+            for category in categories:
+                game_average[version][category] = {
+                    "count": total_tokens[version][category]["count"] / num_games,
+                    "cost": total_tokens[version][category]["cost"] / num_games,
+                    "tpm": sum([game.llm_model.tokens[version][category]["tpm"] for game_name, game in Game.GAMES.items()]) / num_games,
+                    "cpm": sum([game.llm_model.tokens[version][category]["cpm"] for game_name, game in Game.GAMES.items()]) / num_games
+                }
+        
 
         return [
             display_history,
             day_box,
             item_box,
             relationship_box,
+            submit_button,
+            user_message,
             turn_dict,
-            execution_json,
-            # speech,
+            gm_tab,
+            config_tab,
+            total_tokens["gpt-4-0613"],
+            total_tokens["gpt-4-32k-0613"],
+            total_tokens["gpt-3.5-turbo-0613"],
+            total_tokens["gpt-3.5-turbo-16k-0613"],
+            game_average["gpt-4-0613"],
+            game_average["gpt-4-32k-0613"],
+            game_average["gpt-3.5-turbo-0613"],
+            game_average["gpt-3.5-turbo-16k-0613"],
         ]
     
     def undo(game_name: str):
@@ -274,7 +228,7 @@ class Game:
         Game._last_raw(game_name)[1] = None
         Game._last_turn(game_name).stats = Game._prev_turn(game_name).stats
         Game._last_turn(game_name).combat = []
-        Game._last_turn(game_name).tokens = {}
+        Game._last_turn(game_name).execution = {}
         return Game.render_story(game_name)
     def clear(game_name: str):
         logger.info("Clearing history")
@@ -297,16 +251,8 @@ class Game:
         # if "intRollArray" not in self.raw_history[-1][0]:
         #     self.raw_history[-1][0] += f'\n\n{generate_dice_string(10)}'
 
-        turn_start_time = Game._last_turn(game_name).execution["time"]["turn"]["start"]
-        turn_end_time = datetime.now()
-        turn_elapsed_time = turn_end_time - turn_start_time
-        turn_TPM = Game._last_turn(game_name).execution["tokens"]["total"] / turn_elapsed_time.total_seconds() * 60
-        turn_CPM = Game._last_turn(game_name).execution["cost"]["total"] / turn_elapsed_time.total_seconds() * 60
-
-        Game._last_turn(game_name).execution["time"]["turn"]["end"] = turn_end_time
-        Game._last_turn(game_name).execution["time"]["turn"]["elapsed"] = turn_elapsed_time
-        Game._last_turn(game_name).execution["time"]["turn"]["TPM"] = turn_TPM
-        Game._last_turn(game_name).execution["time"]["turn"]["CPM"] = turn_CPM
+        while(Game._(game_name).state == Game.PREDICTING):
+            time.sleep(1)
 
         if Game._num_turns(game_name) > 2:
             dice_string = generate_dice_string(5)
@@ -333,154 +279,162 @@ class Game:
             Game._history(game_name).append(Turn(new_turn_json))
 
         return [""] + Game.render_story(game_name)
-    
-    def new_day(game_name: str):
 
-        logger.info("Starting a new day")
-        last_turn = Game._last_turn(game_name)
-
-
-        user_message = "{Begin the next day}"
-
-        new_day_json = {
-            "type": "normal",
-            "model": last_turn.model,
-            "system_message": last_turn.system_message,
-            "display": [None, None],
-            "raw": [user_message, None],
-            "stats": Game._stats(game_name).copy(),
-            "combat": [],
-            "execution": {},
-        }
-
-        Game._history(game_name).append(Turn(new_day_json))
-
-        return Game.stream_prediction(game_name)
     
     def stream_prediction(game_name: str):
-        logger.info("Streaming prediction")
-        current_turn = Game._last_turn(game_name)
 
-        model = current_turn.model
-        system_message = current_turn.system_message
-        raw_history = Game._raw_history(game_name)
+        new_day = True
+        count_tokens = True
 
-        prompt_tokens = LLMModel.num_tokens_from_messages(model, LLM.build_openai_history_array(Game._raw_history(game_name)))
+        if "dddeeevvv" in Game._last_display(game_name)[0]:
+            del Game._history(game_name)[-1]
+            Game._(game_name).dev = not Game._(game_name).dev
+            new_day = False
+            count_tokens = False
 
-        api_start_time = datetime.now()
+        Game._(game_name).state = Game.PREDICTING
+        new_day_counter = 0
 
-        Game._last_raw(game_name)[1] = ""
-        Game._last_display(game_name)[1] = ""
+        while(new_day and new_day_counter < 2):
+            new_day_counter += 1
+            new_day = False
+                
+            logger.info("Streaming prediction")
+            current_turn = Game._last_turn(game_name)
 
-        schema_delimiter = r'\.\.[A-Z]+\.\.'  # regex pattern to find schema delimiters
-        schema_name = None
-        item_index = None
-        temp_string = ""
-        
+            model = current_turn.model
+            system_message = current_turn.system_message
+            raw_history = Game._raw_history(game_name)
 
-        for chunk in LLM.predict(model, system_message, raw_history):
-            if len(chunk["choices"][0]["delta"]) == 0:
-                break
+            current_turn.system_message = ""
 
-            Game._last_turn(game_name).execution["model"] = chunk.get("model", model)
-            content = chunk["choices"][0]["delta"]["content"]
-            Game._last_raw(game_name)[1] += content
+            Game._last_raw(game_name)[1] = ""
+            Game._last_display(game_name)[1] = ""
 
-            # If not streaming, look for opening tag in the unprocessed content
-            if not schema_name:
-                Game._last_display(game_name)[1] += content
-                # Game._audio(game_name).process_data(content)
+            schema_delimiter = r'\.\.\s*[A-Z]+\s*\.\.'  # regex pattern to find schema delimiters
+            schema_name = None
+            item_index = None
+            temp_string = ""
 
-                opening_match = re.search(schema_delimiter, Game._last_display(game_name)[1])
-                if opening_match:
-                    schema_name = opening_match.group(0).strip(" .")
-                    Game._last_display(game_name)[1] = Game._last_display(game_name)[1][:opening_match.start()]
-                    content = content.rstrip('. \n')
-                    if schema_name == "DAY":
-                        Game._last_turn(game_name).stats["DAY"] = ""
-                    elif schema_name == "ITEM":
-                        if not "ITEM" in Game._last_turn(game_name).stats:
-                            Game._last_turn(game_name).stats["ITEM"] = []
-                    elif schema_name == "RELATIONSHIP":
-                        if not "RELATIONSHIP" in Game._last_turn(game_name).stats:
-                            Game._last_turn(game_name).stats["RELATIONSHIP"] = []
-                    elif schema_name == "HIDE":
-                        pass
-                    else:
-                        logger.error(f"Unknown schema: {schema_name}")
+            for chunk in LLM.predict(model, system_message, raw_history, Game._(game_name).llm_model):
+                if len(chunk["choices"][0]["delta"]) == 0:
+                    break
+
+                content = chunk["choices"][0]["delta"]["content"]
+                Game._last_raw(game_name)[1] += content
+
+                # If not streaming, look for opening tag in the unprocessed content
+                if not schema_name:
+                    Game._last_display(game_name)[1] += content
+                    # Game._audio(game_name).process_data(content)
+
+                    opening_match = re.search(schema_delimiter, Game._last_display(game_name)[1])
+                    if opening_match:
+                        schema_name = opening_match.group(0).strip(" .")
+                        Game._last_display(game_name)[1] = Game._last_display(game_name)[1][:opening_match.start()]
+                        content = content.rstrip('. \n')
+
+                        if schema_name == "DAY":
+                            Game._last_turn(game_name).stats["DAY"] = ""
+                        elif schema_name == "ITEM":
+                            if not "ITEM" in Game._last_turn(game_name).stats:
+                                Game._last_turn(game_name).stats["ITEM"] = []
+                        elif schema_name == "RELATIONSHIP":
+                            if not "RELATIONSHIP" in Game._last_turn(game_name).stats:
+                                Game._last_turn(game_name).stats["RELATIONSHIP"] = []
+                        elif schema_name == "HIDE":
+                            pass
+                        else:
+                            logger.error(f"Unknown schema: {schema_name}")
+                            schema_name = None
+
+
+                if schema_name == "DAY":
+                    Game._last_turn(game_name).stats["DAY"] += content
+                    closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats["DAY"])
+                    if closing_match:
+                        schema_name = None
+                        Game._last_turn(game_name).stats["DAY"] = Game._last_turn(game_name).stats["DAY"][:closing_match.start()]
+
+                        # Extract the number from the day string
+                        numbers_in_day = re.findall(r'\d+', Game._last_turn(game_name).stats["DAY"])
+                        Game._last_turn(game_name).time_left = int(numbers_in_day[-1]) if len(numbers_in_day) > 0 else 0
+                        if Game._last_turn(game_name).time_left <= 0:
+                            logger.info("Day over")
+                            new_day = True
+                        
+                
+                elif schema_name == "HIDE":
+                    temp_string += content
+                    closing_match = re.search(schema_delimiter, temp_string)
+                    if closing_match:
+                        schema_name = None
+                        temp_string = ""
+
+                elif (schema_name is not None) and (item_index is None):
+                    temp_string += content
+                    # See if exactly 1 item in items_array matches the content.
+                    # Check if the start of any item in the array matches the content
+                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.startswith(temp_string)]
+                    if len(matching_indices) == 0:
+                        # # If no match, append the content to the end of the array
+                        # item_index = len(Game._last_turn(game_name).stats[schema_name])
+                        # Game._last_turn(game_name).stats[schema_name].append(temp_string)
+
+                        # If no match, insert the content at the beginning of the array
+                        item_index = 0
+                        Game._last_turn(game_name).stats[schema_name].insert(item_index, temp_string)
+                    elif len(matching_indices) == 1 and len(temp_string) > 4:
+                        # If a match is found, replace the item at the first matching index
+                        item_index = matching_indices[0]
+                        Game._last_turn(game_name).stats[schema_name][item_index] = temp_string
+
+                elif (schema_name is not None) and (item_index is not None):
+                    # If we already found the item index, just append the content to the item
+                    Game._last_turn(game_name).stats[schema_name][item_index] += content
+                    closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
+                    if closing_match:
+                        Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()]
+
+                        if schema_name == "RELATIONSHIP":
+                            first_line  = Game._last_turn(game_name).stats[schema_name][item_index].split('\n', 1)[0]
+                            numbers = re.findall(r'\d+', first_line)
+                            if numbers:
+                                last_number = int(numbers[-1])
+                                if last_number == 0:
+                                    del Game._last_turn(game_name).stats[schema_name][item_index]
+
+                        item_index = None
+                        temp_string = ""
                         schema_name = None
 
+                yield Game.render_story(game_name)
 
-            if schema_name == "DAY":
-                Game._last_turn(game_name).stats["DAY"] += content
-                closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats["DAY"])
-                if closing_match:
-                    schema_name = None
-                    Game._last_turn(game_name).stats["DAY"] = Game._last_turn(game_name).stats["DAY"][:closing_match.start()]
+            if count_tokens:
+                Game._(game_name).llm_model.num_tokens_from_text(model, Game._last_raw(game_name)[1])
 
-                    # Extract the number from the day string
-                    Game._last_turn(game_name).time_left = int(re.findall(r'\d+', Game._last_turn(game_name).stats["DAY"])[0])
-                    if Game._last_turn(game_name).time_left <= 0:
-                        logger.info("Day over")
-                        return Game.new_day(game_name)
-                    
-            
-            elif schema_name == "HIDE":
-                temp_string += content
-                closing_match = re.search(schema_delimiter, temp_string)
-                if closing_match:
-                    schema_name = None
-                    temp_string = ""
+            from PythonClasses.Game.FileManager import FileManager
+            FileManager.save_history(game_name, game_name)
 
-            elif (schema_name is not None) and (item_index is None):
-                temp_string += content
-                # See if exactly 1 item in items_array matches the content.
-                # Check if the start of any item in the array matches the content
-                matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.startswith(temp_string)]
-                if len(matching_indices) == 0:
-                    # If no match, append the content to the end of the array
-                    item_index = len(Game._last_turn(game_name).stats[schema_name])
-                    Game._last_turn(game_name).stats[schema_name].append(temp_string)
-                elif len(matching_indices) == 1 and len(temp_string) > 4:
-                    # If a match is found, replace the item at the first matching index
-                    item_index = matching_indices[0]
-                    Game._last_turn(game_name).stats[schema_name][item_index] = temp_string
+            if new_day:
+                logger.info("Starting a new day")
+                last_turn = Game._last_turn(game_name)
 
-            elif (schema_name is not None) and (item_index is not None):
-                # If we already found the item index, just append the content to the item
-                Game._last_turn(game_name).stats[schema_name][item_index] += content
-                closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
-                if closing_match:
-                    Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()]
-                    item_index = None
-                    temp_string = ""
-                    schema_name = None
+                user_message = "{The day has ended. Begin the next day}"
 
-            yield Game.render_story(game_name)
+                new_day_json = {
+                    "type": "normal",
+                    "model": Game._history(game_name)[0].model,
+                    "system_message": Game._history(game_name)[0].system_message,
+                    "display": [None, None],
+                    "raw": [user_message, None],
+                    "stats": Game._stats(game_name).copy(),
+                    "combat": [],
+                    "execution": {},
+                }
 
-        real_model = Game._last_turn(game_name).execution["model"]
+                Game._history(game_name).append(Turn(new_day_json))
 
-        api_end_time = datetime.now()
-        api_elapsed_time = api_end_time - api_start_time
-        Game._last_turn(game_name).execution["time"]["api_call"]["start"] = api_start_time
-        Game._last_turn(game_name).execution["time"]["api_call"]["end"] = api_end_time
-        Game._last_turn(game_name).execution["time"]["api_call"]["elapsed"] = api_elapsed_time
-
-        completion_tokens = LLMModel.num_tokens_from_text(real_model, Game._last_raw(game_name)[1])
-        total_tokens = prompt_tokens + completion_tokens
-        TPM = total_tokens / api_elapsed_time.total_seconds() * 60
-        Game._last_turn(game_name).execution["tokens"]["prompt"] = prompt_tokens
-        Game._last_turn(game_name).execution["tokens"]["completion"] = completion_tokens
-        Game._last_turn(game_name).execution["tokens"]["total"] = total_tokens
-
-        prompt_cost, completion_cost, total_cost = LLMModel.get_cost(model, prompt_tokens, completion_tokens)
-        CPM = total_cost / api_elapsed_time.total_seconds() * 60
-
-        Game._last_turn(game_name).execution["cost"]["prompt"] = prompt_cost
-        Game._last_turn(game_name).execution["cost"]["completion"] = completion_cost
-        Game._last_turn(game_name).execution["cost"]["total"] = total_cost
-
-        Game._last_turn(game_name).execution["time"]["api_call"]["TPM"] = TPM
-        Game._last_turn(game_name).execution["time"]["api_call"]["CPM"] = CPM
+        Game._(game_name).state = Game.AWAITING_USER
 
         yield Game.render_story(game_name)
