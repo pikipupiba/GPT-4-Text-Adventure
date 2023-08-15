@@ -1,9 +1,6 @@
-import datetime
 from typing import List, Tuple, Dict
 
 from loguru import logger
-
-from PythonClasses.LLM.TokenTracker import TokenTracker
 
 class Turn:
 # The `Turn` class represents the state of a game turn. It includes attributes such as the
@@ -13,31 +10,6 @@ class Turn:
     """
     This class represents the state of a game, including the message, history, raw history, stats, combat, and team name.
     """
-    DEFAULT_EXECUTION = {  
-        "model": None,
-        "time": {
-            "turn": {
-                "start": None,      # datetime
-                "end": None,        # datetime
-                "TPM": None,
-                "CPM": None,
-            },
-            "api_call": {
-                "start": None,      # datetime
-                "end": None,        # datetime
-                "TPM": None,
-                "CPM": None,
-            },
-        },
-        "tokens": {
-            "prompt": 0,
-            "completion": 0,
-        },
-        "cost": {
-            "prompt": 0,
-            "completion": 0,
-        },
-    }
 
     # defaults = {
     #     "type": None,           # enum ["normal", "example", "debug"]
@@ -88,14 +60,6 @@ class Turn:
                         if value[i] is "":
                             value[i] = None
                 setattr(self, key, value)
-
-            if self.combat is None:
-                self.combat = []
-            if self.execution is None or self.execution == {}:
-                self.execution = Turn.DEFAULT_EXECUTION.copy()
-                self.execution["time"]["turn"]["start"] = datetime.datetime.now()
-
-            self.token_tracker = TokenTracker(model, prompt, completion)
             return
 
         if len(args) == 3:
@@ -140,12 +104,8 @@ class Turn:
         if len(self.raw[0]) == 0:
             self.raw[0] = None
         
-        if self.combat is None:
-            self.combat = []
-        if self.execution is None or self.execution == {}:
-            self.execution = Turn.DEFAULT_EXECUTION.copy()
-            self.execution["time"]["turn"]["start"] = datetime.datetime.now()
-
+        self.combat = []
+        self.execution = {}
         # Fill in stats, combat, and execution after response
 
     def has_stats(self):
@@ -161,7 +121,5 @@ class Turn:
             "raw": getattr(self, "raw", []),
             "stats": getattr(self, "stats", {}),
             "combat": getattr(self, "combat", []),
-            "execution": getattr(self, "execution", Turn.DEFAULT_EXECUTION),
+            "execution": getattr(self, "execution", {}),
         }
-    
-    
