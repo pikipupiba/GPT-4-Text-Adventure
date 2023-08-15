@@ -325,7 +325,7 @@ class Game:
                 if len(chunk["choices"][0]["delta"]) == 0:
                     break
 
-                content = chunk["choices"][0]["delta"]["content"]
+                content = chunk["choices"][0].get("delta", {}).get("content",{})
                 Game._last_raw(game_name)[1] += content
 
                 # If not streaming, look for opening tag in the unprocessed content
