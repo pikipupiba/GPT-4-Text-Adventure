@@ -48,6 +48,10 @@ story_render_array = [
     game_average_gpt_4_32_json,
     game_average_gpt_3_5_turbo_json,
     game_average_gpt_3_5_turbo_16_json,
+    game_gpt_4_json,
+    game_gpt_4_32_json,
+    game_gpt_3_5_turbo_json,
+    game_gpt_3_5_turbo_16_json,
 
     # audio_box,
 ]
@@ -126,7 +130,7 @@ with combined:
     submit.click(
         # Add the player message to the history
         fn=Game.submit,
-        inputs=[game_name, user_message, system_message, select_model],
+        inputs=[game_name, user_message, system_message, select_model, system_select, schema_select],
         outputs=[user_message] + story_render_array,
         queue=False
     ).then(
@@ -140,7 +144,7 @@ with combined:
     user_message.submit(
         # Add the player message to the history
         fn=Game.submit, 
-        inputs=[game_name, user_message, system_message, select_model],
+        inputs=[game_name, user_message, system_message, select_model, system_select, schema_select],
         outputs=[user_message] + story_render_array,
         queue=False
     ).then(

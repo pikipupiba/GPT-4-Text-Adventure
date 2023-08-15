@@ -232,6 +232,65 @@ class LLMModel:
             }
         }
 
+        self.last_turn_tokens = {
+            "gpt-3.5-turbo-0613" : {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                },
+            },
+            "gpt-3.5-turbo-16k-0613" : {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                },
+            },
+            "gpt-4-0613": {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                },
+            },
+            "gpt-4-32k-0613": {
+                "total": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "prompt": {
+                    "count": 0,
+                    "cost": 0,
+                },
+                "completion": {
+                    "count": 0,
+                    "cost": 0,
+                },
+            }
+        }
+
     def get_price(model:str):
 
         logger.trace(f"Getting price for model {model}")
@@ -307,6 +366,13 @@ class LLMModel:
 
         logger.trace(f"Found {num_tokens} tokens for model {model}")
 
+
+        self.last_turn_tokens[model]["completion"]["count"] = num_tokens
+        self.last_turn_tokens[model]["completion"]["cost"] = num_tokens * LLMModel.get_price(model)["completion"]
+        self.last_turn_tokens[model]["total"]["count"] = self.last_turn_tokens[model]["completion"]["count"] + self.last_turn_tokens[model]["prompt"]["count"]
+        self.last_turn_tokens[model]["total"]["cost"] = self.last_turn_tokens[model]["completion"]["cost"] + self.last_turn_tokens[model]["prompt"]["cost"]
+
+
         self.tokens[model]["completion"]["count"] += num_tokens
         self.tokens[model]["completion"]["cost"] += num_tokens * LLMModel.get_price(model)["completion"]
         self.tokens[model]["completion"]["tpm"] = self.tokens[model]["completion"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60
@@ -356,6 +422,12 @@ class LLMModel:
         num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
 
         logger.trace(f"Found {num_tokens} tokens for model {model}")
+
+        self.last_turn_tokens[model]["prompt"]["count"] = num_tokens
+        self.last_turn_tokens[model]["prompt"]["cost"] = num_tokens * LLMModel.get_price(model)["completion"]
+        self.last_turn_tokens[model]["total"]["count"] = self.last_turn_tokens[model]["prompt"]["count"]
+        self.last_turn_tokens[model]["total"]["cost"] = self.last_turn_tokens[model]["prompt"]["cost"]
+
         self.tokens[model]["prompt"]["count"] += num_tokens
         self.tokens[model]["prompt"]["cost"] += num_tokens * LLMModel.get_price(model)["prompt"]
         self.tokens[model]["prompt"]["tpm"] = self.tokens[model]["prompt"]["count"] / (datetime.now() - self.start_time).total_seconds() * 60

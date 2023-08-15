@@ -139,6 +139,17 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     value=use_models[0],
                     scale=1,
                 )
+                with gr.Column():
+                    system_select = gr.Radio(
+                        choices=["full", "short", "none"],
+                        label="System Select",
+                        value="full",
+                    )
+                    schema_select = gr.Radio(
+                        choices=["full", "short", "none"],
+                        label="Schema Select",
+                        value="full",
+                    )
                 retry = gr.Button(value="Retry", size="sm")
                 undo = gr.Button(value="Undo", size="sm")
                 clear = gr.Button(value="Clear", size="sm")
@@ -183,6 +194,11 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 game_average_gpt_4_32_json = gr.JSON(label="game average gpt 4 32k", interactive=False)
                 game_average_gpt_3_5_turbo_json = gr.JSON(label="game average gpt 3.5 turbo", interactive=False)
                 game_average_gpt_3_5_turbo_16_json = gr.JSON(label="game average gpt 3.5 turbo 16k", interactive=False)
+            with gr.Row() as game_token_jsons:
+                game_gpt_4_json = gr.JSON(label="last turn gpt 4", interactive=False)
+                game_gpt_4_32_json = gr.JSON(label="last turn gpt 4 32k", interactive=False)
+                game_gpt_3_5_turbo_json = gr.JSON(label="last turn gpt 3.5 turbo", interactive=False)
+                game_gpt_3_5_turbo_16_json = gr.JSON(label="last turn gpt 3.5 turbo 16k", interactive=False)
             turn_json = gr.JSON(label="Game State")
 
 

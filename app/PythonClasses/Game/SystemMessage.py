@@ -4,7 +4,7 @@ from loguru import logger
 
 from PythonClasses.Schemas import schema_strings
 
-schemas = {
+schemas_full = {
     "day": {
         "use": "When time passes in a measurable way. Always use after an action.",
         "description": "Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes. Always display the number of minutes remaining in the day as an integer. Do not start the next day without being told.",
@@ -27,7 +27,7 @@ schemas = {
         "use": "When the number or attitude of NPCs of a certain relationship level changes.",
         "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.",
         "variables": {
-            "level": "Creative relationship levels. Indicates the level of closeness. with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
+            "level": "Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.",
             "change": "change to the number of NPCs in this level, includes the sign: +/- int",
             "count": "number of NPCs of this type after change, should remain self consistent: int",
             "rationale": "rationale for the change in the number of NPCs of this type: <20 words",
@@ -57,6 +57,30 @@ schemas = {
     }
 }
 
+schemas_short = {
+    "day": {
+        "use": "When time passes in a measurable way. Always use after an action.",
+        "description": "Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes.",
+        "format": "..DAY..{day} with {time} minutes left. {quip}..DAY.."
+    },
+    "item": {
+        "use": "When an item is used, gained, or changes status.",
+        "description": "Use this format to describe an item and its condition.",
+        "format": "..ITEM..{name} ({status})..ITEM.."
+    },
+    "relationship": {
+        "use": "When the number or attitude of NPCs of a certain relationship level changes.",
+        "description": "Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.",
+        "format": "..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP.."
+    },
+    "action": {
+        "use": "When an action is taken.",
+        "description": "Use this format to describe an action taken by a character. Actions can succeed or fail.",
+        "format": "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes",
+    }
+}
+
+
 class SystemMessage:
 # The `SystemMessage` class is providing a method called `inject_schemas` that is used to inject
 # schema strings into a given system message. It does this by searching for schema placeholders
@@ -67,7 +91,7 @@ class SystemMessage:
 # message with the injected schemas.
 
     
-    def inject_schemas(system_message: str):
+    def inject_schemas(system_message: str, system_select: str = None, schema_select: str = None):
     # The `inject_schemas` method is used to inject schema strings into a given system message. It
     # searches for schema placeholders in the system message and replaces them with the
     # corresponding schema string. The schema placeholders are identified using a specific pattern
@@ -90,8 +114,14 @@ class SystemMessage:
 
         # # Replace schema placeholders with schema strings in system message
         # complete_system_message = re.sub(schema_matcher, replacer, system_message)
-
-        complete_system_message = f"{system_message}\n\n{json.dumps(schemas, separators=(',', ':'))}"
+        if schema_select == None:
+            complete_system_message = f"{system_message}\n\n{json.dumps(schemas_full, separators=(',', ':'))}"
+        elif schema_select == "full":
+            complete_system_message = f"{system_message}\n\n{json.dumps(schemas_full, separators=(',', ':'))}"
+        elif schema_select == "short":
+            complete_system_message = f"{system_message}\n\n{json.dumps(schemas_short, separators=(',', ':'))}"
+        elif schema_select == "none":
+            complete_system_message = system_message
 
         # logger.info(f"Successfully injected *{num_found_schemas}* schemas")
 

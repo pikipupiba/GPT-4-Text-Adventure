@@ -50,7 +50,7 @@ class Game:
         intro_json = {
             "type": "normal",
             "model": "gpt-4-0613",
-            "system_message": system_message,
+            "system_message": SystemMessage.inject_schemas(system_message),
             "display": history[0],
             "raw": history[0],
             "stats": {
@@ -69,7 +69,7 @@ class Game:
         choose_items_json = {
             "type": "normal",
             "model": "gpt-4-0613",
-            "system_message": system_message,
+            "system_message": SystemMessage.inject_schemas(system_message),
             "display": [game_name, None],
             "raw": [choose_items_string, None],
             "stats": {
@@ -215,6 +215,10 @@ class Game:
             game_average["gpt-4-32k-0613"],
             game_average["gpt-3.5-turbo-0613"],
             game_average["gpt-3.5-turbo-16k-0613"],
+            Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-4-0613"],
+            Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-4-32k-0613"],
+            Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-3.5-turbo-0613"],
+            Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-3.5-turbo-16k-0613"],
         ]
     
     def undo(game_name: str):
@@ -240,7 +244,7 @@ class Game:
         Game.clear(game_name)
         return Game.start(game_name)
     
-    def submit(game_name: str, message: str = "", system_message: str = None, model: str = None, type: str = "normal"):
+    def submit(game_name: str, message: str = "", system_message: str = None, model: str = None, system_select: str = None, schema_select: str = None):
         """
         This function is called when the user submits a message.
         """
@@ -262,10 +266,10 @@ class Game:
         complete_user_message = f'{message}\n{dice_string}'
         if "gpt-3" in model:
             complete_user_message += "\nRemember to use the schemas exactly as provided."
-        complete_system_message = SystemMessage.inject_schemas(system_message)
+        complete_system_message = SystemMessage.inject_schemas(system_message, system_select, schema_select)
 
         new_turn_json = {
-            "type": type,
+            "type": "normal",
             "model": model,
             "system_message": complete_system_message,
             "display": [message, None],
@@ -306,7 +310,8 @@ class Game:
             system_message = current_turn.system_message
             raw_history = Game._raw_history(game_name)
 
-            current_turn.system_message = ""
+            if len(Game._history(game_name)) > 2:
+                Game._history(game_name)[-2].system_message = ""
 
             Game._last_raw(game_name)[1] = ""
             Game._last_display(game_name)[1] = ""
