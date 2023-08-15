@@ -50,7 +50,7 @@ class Game:
         intro_json = {
             "type": "normal",
             "model": "gpt-4-0613",
-            "system_message": SystemMessage.inject_schemas(system_message),
+            "system_message": SystemMessage.inject_schemas(system_message, 1),
             "display": history[0],
             "raw": history[0],
             "stats": {
@@ -69,7 +69,7 @@ class Game:
         choose_items_json = {
             "type": "normal",
             "model": "gpt-4-0613",
-            "system_message": SystemMessage.inject_schemas(system_message),
+            "system_message": SystemMessage.inject_schemas(system_message, 2),
             "display": [game_name, None],
             "raw": [choose_items_string, None],
             "stats": {
@@ -266,7 +266,7 @@ class Game:
         complete_user_message = f'{message}\n{dice_string}'
         if "gpt-3" in model:
             complete_user_message += "\nRemember to use the schemas exactly as provided."
-        complete_system_message = SystemMessage.inject_schemas(system_message, system_select, schema_select)
+        complete_system_message = SystemMessage.inject_schemas(system_message, Game._num_turns(game_name))
 
         new_turn_json = {
             "type": "normal",
@@ -380,7 +380,7 @@ class Game:
                     temp_string += content
                     # See if exactly 1 item in items_array matches the content.
                     # Check if the start of any item in the array matches the content
-                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.startswith(temp_string)]
+                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.lower().startswith(temp_string.lower())]
                     if len(matching_indices) == 0:
                         # # If no match, append the content to the end of the array
                         # item_index = len(Game._last_turn(game_name).stats[schema_name])

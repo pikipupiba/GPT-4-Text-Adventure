@@ -23,9 +23,7 @@ NPC Guidelines:
 Important NPCs need fun names.
 Default NPCs: mischievous critter, patrolling teachers, cliquey groups.
 
-Special Turns:
-Turn 0: Game introduction & ask user's name.
-Turn 1: User selects 5 items from a list of 10 items: treasure map to somewhere mischievous, magical rubber ducky, Ouija board, 7 random (you pick, some can have magical properties)
+
 
 Schemas:
 Day: Used when time passes. Format: "..DAY..{day} with {time} minutes left. {quip}..DAY..".
