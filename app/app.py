@@ -78,17 +78,17 @@ with combined:
     #     # every=5,
     # )
 
-    reset_time_and_games.click(
-        fn=reset_time,
-        inputs=[],
-        outputs=[],
-        queue=False,
-    ).then(
-        fn=Game.reset_games,
-        inputs=[],
-        outputs=[],
-        queue=False,
-    )
+    # reset_time_and_games.click(
+    #     fn=reset_time,
+    #     inputs=[],
+    #     outputs=[],
+    #     queue=False,
+    # ).then(
+    #     fn=Game.reset_games,
+    #     inputs=[],
+    #     outputs=[],
+    #     queue=False,
+    # )
 
     history_length.input(
         fn=set_history_length,
