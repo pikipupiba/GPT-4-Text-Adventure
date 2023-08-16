@@ -196,8 +196,11 @@ class Game:
             config_tab = gr.update(visible=False)
 
         # execution_json = Game._(game_name).llm_model.tokens
-
         num_games = len(Game.GAMES)
+
+        for game in Game.GAMES.values():
+            if game.dev:
+                num_games -= 1
 
         gpt_versions = ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"]
         categories = ["total", "prompt", "completion"]

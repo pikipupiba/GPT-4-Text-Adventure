@@ -172,6 +172,15 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                         label="Schema Select",
                         value="full",
                     )
+                    history_length = gr.Slider(
+                        minimum=10,
+                        maximum=100,
+                        step=1,
+                        value=50,
+                        label="History Length",
+                        visible=True,
+                    )
+
                 retry = gr.Button(value="Retry", size="sm")
                 undo = gr.Button(value="Undo", size="sm")
                 clear = gr.Button(value="Clear", size="sm")

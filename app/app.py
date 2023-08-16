@@ -3,6 +3,7 @@ from loguru import logger
 
 from PythonClasses.Game.Game import Game
 from PythonClasses.Game.FileManager import FileManager
+from PythonClasses.LLM.LLM import set_history_length
 
 import gradio as gr
 from PythonClasses.player import *
@@ -75,6 +76,12 @@ with combined:
     #     queue=False,
     #     # every=5,
     # )
+    history_length.input(
+        fn=set_history_length,
+        inputs=[history_length],
+        outputs=[],
+        queue=False,
+    )
 
     compile_game_stats.click(
         fn=Game.compile_game_stats,
