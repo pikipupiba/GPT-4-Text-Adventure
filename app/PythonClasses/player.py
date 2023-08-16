@@ -145,9 +145,9 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 visible=False,
             ) as stats_area:
 
-            day_box = gr.Textbox(lines=1, label="Today", interactive=False)
+            day_box = gr.Textbox(lines=2, label="Today", interactive=False)
             item_box = gr.Textbox(lines=7, label="Items", interactive=False)
-            relationship_box = gr.Textbox(lines=12, label="Relationships", interactive=False)
+            relationship_box = gr.Textbox(lines=20, label="Relationships", interactive=False)
 
 
 # with gr.Tab(" "):
