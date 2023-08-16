@@ -120,7 +120,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 )
 
                 audio_box = gr.Audio(
-                    value=os.path.join(FileManager.DATA_FOLDER, "intro.mp3"),
+                    value=os.path.join(FileManager.DATA_FOLDER, "Intro.mp3"),
                     label="Audio",
                     type="numpy",
                     scale=3,
