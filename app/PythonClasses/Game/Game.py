@@ -202,6 +202,9 @@ class Game:
             if game.dev:
                 num_games -= 1
 
+        if num_games == 0:
+            num_games = 1
+
         gpt_versions = ["gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k-0613", "gpt-4-0613", "gpt-4-32k-0613"]
         categories = ["total", "prompt", "completion"]
 
