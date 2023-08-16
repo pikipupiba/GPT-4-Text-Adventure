@@ -13,8 +13,12 @@ import openai
 # assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
 
 # openai.api_key = api_key
-
-use_azure = False
+if os.getenv('AZURE_OPENAI_API_KEY') is not None:
+    logger.info("Using Azure OpenAI API")
+    use_azure = True
+else:
+    logger.info("Using OpenAI API")
+    use_azure = False
 
 if use_azure:
     openai.api_type = "azure"
