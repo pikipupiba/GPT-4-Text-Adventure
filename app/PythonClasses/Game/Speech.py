@@ -102,7 +102,8 @@ class LLMChunker:
 
     def _to_ssml(self, text):
         system_message = """You convert the user message from plaintext to SSML.
-                    Do not respond stating what you are doing, simply do."""
+If a line starts with "--->", it is an action line. Interpret action lines to the best of your ability.
+Do not respond by stating what you are doing, simply do."""
         return LLM.oneshot(system_message=system_message, user_message=text, model="gpt-3.5")
 
     def _to_audio(self, text):
@@ -120,4 +121,36 @@ class LLMChunker:
                     self._save_audio(stream)
 
     def speak(self, text):
+        """
+        The function "speak" takes in a text input and returns the audio representation of that text.
+        This method uses GPT-4, so it costs more tokens than the `no_ssml` method.
+        
+        :param text: The text parameter is a string that represents the text that you want to convert to
+        audio
+        :return: the result of the `_to_audio` method.
+        """
         return self._to_audio(text)
+
+    def no_ssml(self, text, voice_id="Brian"):
+        """
+        The `no_ssml` function takes in a text and voice_id as parameters, and uses the AWS Polly client to
+        synthesize speech without using SSML.
+        
+        :param text: The `text` parameter is the input text that you want to convert to speech. It can be a
+        plain text or SSML (Speech Synthesis Markup Language) formatted text
+        :param voice_id: The `voice_id` parameter is used to specify the voice that will be used for
+        synthesizing the speech. In this case, the default value is set to "Brian", which is a specific
+        voice available in the text-to-speech service. However, you can change it to any other valid voice,
+        defaults to Brian (optional)
+        """
+        with self.client.synthesize_speech(
+            Engine="standard",
+            LanguageCode="en-US",
+            OutputFormat="mp3",
+            VoiceId=voice_id,
+            Text=text,
+            TextType="text",
+        ) as response:
+            if "AudioStream" in response:
+                with closing(response["AudioStream"]) as stream:
+                    self._save_audio(stream)
