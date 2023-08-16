@@ -154,6 +154,7 @@ class LLM:
             messages_openai_format.append(openai_system_message)
         if openai_history != None:
             messages_openai_format += openai_history[-history_length:]
+            logger.info(f"History length: {len(messages_openai_format)}")
 
         llm_model.num_tokens_from_messages(model, messages_openai_format)
 
