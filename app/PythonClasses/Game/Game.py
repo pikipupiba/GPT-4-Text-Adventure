@@ -103,6 +103,10 @@ class Game:
             json.dump(final_stats, f, indent=4)
         
         return final_stats
+    
+    def reset_games():
+        for game_name, game in Game.GAMES.items():
+            del Game.GAMES[game_name]
 
     def start(game_name: str):
         logger.info(f"Starting Game: {game_name}")

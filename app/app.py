@@ -1,9 +1,10 @@
 import os,uuid,sys,signal
 from loguru import logger
 
-from PythonClasses.Game.Game import Game
+from PythonClasses.Game.Game import Game, reset_games
 from PythonClasses.Game.FileManager import FileManager
 from PythonClasses.LLM.LLM import set_history_length
+from PythonClasses.LLM.LLMModel import reset_time
 
 import gradio as gr
 from PythonClasses.player import *
@@ -76,6 +77,19 @@ with combined:
     #     queue=False,
     #     # every=5,
     # )
+
+    reset_time_and_games.click(
+        fn=reset_time,
+        inputs=[],
+        outputs=[],
+        queue=False,
+    ).then(
+        fn=Game.reset_games,
+        inputs=[],
+        outputs=[],
+        queue=False,
+    )
+
     history_length.input(
         fn=set_history_length,
         inputs=[history_length],

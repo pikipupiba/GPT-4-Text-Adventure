@@ -6,6 +6,10 @@ from datetime import datetime
 
 total_start_time = None
 
+def reset_time():
+    global total_start_time
+    total_start_time = datetime.now()
+
 total_tokens = {
     "gpt-3.5-turbo-0613" : {
         "total": {

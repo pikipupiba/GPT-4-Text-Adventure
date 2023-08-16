@@ -186,6 +186,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 clear = gr.Button(value="Clear", size="sm")
                 restart = gr.Button(value="Restart", size="sm")
                 render = gr.Button(value="Render", size="sm")
+                reset_time_and_games = gr.Button(value="Reset Time and Games", size="sm")
 
         # GAME NAME
         with gr.Group():
