@@ -107,15 +107,15 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     visible=True,
                 )
 
-                # audio_box = gr.Audio(
-                #     # value="/path/to/intro.mp3",
-                #     label="Audio",
-                #     type="numpy",
-                #     scale=1,
-                #     visible=True,
-                #     interactive=False,
-                #     autoplay=True,
-                # )
+                audio_box = gr.Audio(
+                    # value=None,
+                    label="Audio",
+                    type="numpy",
+                    scale=1,
+                    visible=False,
+                    interactive=False,
+                    autoplay=True,
+                )
                 
         with gr.Column(
                 scale=2,

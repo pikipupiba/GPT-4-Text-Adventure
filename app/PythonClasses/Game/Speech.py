@@ -1,6 +1,7 @@
 import os
-import asyncio
-import aioboto3
+# import asyncio
+# import aioboto3
+import boto3
 from contextlib import closing
 from botocore.config import Config
 from loguru import logger
@@ -19,7 +20,7 @@ class LLMStreamProcessor:
             signature_version="v4",
             retries={"max_attempts": 10, "mode": "standard"},
         )
-        self.client = aioboto3.client("polly", config=self.config)
+        self.client = boto3.client("polly", config=self.config)
         self.audio_path = os.path.join(LLMStreamProcessor.AUDIO_FOLDER, game_name)
 
         if not os.path.exists(self.audio_path):
@@ -83,7 +84,7 @@ class LLMChunker:
             signature_version="v4",
             retries={"max_attempts": 10, "mode": "standard"},
         )
-        self.client = aioboto3.client("polly", config=self.config)
+        self.client = boto3.client("polly", config=self.config)
         self.audio_path = os.path.join(LLMStreamProcessor.AUDIO_FOLDER, game_name)
         
         if not os.path.exists(self.audio_path):
@@ -143,14 +144,14 @@ Do not respond by stating what you are doing, simply do."""
         voice available in the text-to-speech service. However, you can change it to any other valid voice,
         defaults to Brian (optional)
         """
-        with self.client.synthesize_speech(
-            Engine="standard",
+        response = self.client.synthesize_speech(
+            Engine="neural",
             LanguageCode="en-US",
             OutputFormat="mp3",
             VoiceId=voice_id,
             Text=text,
-            TextType="text",
-        ) as response:
-            if "AudioStream" in response:
+            TextType="text"
+        )
+        if "AudioStream" in response:
                 with closing(response["AudioStream"]) as stream:
-                    self._save_audio(stream)
+                    return self._save_audio(stream)
