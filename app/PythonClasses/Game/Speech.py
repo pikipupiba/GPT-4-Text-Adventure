@@ -86,16 +86,25 @@ class LLMChunker:
         )
         self.client = boto3.client("polly", config=self.config)
         self.audio_path = os.path.join(LLMStreamProcessor.AUDIO_FOLDER, game_name)
+        self.index = 0
         
         if not os.path.exists(self.audio_path):
             os.makedirs(self.audio_path)
 
     def _save_audio(self, audio_stream):
         logger.info(f"Saving audio | {self.audio_path}")
+
+
+        if os.path.exists(os.path.join(self.audio_path,f"audio{self.index}.mp3")):
+            os.remove(os.path.join(self.audio_path,f"audio{self.index}.mp3"))
+
+        self.index += 1
+
+
         with open(
             os.path.join(
                 self.audio_path,
-                f"audio{len(os.listdir(self.audio_path))}.mp3"
+                f"audio{self.index}.mp3"
             ), "wb"
         ) as file:
             file.write(audio_stream.read())
