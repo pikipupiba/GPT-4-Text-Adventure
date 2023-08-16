@@ -107,16 +107,6 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     visible=True,
                 )
 
-                audio_box = gr.Audio(
-                    # value=None,
-                    label="Audio",
-                    type="numpy",
-                    scale=1,
-                    visible=False,
-                    interactive=False,
-                    autoplay=True,
-                )
-
             with gr.Row(variant="compact"):
 
                 audio_speed = gr.Slider(
@@ -125,8 +115,18 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     step=1,
                     value=150,
                     label="Audio Speed",
-                    scale=1,
+                    scale=7,
                     visible=True,
+                )
+
+                audio_box = gr.Audio(
+                    # value=None,
+                    label="Audio",
+                    type="numpy",
+                    scale=3,
+                    visible=True,
+                    interactive=True,
+                    autoplay=True,
                 )
 
                 audio_volume = gr.Slider(
@@ -146,8 +146,8 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
             ) as stats_area:
 
             day_box = gr.Textbox(lines=1, label="Today", interactive=False)
-            item_box = gr.Textbox(lines=5, label="Items", interactive=False)
-            relationship_box = gr.Textbox(lines=10, label="Relationships", interactive=False)
+            item_box = gr.Textbox(lines=7, label="Items", interactive=False)
+            relationship_box = gr.Textbox(lines=12, label="Relationships", interactive=False)
 
 
 # with gr.Tab(" "):
@@ -221,6 +221,9 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 game_gpt_4_32_json = gr.JSON(label="last turn gpt 4 32k", interactive=False)
                 game_gpt_3_5_turbo_json = gr.JSON(label="last turn gpt 3.5 turbo", interactive=False)
                 game_gpt_3_5_turbo_16_json = gr.JSON(label="last turn gpt 3.5 turbo 16k", interactive=False)
+            with gr.Row():
+                final_game_stats = gr.JSON(label="Final Game Stats", interactive=False, scale=10)
+                compile_game_stats = gr.Button(value="Compile Game Stats", size="sm", scale=1)
             turn_json = gr.JSON(label="Game State")
 
 

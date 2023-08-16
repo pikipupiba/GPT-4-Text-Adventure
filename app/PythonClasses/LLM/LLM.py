@@ -14,7 +14,7 @@ import openai
 
 # openai.api_key = api_key
 
-use_azure = True
+use_azure = False
 
 if use_azure:
     openai.api_type = "azure"
@@ -157,7 +157,7 @@ class LLM:
             return openai.ChatCompletion.create(
                 engine=model,
                 messages=messages_openai_format,
-                temperature=1,
+                temperature=0.9,
                 stream=True,
                 max_tokens=1000,
             )
@@ -166,7 +166,7 @@ class LLM:
             return openai.ChatCompletion.create(
                 model=model,
                 messages=messages_openai_format,
-                temperature=1,
+                temperature=0.9,
                 stream=True,
                 max_tokens=1000,
             )

@@ -76,6 +76,12 @@ with combined:
     #     # every=5,
     # )
 
+    compile_game_stats.click(
+        fn=Game.compile_game_stats,
+        inputs=[],
+        outputs=[final_game_stats]
+    )
+
     start_game.click(
         fn=Game,
         inputs=[game_name, chatbot, system_message],

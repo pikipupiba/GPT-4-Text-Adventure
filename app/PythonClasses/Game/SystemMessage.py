@@ -122,7 +122,7 @@ class SystemMessage:
 
         logger.debug("Injecting schemas into system message")
 
-        if turn_num > 10:
+        if turn_num > 15:
             with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "medium.txt"), "r") as f:
                 system_message = f.read()
                 complete_system_message = f"{system_message}\n\n{json.dumps(schemas_short, separators=(',', ':'))}"
