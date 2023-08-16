@@ -149,7 +149,7 @@ Do not respond by stating what you are doing, simply do."""
             OutputFormat="mp3",
             VoiceId=voice_id,
             Text=text,
-            TextType="ssml",
+            TextType="text",
         ) as response:
             if "AudioStream" in response:
                 with closing(response["AudioStream"]) as stream:
