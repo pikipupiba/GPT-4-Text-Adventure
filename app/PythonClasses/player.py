@@ -63,7 +63,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
         # STORY AREA
     with gr.Row(variant="compact").style(equal_height=True) as story_area:
         # CHAT AREA
-        with gr.Column(scale=10, variant="compact") as chat_area:
+        with gr.Column(scale=8, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
                 value=intro,
@@ -118,7 +118,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 # )
                 
         with gr.Column(
-                scale=1,
+                scale=2,
                 variant="compact",
                 visible=False,
             ) as stats_area:
