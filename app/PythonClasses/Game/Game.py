@@ -289,7 +289,7 @@ class Game:
         return [""] + Game.render_story(game_name)
 
     
-    def stream_prediction(game_name: str):
+    def stream_prediction(game_name: str, audio_speed:int = 125):
 
         new_day = True
         count_tokens = True
@@ -430,7 +430,7 @@ class Game:
                 from PythonClasses.Game.FileManager import FileManager
                 FileManager.save_history(game_name, game_name)
 
-                Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1])
+                Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1], audio_speed)
 
                 if new_day:
                     logger.info("Starting a new day")
