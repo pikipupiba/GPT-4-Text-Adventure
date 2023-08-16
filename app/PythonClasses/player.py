@@ -63,34 +63,12 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
         # STORY AREA
     with gr.Row(variant="compact").style(equal_height=True) as story_area:
         # CHAT AREA
-        with gr.Column(scale=8, variant="compact") as chat_area:
+        with gr.Column(scale=7, variant="compact") as chat_area:
             # CHATBOT
             chatbot = gr.Chatbot(
                 value=intro,
                 height=600,
             )
-        
-            with gr.Row(variant="compact"):
-
-                audio_speed = gr.Slider(
-                    minimum=100,
-                    maximum=200,
-                    step=1,
-                    value=125,
-                    label="Audio Speed",
-                    scale=1,
-                    visible=True,
-                )
-
-                audio_volume = gr.Slider(
-                    minimum=0,
-                    maximum=100,
-                    step=1,
-                    value=75,
-                    label="Audio Volume",
-                    scale=1,
-                    visible=True,
-                )
 
             # USER MESSAGE AREA
             with gr.Row(variant="compact") as user_message_area:
@@ -138,9 +116,31 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     interactive=False,
                     autoplay=True,
                 )
+
+            with gr.Row(variant="compact"):
+
+                audio_speed = gr.Slider(
+                    minimum=100,
+                    maximum=200,
+                    step=1,
+                    value=150,
+                    label="Audio Speed",
+                    scale=1,
+                    visible=True,
+                )
+
+                audio_volume = gr.Slider(
+                    minimum=0,
+                    maximum=100,
+                    step=1,
+                    value=75,
+                    label="Audio Volume",
+                    scale=1,
+                    visible=False,
+                )
                 
         with gr.Column(
-                scale=2,
+                scale=3,
                 variant="compact",
                 visible=False,
             ) as stats_area:

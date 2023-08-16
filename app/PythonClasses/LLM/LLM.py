@@ -143,7 +143,7 @@ class LLM:
         if openai_system_message != None:
             messages_openai_format.append(openai_system_message)
         if openai_history != None:
-            messages_openai_format += openai_history
+            messages_openai_format += openai_history[-50:]
 
         llm_model.num_tokens_from_messages(model, messages_openai_format)
 
@@ -157,16 +157,18 @@ class LLM:
             return openai.ChatCompletion.create(
                 engine=model,
                 messages=messages_openai_format,
-                temperature=0.8,
-                stream=True
+                temperature=1,
+                stream=True,
+                max_tokens=1000,
             )
         else:
             # OpenAI API call
             return openai.ChatCompletion.create(
                 model=model,
                 messages=messages_openai_format,
-                temperature=0.8,
-                stream=True
+                temperature=1,
+                stream=True,
+                max_tokens=1000,
             )
 
 

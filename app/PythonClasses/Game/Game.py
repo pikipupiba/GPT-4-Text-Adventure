@@ -389,7 +389,10 @@ class Game:
                     temp_string += content
                     # See if exactly 1 item in items_array matches the content.
                     # Check if the start of any item in the array matches the content
-                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.lower().startswith(temp_string.lower())]
+                    # matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.lower().startswith(temp_string.lower())]
+                    compare_length = min(4, len(temp_string))
+                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) 
+                    if item[:compare_length].lower() == temp_string[:compare_length].lower()]
                     if len(matching_indices) == 0:
                         # # If no match, append the content to the end of the array
                         # item_index = len(Game._last_turn(game_name).stats[schema_name])
@@ -430,7 +433,8 @@ class Game:
             from PythonClasses.Game.FileManager import FileManager
             FileManager.save_history(game_name, game_name)
 
-            Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1],rate=audio_speed)
+            stripped_string = '\n'.join([line for line in Game._last_display(game_name)[1].split('\n') if not line.startswith('--->')]).strip(" .\n")
+            Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(stripped_string,rate=audio_speed)
 
             if new_day:
                 logger.info("Starting a new day")

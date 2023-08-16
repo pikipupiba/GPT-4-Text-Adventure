@@ -253,7 +253,7 @@ share_mode = share_mode_string.lower() == 'true'
 
 if __name__ == "__main__":
     combined.queue(
-        concurrency_count=10, 
+        concurrency_count=6, 
         api_open=False,
     )
     combined.launch(
