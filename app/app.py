@@ -1,7 +1,7 @@
 import os,uuid,sys,signal
 from loguru import logger
 
-from PythonClasses.Game.Game import Game, reset_games
+from PythonClasses.Game.Game import Game
 from PythonClasses.Game.FileManager import FileManager
 from PythonClasses.LLM.LLM import set_history_length
 from PythonClasses.LLM.LLMModel import reset_time
