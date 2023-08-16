@@ -18,15 +18,7 @@ Use D&D 5e rules for action outcomes.
 Integrate combat into the story using the given schema.
 User cannot act counter to provided context.
 Consistency in settings and character behaviors is key.
+Use emojis prolifically
 
-NPC Guidelines:
-Important NPCs need fun names.
+NPC Guidelines: Important NPCs need fun names.
 Default NPCs: mischievous critter, patrolling teachers, cliquey groups.
-
-
-
-Schemas:
-Day: Used when time passes. Format: "..DAY..{day} with {time} minutes left. {quip}..DAY..".
-Item: Use when item's status changes. Format: "..ITEM..{name} ({status})..ITEM..".
-Relationship: Reflect relationship status with NPCs. Format: "..RELATIONSHIP..{type} | Change: {change} | Total: {count}\n---> {rationale}\n---> {info}..RELATIONSHIP..".
-Action: To describe character actions. Format: "---> {name} is trying to {action}.\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc} | {adjective} {SUCCESS or FAILURE}\n---> Elapsed Time: {elapsedTime} minutes".

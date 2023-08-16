@@ -15,7 +15,6 @@
 # Function to stop the container
 cleanup() {
   echo "Saving data and stopping container..."
-  docker cp "$CONTAINER_NAME":/app/data/history /home/ubuntu/game_data
   docker stop "$CONTAINER_NAME"
   docker rm "$CONTAINER_NAME"
 trap cleanup INT
@@ -96,7 +95,6 @@ if docker build -t "$IMAGE_NAME" .; then
 
   if docker inspect "$CONTAINER_NAME" &> /dev/null; then
     echo "Container $CONTAINER_NAME already exists. Saving data and stopping container..."
-    docker cp "$CONTAINER_NAME":/app/data/history /home/ubuntu/game_data
     docker stop "$CONTAINER_NAME"
     docker rm "$CONTAINER_NAME"
   else
