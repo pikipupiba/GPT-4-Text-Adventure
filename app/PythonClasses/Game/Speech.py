@@ -131,7 +131,7 @@ Do not respond by stating what you are doing, simply do."""
         """
         return self._to_audio(text)
 
-    def no_ssml(self, text, voice_id="Brian"):
+    def no_ssml(self, text, voice_id="Brian", rate = 100):
         """
         The `no_ssml` function takes in a text and voice_id as parameters, and uses the AWS Polly client to
         synthesize speech without using SSML.
@@ -143,13 +143,14 @@ Do not respond by stating what you are doing, simply do."""
         voice available in the text-to-speech service. However, you can change it to any other valid voice,
         defaults to Brian (optional)
         """
+        text = f"<speak><prosody rate='{rate}%'>{text}</prosody></speak>"
         with self.client.synthesize_speech(
             Engine="standard",
             LanguageCode="en-US",
             OutputFormat="mp3",
             VoiceId=voice_id,
             Text=text,
-            TextType="text",
+            TextType="ssml",
         ) as response:
             if "AudioStream" in response:
                 with closing(response["AudioStream"]) as stream:
