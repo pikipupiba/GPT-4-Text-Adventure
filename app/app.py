@@ -94,7 +94,7 @@ with combined:
         queue=False
     ).then(
         fn=Game.stream_prediction,
-        inputs=[game_name],
+        inputs=[game_name, audio_speed],
         outputs=story_render_array,
         queue=True
     )
@@ -117,7 +117,7 @@ with combined:
         queue=False
     ).then(
         fn=Game.stream_prediction,
-        inputs=[game_name],
+        inputs=[game_name, audio_speed],
         outputs=story_render_array,
         queue=True
     )

@@ -325,134 +325,134 @@ class Game:
             item_index = None
             temp_string = ""
 
-            try:
-                for chunk in LLM.predict(model, system_message, raw_history, Game._(game_name).llm_model):
-                    if len(chunk["choices"][0]["delta"]) == 0:
-                        break
+        # try:
+            for chunk in LLM.predict(model, system_message, raw_history, Game._(game_name).llm_model):
+                if len(chunk["choices"][0]["delta"]) == 0:
+                    break
 
-                    content = chunk["choices"][0].get("delta", {}).get("content")
+                content = chunk["choices"][0].get("delta", {}).get("content")
 
-                    if content is None:                 
-                        continue
+                if content is None:                 
+                    continue
 
-                    Game._last_raw(game_name)[1] += content
+                Game._last_raw(game_name)[1] += content
 
-                    # If not streaming, look for opening tag in the unprocessed content
-                    if not schema_name:
-                        Game._last_display(game_name)[1] += content
-                        # Game._audio(game_name).process_data(content)
+                # If not streaming, look for opening tag in the unprocessed content
+                if not schema_name:
+                    Game._last_display(game_name)[1] += content
+                    # Game._audio(game_name).process_data(content)
 
-                        opening_match = re.search(schema_delimiter, Game._last_display(game_name)[1])
-                        if opening_match:
-                            schema_name = opening_match.group(0).strip(" .")
-                            Game._last_display(game_name)[1] = Game._last_display(game_name)[1][:opening_match.start()]
-                            content = content.rstrip('. \n')
+                    opening_match = re.search(schema_delimiter, Game._last_display(game_name)[1])
+                    if opening_match:
+                        schema_name = opening_match.group(0).strip(" .")
+                        Game._last_display(game_name)[1] = Game._last_display(game_name)[1][:opening_match.start()]
+                        content = content.rstrip('. \n')
 
-                            if schema_name == "DAY":
-                                Game._last_turn(game_name).stats["DAY"] = ""
-                            elif schema_name == "ITEM":
-                                if not "ITEM" in Game._last_turn(game_name).stats:
-                                    Game._last_turn(game_name).stats["ITEM"] = []
-                            elif schema_name == "RELATIONSHIP":
-                                if not "RELATIONSHIP" in Game._last_turn(game_name).stats:
-                                    Game._last_turn(game_name).stats["RELATIONSHIP"] = []
-                            elif schema_name == "HIDE":
-                                pass
-                            else:
-                                logger.error(f"Unknown schema: {schema_name}")
-                                schema_name = None
-
-
-                    if schema_name == "DAY":
-                        Game._last_turn(game_name).stats["DAY"] += content
-                        closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats["DAY"])
-                        if closing_match:
-                            schema_name = None
-                            Game._last_turn(game_name).stats["DAY"] = Game._last_turn(game_name).stats["DAY"][:closing_match.start()]
-
-                            # Extract the number from the day string
-                            numbers_in_day = re.findall(r'\d+', Game._last_turn(game_name).stats["DAY"])
-                            Game._last_turn(game_name).time_left = int(numbers_in_day[-1]) if len(numbers_in_day) > 0 else 0
-                            if Game._last_turn(game_name).time_left <= 0:
-                                logger.info("Day over")
-                                new_day = True
-                            
-                    
-                    elif schema_name == "HIDE":
-                        temp_string += content
-                        closing_match = re.search(schema_delimiter, temp_string)
-                        if closing_match:
-                            schema_name = None
-                            temp_string = ""
-
-                    elif (schema_name is not None) and (item_index is None):
-                        temp_string += content
-                        # See if exactly 1 item in items_array matches the content.
-                        # Check if the start of any item in the array matches the content
-                        matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.lower().startswith(temp_string.lower())]
-                        if len(matching_indices) == 0:
-                            # # If no match, append the content to the end of the array
-                            # item_index = len(Game._last_turn(game_name).stats[schema_name])
-                            # Game._last_turn(game_name).stats[schema_name].append(temp_string)
-
-                            # If no match, insert the content at the beginning of the array
-                            item_index = 0
-                            Game._last_turn(game_name).stats[schema_name].insert(item_index, temp_string)
-                        elif len(matching_indices) == 1 and len(temp_string) > 4:
-                            # If a match is found, replace the item at the first matching index
-                            item_index = matching_indices[0]
-                            Game._last_turn(game_name).stats[schema_name][item_index] = temp_string
-
-                    elif (schema_name is not None) and (item_index is not None):
-                        # If we already found the item index, just append the content to the item
-                        Game._last_turn(game_name).stats[schema_name][item_index] += content
-                        closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
-                        if closing_match:
-                            Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()].strip(". \n")
-
-                            if schema_name == "RELATIONSHIP":
-                                first_line  = Game._last_turn(game_name).stats[schema_name][item_index].split('\n', 1)[0]
-                                numbers = re.findall(r'\d+', first_line)
-                                if numbers:
-                                    last_number = int(numbers[-1])
-                                    if last_number == 0:
-                                        del Game._last_turn(game_name).stats[schema_name][item_index]
-
-                            item_index = None
-                            temp_string = ""
+                        if schema_name == "DAY":
+                            Game._last_turn(game_name).stats["DAY"] = ""
+                        elif schema_name == "ITEM":
+                            if not "ITEM" in Game._last_turn(game_name).stats:
+                                Game._last_turn(game_name).stats["ITEM"] = []
+                        elif schema_name == "RELATIONSHIP":
+                            if not "RELATIONSHIP" in Game._last_turn(game_name).stats:
+                                Game._last_turn(game_name).stats["RELATIONSHIP"] = []
+                        elif schema_name == "HIDE":
+                            pass
+                        else:
+                            logger.error(f"Unknown schema: {schema_name}")
                             schema_name = None
 
-                    yield Game.render_story(game_name)
 
-                if count_tokens:
-                    Game._(game_name).llm_model.num_tokens_from_text(model, Game._last_raw(game_name)[1])
+                if schema_name == "DAY":
+                    Game._last_turn(game_name).stats["DAY"] += content
+                    closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats["DAY"])
+                    if closing_match:
+                        schema_name = None
+                        Game._last_turn(game_name).stats["DAY"] = Game._last_turn(game_name).stats["DAY"][:closing_match.start()]
 
-                from PythonClasses.Game.FileManager import FileManager
-                FileManager.save_history(game_name, game_name)
+                        # Extract the number from the day string
+                        numbers_in_day = re.findall(r'\d+', Game._last_turn(game_name).stats["DAY"])
+                        Game._last_turn(game_name).time_left = int(numbers_in_day[-1]) if len(numbers_in_day) > 0 else 0
+                        if Game._last_turn(game_name).time_left <= 0:
+                            logger.info("Day over")
+                            new_day = True
+                        
+                
+                elif schema_name == "HIDE":
+                    temp_string += content
+                    closing_match = re.search(schema_delimiter, temp_string)
+                    if closing_match:
+                        schema_name = None
+                        temp_string = ""
 
-                Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1], audio_speed)
+                elif (schema_name is not None) and (item_index is None):
+                    temp_string += content
+                    # See if exactly 1 item in items_array matches the content.
+                    # Check if the start of any item in the array matches the content
+                    matching_indices = [index for index, item in enumerate(Game._last_turn(game_name).stats[schema_name]) if item.lower().startswith(temp_string.lower())]
+                    if len(matching_indices) == 0:
+                        # # If no match, append the content to the end of the array
+                        # item_index = len(Game._last_turn(game_name).stats[schema_name])
+                        # Game._last_turn(game_name).stats[schema_name].append(temp_string)
 
-                if new_day:
-                    logger.info("Starting a new day")
-                    last_turn = Game._last_turn(game_name)
+                        # If no match, insert the content at the beginning of the array
+                        item_index = 0
+                        Game._last_turn(game_name).stats[schema_name].insert(item_index, temp_string)
+                    elif len(matching_indices) == 1 and len(temp_string) > 4:
+                        # If a match is found, replace the item at the first matching index
+                        item_index = matching_indices[0]
+                        Game._last_turn(game_name).stats[schema_name][item_index] = temp_string
 
-                    user_message = "{The day has ended. Begin the next day}"
+                elif (schema_name is not None) and (item_index is not None):
+                    # If we already found the item index, just append the content to the item
+                    Game._last_turn(game_name).stats[schema_name][item_index] += content
+                    closing_match = re.search(schema_delimiter, Game._last_turn(game_name).stats[schema_name][item_index])
+                    if closing_match:
+                        Game._last_turn(game_name).stats[schema_name][item_index] = Game._last_turn(game_name).stats[schema_name][item_index][:closing_match.start()].strip(". \n")
 
-                    new_day_json = {
-                        "type": "normal",
-                        "model": Game._history(game_name)[0].model,
-                        "system_message": Game._history(game_name)[0].system_message,
-                        "display": [None, None],
-                        "raw": [user_message, None],
-                        "stats": Game._stats(game_name).copy(),
-                        "combat": [],
-                        "execution": {},
-                    }
+                        if schema_name == "RELATIONSHIP":
+                            first_line  = Game._last_turn(game_name).stats[schema_name][item_index].split('\n', 1)[0]
+                            numbers = re.findall(r'\d+', first_line)
+                            if numbers:
+                                last_number = int(numbers[-1])
+                                if last_number == 0:
+                                    del Game._last_turn(game_name).stats[schema_name][item_index]
 
-                    Game._history(game_name).append(Turn(new_day_json))
+                        item_index = None
+                        temp_string = ""
+                        schema_name = None
 
-            except openai.error.OpenAIAPIContentError as e:
-                 Game._last_display(game_name)[1] = f"OpenAI API Error: {e}"
+                yield Game.render_story(game_name)
+
+            if count_tokens:
+                Game._(game_name).llm_model.num_tokens_from_text(model, Game._last_raw(game_name)[1])
+
+            from PythonClasses.Game.FileManager import FileManager
+            FileManager.save_history(game_name, game_name)
+
+            Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1], audio_speed)
+
+            if new_day:
+                logger.info("Starting a new day")
+                last_turn = Game._last_turn(game_name)
+
+                user_message = "{The day has ended. Begin the next day}"
+
+                new_day_json = {
+                    "type": "normal",
+                    "model": Game._history(game_name)[0].model,
+                    "system_message": Game._history(game_name)[0].system_message,
+                    "display": [None, None],
+                    "raw": [user_message, None],
+                    "stats": Game._stats(game_name).copy(),
+                    "combat": [],
+                    "execution": {},
+                }
+
+                Game._history(game_name).append(Turn(new_day_json))
+
+        # except openai.error.OpenAIAPIContentError as e:
+        #      Game._last_display(game_name)[1] = f"OpenAI API Error: {e}"
 
         Game._(game_name).state = Game.AWAITING_USER
 
