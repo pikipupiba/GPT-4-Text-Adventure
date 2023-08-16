@@ -144,7 +144,7 @@ Do not respond by stating what you are doing, simply do."""
         voice available in the text-to-speech service. However, you can change it to any other valid voice,
         defaults to Brian (optional)
         """
-        text = "<speak><prosody rate='{}%'>{}</prosody></speak>".format(rate, text)
+        text = f"<speak><prosody rate='{rate}%'>{text}</prosody></speak>"
         response = self.client.synthesize_speech(
             Engine="neural",
             LanguageCode="en-US",
