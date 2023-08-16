@@ -430,7 +430,7 @@ class Game:
             from PythonClasses.Game.FileManager import FileManager
             FileManager.save_history(game_name, game_name)
 
-            Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1], audio_speed)
+            Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1],rate=audio_speed)
 
             if new_day:
                 logger.info("Starting a new day")
