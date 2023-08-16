@@ -321,41 +321,41 @@ class Game:
     
     def stream_prediction(game_name: str, audio_speed:int = 125):
 
-        new_day = True
-        count_tokens = True
+        try:
+            new_day = True
+            count_tokens = True
 
-        if "dddeeevvv" in Game._last_display(game_name)[0]:
-            del Game._history(game_name)[-1]
-            Game._(game_name).dev = not Game._(game_name).dev
-            new_day = False
-            count_tokens = False
+            if "dddeeevvv" in Game._last_display(game_name)[0]:
+                del Game._history(game_name)[-1]
+                Game._(game_name).dev = not Game._(game_name).dev
+                new_day = False
+                count_tokens = False
 
-        Game._(game_name).state = Game.PREDICTING
-        new_day_counter = 0
+            Game._(game_name).state = Game.PREDICTING
+            new_day_counter = 0
 
-        while(new_day and new_day_counter < 3):
-            new_day_counter += 1
-            new_day = False
-                
-            logger.info("Streaming prediction")
-            current_turn = Game._last_turn(game_name)
+            while(new_day and new_day_counter < 3):
+                new_day_counter += 1
+                new_day = False
+                    
+                logger.info("Streaming prediction")
+                current_turn = Game._last_turn(game_name)
 
-            model = current_turn.model
-            system_message = current_turn.system_message
-            raw_history = Game._raw_history(game_name)
+                model = current_turn.model
+                system_message = current_turn.system_message
+                raw_history = Game._raw_history(game_name)
 
-            if len(Game._history(game_name)) > 2:
-                Game._history(game_name)[-2].system_message = ""
+                if len(Game._history(game_name)) > 2:
+                    Game._history(game_name)[-2].system_message = ""
 
-            Game._last_raw(game_name)[1] = ""
-            Game._last_display(game_name)[1] = ""
+                Game._last_raw(game_name)[1] = ""
+                Game._last_display(game_name)[1] = ""
 
-            schema_delimiter = r'\.\.\s*[A-Z]+\s*\.\.'  # regex pattern to find schema delimiters
-            schema_name = None
-            item_index = None
-            temp_string = ""
+                schema_delimiter = r'\.\.\s*[A-Z]+\s*\.\.'  # regex pattern to find schema delimiters
+                schema_name = None
+                item_index = None
+                temp_string = ""
 
-            try:
                 for chunk in LLM.predict(model, system_message, raw_history, Game._(game_name).llm_model):
                     if len(chunk["choices"][0]["delta"]) == 0:
                         break
@@ -485,14 +485,18 @@ class Game:
 
                     Game._history(game_name).append(Turn(new_day_json))
 
-            except Exception as e:
-                Game._last_display(game_name)[0] = f"Try again! Encountered an exception: {e}"
-                Game._last_display(game_name)[1] = None
-                Game._last_raw(game_name)[0] = None
-                Game._last_raw(game_name)[1] = None
-                new_day = False
+            
 
 
-        Game._(game_name).state = Game.AWAITING_USER
+            Game._(game_name).state = Game.AWAITING_USER
 
-        yield Game.render_story(game_name)
+            yield Game.render_story(game_name)
+
+        except Exception as e:
+            Game._last_display(game_name)[0] = f"Try again! Encountered an exception: {e}"
+            Game._last_display(game_name)[1] = None
+            Game._last_raw(game_name)[0] = None
+            Game._last_raw(game_name)[1] = None
+            new_day = False
+
+            yield Game.render_story(game_name)
