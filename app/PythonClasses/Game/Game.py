@@ -295,8 +295,8 @@ class Game:
         
 
         complete_user_message = f'{message}\n{dice_string}'
-        if "gpt-3" in model:
-            complete_user_message += "\nRemember to use the schemas exactly as provided."
+
+        complete_user_message += "\n{remember to update items, relationships, and day}"
         complete_system_message = SystemMessage.inject_schemas(system_message, Game._num_turns(game_name))
 
         new_turn_json = {
