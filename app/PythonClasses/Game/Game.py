@@ -498,5 +498,6 @@ class Game:
             Game._last_raw(game_name)[0] = None
             Game._last_raw(game_name)[1] = None
             new_day = False
+            Game._(game_name).state = Game.AWAITING_USER
 
             yield Game.render_story(game_name)
