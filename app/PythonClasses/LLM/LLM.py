@@ -14,18 +14,19 @@ import openai
 
 # openai.api_key = api_key
 
-use_azure = True
+use_azure = False
 
-openai.api_type = "azure"
-openai.api_version = "2023-05-15"
+if use_azure:
+    openai.api_type = "azure"
+    openai.api_version = "2023-05-15"
+    openai.api_key = os.getenv('AZURE_OPENAI_API_KEY')
+    openai.api_base = os.getenv('AZURE_OPENAI_API_BASE')
+    model_deployment_name_35 = "Q3-dpt-meeting-35"
+    model_deployment_name_4 = "Q3-dpt-meeting-4"
+else:
+    openai.api_key = os.getenv('OPENAI_API_KEY')
 
-
-openai.api_key = os.getenv('AZURE_OPENAI_API_KEY')
-openai.api_base = os.getenv('AZURE_OPENAI_API_BASE')
-
-
-model_deployment_name_35 = "Q3-dpt-meeting-35"
-model_deployment_name_4 = "Q3-dpt-meeting-4"
+assert openai.api_key is not None and len(openai.api_key) > 0, "API Key not set in environment"
 
 # `LLM` is a class that provides methods for interacting with the OpenAI API. It includes
 # methods for generating responses in a chat-like format (`oneshot`), building the history array
@@ -152,13 +153,22 @@ class LLM:
             elif "gpt-3.5" in model:
                 model = model_deployment_name_35
 
-        # OpenAI API call
-        return openai.ChatCompletion.create(
-            engine=model,
-            messages=messages_openai_format,
-            temperature=1.0,
-            stream=True
-        )
+            # OpenAI API call
+            return openai.ChatCompletion.create(
+                engine=model,
+                messages=messages_openai_format,
+                temperature=0.8,
+                stream=True
+            )
+        else:
+            # OpenAI API call
+            return openai.ChatCompletion.create(
+                model=model,
+                messages=messages_openai_format,
+                temperature=0.8,
+                stream=True
+            )
+
 
     def summarize(self, text: str = None, model: str = "gpt-4"):
         if text == None:
