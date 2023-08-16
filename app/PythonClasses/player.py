@@ -113,7 +113,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     minimum=100,
                     maximum=200,
                     step=1,
-                    value=150,
+                    value=130,
                     label="Audio Speed",
                     scale=7,
                     visible=True,
