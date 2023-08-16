@@ -14,7 +14,7 @@ import openai
 
 # openai.api_key = api_key
 
-use_azure = True
+use_azure = False
 
 if use_azure:
     openai.api_type = "azure"

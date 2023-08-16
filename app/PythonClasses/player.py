@@ -70,6 +70,16 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 height=600,
             )
 
+            audio_speed = gr.Slider(
+                minimum=100,
+                maximum=200,
+                step=1,
+                value=125,
+                label="Audio Speed",
+                scale=1,
+                visible=True,
+            )
+
             # USER MESSAGE AREA
             with gr.Row(variant="compact") as user_message_area:
                 user_message = gr.Textbox(
