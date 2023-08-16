@@ -59,15 +59,20 @@ class LLM:
         }
 
     def oneshot(system_message: str, user_message: str, model: str = "gpt-4"):
+        if use_azure:
+            if "gpt-4" in model:
+                model = model_deployment_name_4
+            elif "gpt-3.5" in model:
+                model = model_deployment_name_35
         chat = openai.ChatCompletion.create(
-            model=model,
+            engine = model,
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message},
-            ],
+            ]
         )
         return chat.choices[0].message["content"]
-    
+
     def build_openai_history_array(raw_history):
         logger.debug("Building history OpenAI format")
 
