@@ -22,6 +22,7 @@ from PythonClasses.Game.UserMessage import UserMessage
 
 from PythonClasses.LLM.LLM import LLM
 from PythonClasses.LLM.LLMModel import LLMModel, total_tokens
+from PythonClasses.Game.Speech import LLMChunker
 from PythonClasses.Game.CompleteJson import CompleteJson
 
 
@@ -42,7 +43,8 @@ class Game:
         self.state = Game.START
         self.game_name = game_name
         self.dev = False
-        # self.audio = LLMStreamProcessor(game_name)
+        self.audio = LLMChunker(game_name)
+        self.audio_file = None
 
         self.llm_model = LLMModel()
         
@@ -220,6 +222,7 @@ class Game:
             Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-4-32k-0613"],
             Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-3.5-turbo-0613"],
             Game.GAMES[game_name].llm_model.last_turn_tokens["gpt-3.5-turbo-16k-0613"],
+            Game._(game_name).audio_file,
         ]
     
     def undo(game_name: str):
@@ -426,6 +429,8 @@ class Game:
 
                 from PythonClasses.Game.FileManager import FileManager
                 FileManager.save_history(game_name, game_name)
+
+                Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(Game._last_display(game_name)[1])
 
                 if new_day:
                     logger.info("Starting a new day")

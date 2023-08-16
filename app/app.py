@@ -52,8 +52,7 @@ story_render_array = [
     game_gpt_4_32_json,
     game_gpt_3_5_turbo_json,
     game_gpt_3_5_turbo_16_json,
-
-    # audio_box,
+    audio_box,
 ]
 
 story_interface_array = [

@@ -2,4 +2,4 @@ openai
 gradio
 loguru
 tiktoken
-aioboto3
+boto3
