@@ -102,7 +102,8 @@ class LLMChunker:
 
     def _to_ssml(self, text):
         system_message = """You convert the user message from plaintext to SSML.
-                    Do not respond stating what you are doing, simply do."""
+If a line starts with "--->", it is an action line. Interpret action lines to the best of your ability.
+Do not respond by stating what you are doing, simply do."""
         return LLM.oneshot(system_message=system_message, user_message=text, model="gpt-3.5")
 
     def _to_audio(self, text):
