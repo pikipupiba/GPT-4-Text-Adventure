@@ -267,7 +267,7 @@ class Game:
         else:
             dice_string = ""
 
-        if
+        
 
         complete_user_message = f'{message}\n{dice_string}'
         if "gpt-3" in model:
