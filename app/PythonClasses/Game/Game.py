@@ -474,9 +474,9 @@ class Game:
 
             except Exception as e:
                 Game._last_display(game_name)[0] = f"Try again! Encountered an exception: {e}"
-                Game._last_display(game_name)[1] = ""
-                Game._last_raw(game_name)[0] = ""
-                Game._last_raw(game_name)[1] = ""
+                Game._last_display(game_name)[1] = None
+                Game._last_raw(game_name)[0] = None
+                Game._last_raw(game_name)[1] = None
                 new_day = False
 
 
