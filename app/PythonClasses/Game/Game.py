@@ -477,6 +477,7 @@ class Game:
                 Game._last_display(game_name)[1] = ""
                 Game._last_raw(game_name)[0] = ""
                 Game._last_raw(game_name)[1] = ""
+                new_day = False
 
 
         Game._(game_name).state = Game.AWAITING_USER
