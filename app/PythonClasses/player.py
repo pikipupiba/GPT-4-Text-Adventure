@@ -17,7 +17,7 @@
 # 12. Countdown timer bar + allow everyone to answer + average actions :) :) :)
 # 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
-
+import os
 import gradio as gr
 from PythonClasses.Game.FileManager import FileManager
 
@@ -120,7 +120,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 )
 
                 audio_box = gr.Audio(
-                    # value=None,
+                    value=os.path.join(FileManager.DATA_FOLDER, "intro.mp3"),
                     label="Audio",
                     type="numpy",
                     scale=3,

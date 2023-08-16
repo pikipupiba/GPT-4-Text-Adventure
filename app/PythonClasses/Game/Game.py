@@ -300,6 +300,9 @@ class Game:
             "execution": {},
         }
 
+        if "Try again! Encountered an exception:" in Game._last_display(game_name)[0]:
+            Game.undo(game_name)
+
         if (Game._num_turns(game_name) == 0) or ((Game._last_raw(game_name)[1] is not None) and (len(Game._last_raw(game_name)[1]) > 0)):
             Game._history(game_name).append(Turn(new_turn_json))
 
@@ -320,7 +323,7 @@ class Game:
         Game._(game_name).state = Game.PREDICTING
         new_day_counter = 0
 
-        while(new_day and new_day_counter < 2):
+        while(new_day and new_day_counter < 3):
             new_day_counter += 1
             new_day = False
                 
