@@ -1,5 +1,5 @@
-openai
-gradio
+openai==0.28
+gradio==3.48.0
 loguru
 tiktoken
 boto3

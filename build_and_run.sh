@@ -104,9 +104,9 @@ if docker build -t "$IMAGE_NAME" .; then
   echo "Running new container..."
 
   # Run the container, mapping port 8000 inside the container to port 8000 on the host
+  # --mount type=bind,source=/home/ubuntu/game_data,target=/app/data/history \
   docker run \
     --name "$CONTAINER_NAME" \
-    --mount type=bind,source=/home/ubuntu/game_data,target=/app/data/history \
     -p "$PORT":"$PORT" \
     -e OPENAI_API_KEY="$OPENAI_API_KEY" \
     -e AZURE_OPENAI_API_KEY="$AZURE_OPENAI_API_KEY" \

@@ -151,7 +151,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
 
 
 # with gr.Tab(" "):
-    with gr.Box(visible=False) as config_tab:
+    with gr.Box(visible=True) as config_tab:
         with gr.Group():
             with gr.Row():
                 # SELECT MODEL
@@ -238,7 +238,7 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
 
 
 # with gr.Tab(" "):
-    with gr.Box(visible=False) as gm_tab:
+    with gr.Box(visible=True) as gm_tab:
 
         with gr.Group():
             # SAVE/LOAD SESSION
