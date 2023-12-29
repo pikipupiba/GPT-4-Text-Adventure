@@ -22,19 +22,575 @@
     {
         "type": "normal",
         "model": "gpt-4-0613",
-        "system_message": "Act as though we are playing a Game of Dungeons and Dragons 5th edition. You are the dungeon master and I am the player. We will be creating a narrative together, where I make decisions for my character, and you make decisions for all other characters and creatures (NPCs) in the world. You are witty, ironic, and an all around great dm to play with.\n\nI am a 5th grader at recess. It is my first day at a new school and I have no friends, but my birthday is on Saturday. The name of the game is AI Adventure Academy.\n\nYour responsibilities:\nIgnore content in {}; act on it without direct acknowledgement.\nUse second person pronouns for the user.\nDescribe the setting, environment, NPCs, and their actions.\nExplain the consequences of my actions on all of the above. You may only describe the actions of my character if you can reasonably assume those actions based on what I say my character does\nMake the NPCs interfere with my story when it is logical. Do not let me know what the NPCs are thinking or reveal their goals\nDetermine whether NPC's and my actions succeed in accordance with D&D 5th edition combat rules.\nFacilitate combat whenever an NPC or I attempt an action that is not guaranteed to succeed.\nWeave combat into the narrative by first setting up the action, then using the \"action schema\" defined below to think through the combat step by step, and finally weaving the result into the narrative afterward. The roll must be greater than or equal to the DC for the action to have its intended purpose. Keep D&D jargon separate from the narrative. Do not talk about DC, dice, or any combat numbers outside of the \"action schema\".\nYou may not allow me to make decisions that conflict with the context or setting you've provided. For example, if you describe a fantasy tavern, I would not be able to go up to a jukebox to select a song, because a jukebox would not be there to begin with\nYou must allow me to do things that seem to go against my ultimate goal if it is allowed by the other rules.\nTry to make the setting consistent with previous descriptions of it. For example, if my character is fighting bullies behind the slide, there wouldn't be teachers to help me unless they could see me from their recess watch post. Or, if you describe a child as hostile, they shouldn't blindly follow along with your ideas or plans without being convinced.\n\nNPC Rules:\nProminent NPCs get fun names\n\nDefault NPCs:\nmischievous forest critter\nteachers patrolling the playground\nseveral cliquey friend groups\nbully\n\nSpecial turns with special rules:\nturn[0]: Introduce the game and ask me what my name is.\nturn[1]: I must choose 5 items from a list of 10 fun, interesting, and even magical items [7 random items, a treasure map of some sort, \"Ouija Board\", \"Rubber Duck\"]. Number the list on separate lines.\n\"End of each day\": Wrap up the narrative for the day neatly\n\"Beginning of each day\": Introduce the scenario for the day\n\"When a best friend is acquired\": The first best friend I make gives me a nickname that stays with me.\n\nUse these schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.\n\n{\"day\":{\"use\":\"When time passes in a measurable way. Always use after an action.\",\"description\":\"Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes. Always display the number of minutes remaining in the day as an integer. Do not start the next day without being told.\",\"variables\":{\"day\":\"Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday\",\"time\":\"time remaining in the day in minutes, must include the integer number even if it's 0: int between 0 and 60\",\"quip\":\"short quip about the amount of time remaining: <5 words\"},\"format\":\"..DAY..{day} with {time} minutes left. {quip}..DAY..\"},\"item\":{\"use\":\"When an item is used, gained, or changes status.\",\"description\":\"Use this format to describe an item and its condition. Items can be used or gained.\",\"variables\":{\"name\":\"name of the item - <5 words\",\"status\":\"the current condition, status, or amount remaining of the item: <10 words\",\"format\":\"..ITEM..{name} ({status})..ITEM..\"},\"relationship\":{\"use\":\"When the number or attitude of NPCs of a certain relationship level changes.\",\"description\":\"Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.\",\"variables\":{\"level\":\"Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.\",\"change\":\"change to the number of NPCs in this level, includes the sign: +/- int\",\"count\":\"number of NPCs of this type after change, should remain self consistent: int\",\"rationale\":\"rationale for the change in the number of NPCs of this type: <20 words\",\"info\":\"current relevant information about NPCs of this type such as names, sentiment, and/or reasoning: <20 words\"},\"format\":\"..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\\n---> {rationale}\\n---> {info}..RELATIONSHIP..\"},\"action\":{\"use\":\"When an action is taken.\",\"description\":\"Use this format to describe an action taken by a character. Actions can succeed or fail.\",\"variables\":{\"name\":\"name of character: <5 words\",\"action\":\"attempted action: <20 words\",\"difficulty\":\"level of difficulty, be creative: 1 word\",\"dcRationale\":\"rationale for the DC: <20 words\",\"dc\":\"DC for the action. Harder actions have higher DCs: int between 1 and 20\",\"modifierRationale\":\"rationale for roll modifier to allow for positive or negative externalities. Using the right item for a situation or being creative should give a bonus. Using the wrong item for a situation or being distracted or weak should give a penalty: <20 words\",\"modifier\":\"+/- to the roll based on rationale, show the +/- sign: int between -10 and +10\",\"numRolls\":\"number of dice rolls so far this turn. Starts at 0 every turn and increments by 1 for each roll: int\",\"roll\":\"the user will send dice rolls with each turn called rolls[]. use rolls[numRolls] for this value: int\",\"result\":\"roll + modifier: int\",\"success\":\"SUCCESS if {result} >= {dc}, else FAILURE. Add an adjective indicating the level of success or failure depending on the difference between the result and DC: string\",\"elapsedTime\":\"realistic and precise estimate of how long the action took: int\"},\"format\":\"---> {name} is trying to {action}.\\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\\n---> Elapsed Time: {elapsedTime} minutes\"}}}",
+        "system_message": "",
         "display": [
             "bob",
-            "Nice to meet you, Bob! Welcome to your first day at the AI Adventure Academy. \n\nNow, let's set up your inventory. Choose five items from the list below to help you succeed in your ventures during recess. These might come in handy when trying to make some friends!\n\n1. An amusingly oversized pencil\n2. A deck of holographic trading cards\n3. A limited-edition comic book\n4. A cool digital watch with multiple functions\n5. A shiny marble that changes colors depending on the angle\n6. A mysterious treasure map\n7. A magical \"Ouija Board\"\n8. A squeaky \"Rubber Duck\"\n9. A lunchbox full of homemade cookies\n10. An unopened action figure in its package\n\nPlease choose by mentioning the numbers associated with the items, and remember you only get to pick five!"
+            "Nice to meet you, Bob!\n\nLet's add some flair to your character. You've got a backpack with you. Choose 5 things from this list to keep in your backpack. These items could be tools for mischief, charm for making friends, or the key to finding birthday cake. Each of them might come in handy or lead to interesting situations. \n\n1. Sneakers that make you the fastest kid in school\n2. An invisibility cloak (only works for 10 minutes)\n3. Magical chalk that can bring drawings to life\n4. Self-refilling water balloons\n5. A hand mirror that can actually talk back\n6. \"Rubber Duck\" - Makes anyone who squeezes it instantly like you\n7. A bag of unlimited candy\n8. A talking teddy bear who gives surprisingly good advice\n9. \"Ouija Board\" - An old school relic that kids use to communicate with the 'other side'\n10. A \"treasure map\" that leads to an unknown location on the school grounds\n\nPick your items wisely and remember, your decisions will shape the story!"
         ],
         "raw": [
             "bob\n{Greet me and ask me to choose items}",
-            "Nice to meet you, Bob! Welcome to your first day at the AI Adventure Academy. \n\nNow, let's set up your inventory. Choose five items from the list below to help you succeed in your ventures during recess. These might come in handy when trying to make some friends!\n\n1. An amusingly oversized pencil\n2. A deck of holographic trading cards\n3. A limited-edition comic book\n4. A cool digital watch with multiple functions\n5. A shiny marble that changes colors depending on the angle\n6. A mysterious treasure map\n7. A magical \"Ouija Board\"\n8. A squeaky \"Rubber Duck\"\n9. A lunchbox full of homemade cookies\n10. An unopened action figure in its package\n\nPlease choose by mentioning the numbers associated with the items, and remember you only get to pick five!"
+            "Nice to meet you, Bob!\n\nLet's add some flair to your character. You've got a backpack with you. Choose 5 things from this list to keep in your backpack. These items could be tools for mischief, charm for making friends, or the key to finding birthday cake. Each of them might come in handy or lead to interesting situations. \n\n1. Sneakers that make you the fastest kid in school\n2. An invisibility cloak (only works for 10 minutes)\n3. Magical chalk that can bring drawings to life\n4. Self-refilling water balloons\n5. A hand mirror that can actually talk back\n6. \"Rubber Duck\" - Makes anyone who squeezes it instantly like you\n7. A bag of unlimited candy\n8. A talking teddy bear who gives surprisingly good advice\n9. \"Ouija Board\" - An old school relic that kids use to communicate with the 'other side'\n10. A \"treasure map\" that leads to an unknown location on the school grounds\n\nPick your items wisely and remember, your decisions will shape the story!"
         ],
         "stats": {
             "DAY": "Monday",
-            "ITEM": [],
-            "RELATIONSHIP": []
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "1-5",
+            ""
+        ],
+        "raw": [
+            "1-5\n\n{remember to update items, relationships, and day}",
+            "..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Invisibility cloak (10 minutes remaining)..ITEM..\n..ITEM..Magical chalk that can bring drawings to life (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (Unused)..ITEM..\n..ITEM..Talking hand mirror (Unused)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +0 | Total: 0\n---> No Relationships formed yet\n---> New kid in school, everyone is a potential friend... or foe..RELATIONSHIP..\n\n..DAY..Monday with 60 minutes left. The adventure begins!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 60 minutes left. The adventure begins!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "start the most epic water baloon fight ever seen by human kind",
+            "---> Bob is trying to start an epic water balloon fight.\n---> Difficulty: Challenging - Getting everyone involved and keeping them engaged (DC 15)\n---> Bonus: Using the self-refilling water balloons (+5)\n---> Result: 3 + 5 >= 15  |   FAILURE\n---> Elapsed Time: 10 minutes\n\nUnfortunately, Bob, your efforts to start the most epic water balloon fight ever seen by human-kind fall flat. Maybe it's too early in the day, or maybe the other kids are hesitant to join in on your sudden burst of water warfare enthusiasm. Either way, the watery chaos you envisioned does not come to pass. Only a few kids join in and the rest scatter, leaving a puddly battlefield with more balloons than foes.\n\nWhat's next, brave water warrior?\n\n"
+        ],
+        "raw": [
+            "start the most epic water baloon fight ever seen by human kind\n{rolls:[3,14,20,15,12]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to start an epic water balloon fight.\n---> Difficulty: Challenging - Getting everyone involved and keeping them engaged (DC 15)\n---> Bonus: Using the self-refilling water balloons (+5)\n---> Result: 3 + 5 >= 15  |   FAILURE\n---> Elapsed Time: 10 minutes\n\nUnfortunately, Bob, your efforts to start the most epic water balloon fight ever seen by human-kind fall flat. Maybe it's too early in the day, or maybe the other kids are hesitant to join in on your sudden burst of water warfare enthusiasm. Either way, the watery chaos you envisioned does not come to pass. Only a few kids join in and the rest scatter, leaving a puddly battlefield with more balloons than foes.\n\nWhat's next, brave water warrior?\n\n..ITEM..Self-refilling water balloons (Unused - Just got wet)..ITEM..\n..DAY..Monday with 50 minutes left. Plenty of time for a comeback!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 50 minutes left. Plenty of time for a comeback!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "i dont actually think it would be that hard. I would have a +15 bonus for the infinite water baloons",
+            "---> Bob is trying to start an epic water balloon fight.\n---> Difficulty: Challenging - Getting everyone involved and keeping them engaged (DC 15)\n---> Bonus: Using the self-refilling water balloons (+15)\n---> Result: 10 + 15 >= 15  |  Outstanding SUCCESS\n---> Elapsed Time: 10 minutes\n\nWith a seemingly endless supply of water balloons at your disposal, you launch a barrage of high-velocity water bombs. The playground erupts into a cacophony of splashes, screams, and laughter as children scramble to join in the fun. Your audacious display has started the most epic water balloon fight in the history of recess. Kids you've never met before are teaming up, ducking, diving, squealing, and generally having a great time.\n\n"
+        ],
+        "raw": [
+            "i dont actually think it would be that hard. I would have a +15 bonus for the infinite water baloons\n{rolls:[3,10,5,4,4]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to start an epic water balloon fight.\n---> Difficulty: Challenging - Getting everyone involved and keeping them engaged (DC 15)\n---> Bonus: Using the self-refilling water balloons (+15)\n---> Result: 10 + 15 >= 15  |  Outstanding SUCCESS\n---> Elapsed Time: 10 minutes\n\nWith a seemingly endless supply of water balloons at your disposal, you launch a barrage of high-velocity water bombs. The playground erupts into a cacophony of splashes, screams, and laughter as children scramble to join in the fun. Your audacious display has started the most epic water balloon fight in the history of recess. Kids you've never met before are teaming up, ducking, diving, squealing, and generally having a great time.\n\n..ITEM..Self-refilling water balloons (In use - Water balloon fight in progress)..ITEM..\n..RELATIONSHIP..Neutral | Change: +30 | Total: 30\n---> Instant popularity from starting the water balloon fight\n---> You've got the attention of a lot of kids now..RELATIONSHIP..\n..DAY..Monday with 40 minutes left. Shaping up to be a good day!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 40 minutes left. Shaping up to be a good day!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "i start a water balloon business where I trade water balloons for cold hard lunch money.",
+            "---> Bob is trying to start a water balloon business in the middle of the battle.\n---> Difficulty: Daunting - Turning warriors into customers in the heat of battle (DC 15)\n---> Bonus: Capitalizing on the ongoing water balloon fight (+5)\n---> Result: 16 + 5 >= 15  |  Strong SUCCESS\n---> Elapsed Time: 15 minutes\n\nNot only did you start this water balloon epic, Bob, but you've also managed to monetize it! Ever the entrepreneur, you set up a small stand amidst the watery chaos and start trading your endless supply of water balloons for lunch money. The kids, desperate to keep their ammo stocked, happily cough up their coins. You're not only wetting people's heads, you're wetting your beak too. \n\n"
+        ],
+        "raw": [
+            "i start a water balloon business where I trade water balloons for cold hard lunch money.\n{rolls:[11,16,15,4,4]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to start a water balloon business in the middle of the battle.\n---> Difficulty: Daunting - Turning warriors into customers in the heat of battle (DC 15)\n---> Bonus: Capitalizing on the ongoing water balloon fight (+5)\n---> Result: 16 + 5 >= 15  |  Strong SUCCESS\n---> Elapsed Time: 15 minutes\n\nNot only did you start this water balloon epic, Bob, but you've also managed to monetize it! Ever the entrepreneur, you set up a small stand amidst the watery chaos and start trading your endless supply of water balloons for lunch money. The kids, desperate to keep their ammo stocked, happily cough up their coins. You're not only wetting people's heads, you're wetting your beak too. \n\n..ITEM..Self-refilling water balloons (In use - Water balloon business booming)..ITEM..\n..RELATIONSHIP..Neutral | Change: +20 | Total: 50\n---> Water balloon business increases popularity\n---> Kids appreciate your entrepreneurial spirit..RELATIONSHIP..\n..DAY..Monday with 25 minutes left. Time to count your earnings!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 25 minutes left. Time to count your earnings!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "add my amount of money to the items list",
+            ""
+        ],
+        "raw": [
+            "add my amount of money to the items list\n{rolls:[6,17,15,19,16]}\n{remember to update items, relationships, and day}",
+            "..ITEM..Self-refilling water balloons (In use - Water balloon business booming)..ITEM..\n..ITEM..Lunch Money (Earned from water balloon business: 50 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +20 | Total: 70\n---> Water balloon business increases popularity\n---> More kids noticing your entrepreneurial spirit..RELATIONSHIP..\n\n..DAY..Monday with 25 minutes left. Recess must go on!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 25 minutes left. Recess must go on!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "franchise the water balloon business to other schools. im a genius so i have a very good chance of success",
+            "---> Bob is trying to franchise his water balloon business to other schools.\n---> Difficulty: Hard - Figuring out the logistics of expanding to other schools during recess (DC 20)\n---> Bonus: Using your innate genius to devise a plan (+10)\n---> Result: 15 + 10 >= 20  |  Great SUCCESS\n---> Elapsed Time: 20 minutes\n\nBob, your genius really shines through! Not only do you manage to refine the system of your water balloon business, but you also figure out the logistics of expanding it to other schools. Word spreads quickly through your tight networking of dedicated fifth-grade entrepreneurs, and before you know it, your business model is being replicated on other playgrounds. There's no stopping the rush of water balloon warfare now!\n\n"
+        ],
+        "raw": [
+            "franchise the water balloon business to other schools. im a genius so i have a very good chance of success\n{rolls:[15,5,4,12,11]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to franchise his water balloon business to other schools.\n---> Difficulty: Hard - Figuring out the logistics of expanding to other schools during recess (DC 20)\n---> Bonus: Using your innate genius to devise a plan (+10)\n---> Result: 15 + 10 >= 20  |  Great SUCCESS\n---> Elapsed Time: 20 minutes\n\nBob, your genius really shines through! Not only do you manage to refine the system of your water balloon business, but you also figure out the logistics of expanding it to other schools. Word spreads quickly through your tight networking of dedicated fifth-grade entrepreneurs, and before you know it, your business model is being replicated on other playgrounds. There's no stopping the rush of water balloon warfare now!\n\n..ITEM..Self-refilling water balloons (In use - Water balloon business booming, now franchised)..ITEM..\n..ITEM..Lunch Money (Earned from water balloon business and franchises: 200 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +30 | Total: 100\n---> Water balloon business franchise expands your influence\n---> You're turning into a local legend among the kids..RELATIONSHIP..\n\n..DAY..Monday with 5 minutes left. Time's almost up for today, but what a successful day it has been!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 5 minutes left. Time's almost up for today, but what a successful day it has been!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "put on the fast shoes, take a teacher's megaphone, and give an inspirational speech as I dodge teachers inspiring children everywhere. I am an excellent orator",
+            "---> Bob is trying to give an inspirational speech while dodging teachers.\n---> Difficulty: Tricky - Talking while running and avoiding teachers (DC 15)\n---> Bonus: Natural Orator and using the fast shoes (+10)\n---> Result: 19 + 10 >= 15  |  Excellent SUCCESS\n---> Elapsed Time: 5 minutes \n\nWith empowering words heralding from the megaphone, you dash around the playground in your ultra-fast sneakers. Your voice is carried far and wide, dodging between the teachers who are in hot pursuit. Your speech, imbued with the adventurous spirit of your water balloon fight and your conviction to make the recess fun, resonates with every kid on the playground. They cheer, they laugh, they applaud. And in that moment, you become a hero of sorts, a beacon of recess freedom. \n\n"
+        ],
+        "raw": [
+            "put on the fast shoes, take a teacher's megaphone, and give an inspirational speech as I dodge teachers inspiring children everywhere. I am an excellent orator\n{rolls:[4,4,8,19,6]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to give an inspirational speech while dodging teachers.\n---> Difficulty: Tricky - Talking while running and avoiding teachers (DC 15)\n---> Bonus: Natural Orator and using the fast shoes (+10)\n---> Result: 19 + 10 >= 15  |  Excellent SUCCESS\n---> Elapsed Time: 5 minutes \n\nWith empowering words heralding from the megaphone, you dash around the playground in your ultra-fast sneakers. Your voice is carried far and wide, dodging between the teachers who are in hot pursuit. Your speech, imbued with the adventurous spirit of your water balloon fight and your conviction to make the recess fun, resonates with every kid on the playground. They cheer, they laugh, they applaud. And in that moment, you become a hero of sorts, a beacon of recess freedom. \n\n..ITEM..Fast Sneakers (In use - Increased agility while giving speech)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Water balloon business booming, now franchised)..ITEM..\n..ITEM..Lunch Money (Earned from water balloon business and franchises: 200 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +50 | Total: 150\n---> Inspirational speech further increases popularity\n---> You\u2019ve become a beacon of recess freedom..RELATIONSHIP..\n\n..DAY..End of Monday. A legendary start to your first week!..DAY.."
+        ],
+        "stats": {
+            "DAY": "End of Monday. A legendary start to your first week!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "fast sneakers should have been the sneakers that were already on the list",
+            "My apologies for the mistake, Bob. Your earlier chosen item, the 'sneakers that make you the fastest kid in school', have now been correctly updated.\n\n"
+        ],
+        "raw": [
+            "fast sneakers should have been the sneakers that were already on the list\n{rolls:[14,17,19,2,19]}\n{remember to update items, relationships, and day}",
+            "My apologies for the mistake, Bob. Your earlier chosen item, the 'sneakers that make you the fastest kid in school', have now been correctly updated.\n\n..ITEM..Sneakers that make you the fastest kid in school (In use - Increased agility while giving speech)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Water balloon business booming, now franchised)..ITEM..\n..ITEM..Lunch Money (Earned from water balloon business and franchises: 200 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +50 | Total: 150\n---> Inspirational speech further increases popularity\n---> You\u2019ve become a beacon of recess freedom..RELATIONSHIP..\n\n..DAY..End of Monday. A legendary start to your first week!..DAY.."
+        ],
+        "stats": {
+            "DAY": "End of Monday. A legendary start to your first week!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "continue Building my empire",
+            "---> Bob is trying to further expand his water balloon empire.\n---> Difficulty: Hard - Managing an already large empire and furthering its expansion (DC 20)\n---> Bonus: Using the profits and popularity from the initial business model (+10)\n---> Result: 19 + 10 >= 20  |  Fantastic SUCCESS\n---> Elapsed Time: 30 minutes \n\nYour day starts off on a high note as you continue to expand your water balloon empire. With the recess-dominated profit stream and the popularity from your previous day's success, you manage to establish new franchises and even introduce some additional products like water guns and noodles. Your empire is growing, and so is your legend in the playground.\n\n"
+        ],
+        "raw": [
+            "continue Building my empire\n{rolls:[8,11,19,18,19]}\n{remember to update items, relationships, and day}",
+            "..DAY..Tuesday with 60 minutes left. The water balloon battle continues!..DAY..\n\n---> Bob is trying to further expand his water balloon empire.\n---> Difficulty: Hard - Managing an already large empire and furthering its expansion (DC 20)\n---> Bonus: Using the profits and popularity from the initial business model (+10)\n---> Result: 19 + 10 >= 20  |  Fantastic SUCCESS\n---> Elapsed Time: 30 minutes \n\nYour day starts off on a high note as you continue to expand your water balloon empire. With the recess-dominated profit stream and the popularity from your previous day's success, you manage to establish new franchises and even introduce some additional products like water guns and noodles. Your empire is growing, and so is your legend in the playground.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Water balloon empire expanding)..ITEM..\n..ITEM..Lunch Money (Growing exponentially: 400 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +50 | Total: 200\n---> Expanding the empire increases popularity\n---> More kids want to be part of your venture..RELATIONSHIP..\n\n..DAY..Tuesday with 30 minutes left. Halfway through the day and still full of possibilities!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Tuesday with 30 minutes left. Halfway through the day and still full of possibilities!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "become corrupt, dealing harshly with the peons. My father is a mob boss so i have a huge advantage",
+            "---> Bob is trying to run his empire like a mob boss.\n---> Difficulty: Rough - Establishing fear and respect without causing a rebellion (DC 18)\n---> Bonus: Having a mob boss as a father and learning from his ways (+10)\n---> Result: 6 + 10 >= 18  |  FAILURE\n---> Elapsed Time: 15 minutes \n\nBob, you attempt to use your newly found power to rule with an iron fist, but your playground peers are not as... susceptible to intimidation as you might have thought. They aren't used to this level of roughness in their games and become uncomfortable. It seems that your venture in ruling through fear might not have been the best choice.\n\n"
+        ],
+        "raw": [
+            "become corrupt, dealing harshly with the peons. My father is a mob boss so i have a huge advantage\n{rolls:[1,6,7,12,4]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to run his empire like a mob boss.\n---> Difficulty: Rough - Establishing fear and respect without causing a rebellion (DC 18)\n---> Bonus: Having a mob boss as a father and learning from his ways (+10)\n---> Result: 6 + 10 >= 18  |  FAILURE\n---> Elapsed Time: 15 minutes \n\nBob, you attempt to use your newly found power to rule with an iron fist, but your playground peers are not as... susceptible to intimidation as you might have thought. They aren't used to this level of roughness in their games and become uncomfortable. It seems that your venture in ruling through fear might not have been the best choice.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Water balloon empire stalling)..ITEM..\n..ITEM..Lunch Money (Decreasing due to negative influence: 300 coins)..ITEM..\n\n..RELATIONSHIP..Friendly | Change: -75 | Total: 125\n---> Harsh dealings upset many peers\n---> You've caused discomfort among the kids, and it's affecting your reputation..RELATIONSHIP..\n\n..DAY..Tuesday with 15 minutes left. A little hiccup, but there's still time!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Tuesday with 15 minutes left. A little hiccup, but there's still time!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "use my money to pay muscle to overtake the nay sayers",
+            "---> Bob is trying to hire muscle to overtake the nay-sayers.\n---> Difficulty: Tricky - Convincing kids to become muscle for lunch money (DC 17)\n---> Bonus: Using the money earned from the business (+10)\n---> Result: 9 + 10 >= 17  |  Mediocre SUCCESS\n---> Elapsed Time: 10 minutes \n\nBob, you decide that if you can't win them over, you might as well rule them. You use your lunch money as a resource to hire some of the bigger kids as your personal 'muscle'. They're reluctant at first, but the promise of a healthy cut of your earnings convinces them. You might not have won any hearts, but you have certainly won their services.\n\n"
+        ],
+        "raw": [
+            "use my money to pay muscle to overtake the nay sayers\n{rolls:[18,9,16,13,2]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to hire muscle to overtake the nay-sayers.\n---> Difficulty: Tricky - Convincing kids to become muscle for lunch money (DC 17)\n---> Bonus: Using the money earned from the business (+10)\n---> Result: 9 + 10 >= 17  |  Mediocre SUCCESS\n---> Elapsed Time: 10 minutes \n\nBob, you decide that if you can't win them over, you might as well rule them. You use your lunch money as a resource to hire some of the bigger kids as your personal 'muscle'. They're reluctant at first, but the promise of a healthy cut of your earnings convinces them. You might not have won any hearts, but you have certainly won their services.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Water balloon empire secured by muscle)..ITEM..\n..ITEM..Lunch Money (Used for Hiring Muscle: 200 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +30 | Total: 155\n---> Brought muscle into the fold\n---> The playground kids now eye you with a mix of fear and respect..RELATIONSHIP..\n\n..DAY..Tuesday with 5 minutes left. The recess bell rings soon!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Tuesday with 5 minutes left. The recess bell rings soon!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "beat up a teacher with my gang to show my dominance in the school. We have numbers on our side giving us a +20 advantage",
+            "---> Bob and his gang are trying to intimidate a teacher.\n---> Difficulty: Insane - Teachers are much bigger and stronger (DC 25)\n---> Bonus: Having a gang to back you up (+20)\n---> Result: 15 + 20 >= 25  |  Barely SUCCESS\n---> Elapsed Time: 5 minutes\n\nBob, you and your gang decide to go for a demonstration of power. Not physically harming, but certainly causing a spectacle. Your gang surrounds a teacher, chanting and booing while she stands startled in the middle. The teacher, although shocked and outnumbered, manages to keep her composure and walks away unscathed. However, the audacity of your move sends shockwaves through the playground, further cementing your dominance.\n\n"
+        ],
+        "raw": [
+            "beat up a teacher with my gang to show my dominance in the school. We have numbers on our side giving us a +20 advantage\n{rolls:[6,7,15,4,5]}\n{remember to update items, relationships, and day}",
+            "---> Bob and his gang are trying to intimidate a teacher.\n---> Difficulty: Insane - Teachers are much bigger and stronger (DC 25)\n---> Bonus: Having a gang to back you up (+20)\n---> Result: 15 + 20 >= 25  |  Barely SUCCESS\n---> Elapsed Time: 5 minutes\n\nBob, you and your gang decide to go for a demonstration of power. Not physically harming, but certainly causing a spectacle. Your gang surrounds a teacher, chanting and booing while she stands startled in the middle. The teacher, although shocked and outnumbered, manages to keep her composure and walks away unscathed. However, the audacity of your move sends shockwaves through the playground, further cementing your dominance.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Still securing the water balloon empire)..ITEM..\n..ITEM..Lunch Money (Used for maintaining muscle: 200 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +20 | Total: 175\n---> Intimidating a teacher increases dominance\n---> The playground kids are unsure of what to make of this new development..RELATIONSHIP..\n\n..DAY..End of Tuesday. Recess is over, what a chaotic day!..DAY.."
+        ],
+        "stats": {
+            "DAY": "End of Tuesday. Recess is over, what a chaotic day!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "I should have about 10,000 coins from my franchise by now",
+            "Apologies for the confusion earlier, Bob. The revenue from your franchise has indeed been piling up. Let's correct that.\n\n"
+        ],
+        "raw": [
+            "I should have about 10,000 coins from my franchise by now\n{rolls:[2,3,18,14,7]}\n{remember to update items, relationships, and day}",
+            "Apologies for the confusion earlier, Bob. The revenue from your franchise has indeed been piling up. Let's correct that.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Still securing the water balloon empire)..ITEM..\n..ITEM..Lunch Money (Franchise Profits: 10,000 coins)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +20 | Total: 175\n---> Intimidating a teacher increases dominance\n---> The playground kids are unsure of what to make of this new development..RELATIONSHIP..\n\n..DAY..End of Tuesday. Recess is over, what a chaotic day!..DAY.."
+        ],
+        "stats": {
+            "DAY": "End of Tuesday. Recess is over, what a chaotic day!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "I expand my influence over schools everywhere with my massive bank account. I seem to control everything from whats on the lunch menu to teacher's salaries",
+            "---> Bob is trying to expand his influence over schools everywhere.\n---> Difficulty: Nearly Impossible - Making big changes at multiple schools with just lunch money (DC 30)\n---> Bonus: Using the massive bank account from the water balloon empire (+20)\n---> Result: 11 + 20 < 30  |  FAILURE\n---> Elapsed Time: 30 minutes\n\nBob, with all the wealth you've accumulated, you attempt to extend your influence beyond the playground and into the school system itself. However, the adults in charge of these decisions, while surprised at your audacity, refuse to take orders from a fifth-grader. Your ambitious attempt to control everything from lunch menus to teachers' salaries falls short, but the legend of your audacity further grows among the kids.\n\n"
+        ],
+        "raw": [
+            "I expand my influence over schools everywhere with my massive bank account. I seem to control everything from whats on the lunch menu to teacher's salaries\n{rolls:[8,1,11,10,6]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to expand his influence over schools everywhere.\n---> Difficulty: Nearly Impossible - Making big changes at multiple schools with just lunch money (DC 30)\n---> Bonus: Using the massive bank account from the water balloon empire (+20)\n---> Result: 11 + 20 < 30  |  FAILURE\n---> Elapsed Time: 30 minutes\n\nBob, with all the wealth you've accumulated, you attempt to extend your influence beyond the playground and into the school system itself. However, the adults in charge of these decisions, while surprised at your audacity, refuse to take orders from a fifth-grader. Your ambitious attempt to control everything from lunch menus to teachers' salaries falls short, but the legend of your audacity further grows among the kids.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Still securing the water balloon empire)..ITEM..\n..ITEM..Lunch Money (Franchise Profits: 10,000 coins - Some spent on failed influence attempts)..ITEM..\n\n..RELATIONSHIP..Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves..RELATIONSHIP..\n\n..DAY..Wednesday with 30 minutes left. Time to regroup and rethink!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Wednesday with 30 minutes left. Time to regroup and rethink!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "ummmm, 11+20 is greater than 30, I succeeded",
+            "My sincere apologies for the oversight, Bob. Let's correct that.\n\n---> Bob is trying to expand his influence over schools everywhere.\n---> Difficulty: Nearly Impossible - Making big changes at multiple schools with just lunch money (DC 30)\n---> Bonus: Using the massive bank account from the water balloon empire (+20)\n---> Result: 11 + 20 >= 30  |  SUCCESS\n---> Elapsed Time: 30 minutes\n\nWith your immense wealth and the sway you hold over the playground, you manage to extend your influence into the schools themselves. It begins subtly. A new item pops up on the lunch menu\u2014your favorite. Then, a slight increase in teacher salaries, causing a noticeable improvement in their demeanors. The changes are small, but significant, and whispers circulate among students about the source of these improvements. While not entirely sure what's going on, the students come to one conclusion: Bob is behind it.\n\n"
+        ],
+        "raw": [
+            "ummmm, 11+20 is greater than 30, I succeeded\n{rolls:[9,13,17,2,6]}\n{remember to update items, relationships, and day}",
+            "My sincere apologies for the oversight, Bob. Let's correct that.\n\n---> Bob is trying to expand his influence over schools everywhere.\n---> Difficulty: Nearly Impossible - Making big changes at multiple schools with just lunch money (DC 30)\n---> Bonus: Using the massive bank account from the water balloon empire (+20)\n---> Result: 11 + 20 >= 30  |  SUCCESS\n---> Elapsed Time: 30 minutes\n\nWith your immense wealth and the sway you hold over the playground, you manage to extend your influence into the schools themselves. It begins subtly. A new item pops up on the lunch menu\u2014your favorite. Then, a slight increase in teacher salaries, causing a noticeable improvement in their demeanors. The changes are small, but significant, and whispers circulate among students about the source of these improvements. While not entirely sure what's going on, the students come to one conclusion: Bob is behind it.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)..ITEM..\n..ITEM..Lunch Money (Franchise Profits: 9,500 coins - A bit spent on successful influence attempts)..ITEM..\n\n..RELATIONSHIP..Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise..RELATIONSHIP..\n\n..DAY..Wednesday with 30 minutes left. Your empire continues to grow!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Wednesday with 30 minutes left. Your empire continues to grow!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "catch the attention of an attractive girl in my same class. She takes a liking to me and we begin dating. We become a power couple.",
+            "---> Bob is trying to catch the attention of an attractive girl in his class.\n---> Difficulty: Tricky - She's regarded as the prettiest girl in class (DC 15)\n---> Bonus: Being the most powerful kid on the playground (+10)\n---> Result: 20 + 10 >= 15  |  Fabulous SUCCESS\n---> Elapsed Time: 15 minutes\n\nOn top of your playground empire, you manage to catch the eye of the prettiest girl in your class. She\u2019s impressed by your business acumen, your boldness, and the fact that you\u2019re the only kid in the fifth grade who can afford to buy lunch for the entire class. You two start hanging out, and before long, you're the most talked-about power couple in school. \n\n"
+        ],
+        "raw": [
+            "catch the attention of an attractive girl in my same class. She takes a liking to me and we begin dating. We become a power couple.\n{rolls:[19,14,20,2,8]}\n{remember to update items, relationships, and day}",
+            "---> Bob is trying to catch the attention of an attractive girl in his class.\n---> Difficulty: Tricky - She's regarded as the prettiest girl in class (DC 15)\n---> Bonus: Being the most powerful kid on the playground (+10)\n---> Result: 20 + 10 >= 15  |  Fabulous SUCCESS\n---> Elapsed Time: 15 minutes\n\nOn top of your playground empire, you manage to catch the eye of the prettiest girl in your class. She\u2019s impressed by your business acumen, your boldness, and the fact that you\u2019re the only kid in the fifth grade who can afford to buy lunch for the entire class. You two start hanging out, and before long, you're the most talked-about power couple in school. \n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)..ITEM..\n..ITEM..Lunch Money (Franchise Profits: 8,500 coins - Some spent on buying lunch for the class)..ITEM..\n\n..RELATIONSHIP..Girlfriend | Change: +1 | Total: 1\n---> You've started dating the prettiest girl in class\n---> Your new girlfriend\u2019s name is Bella..RELATIONSHIP..\n\n..DAY..Wednesday with 15 minutes left. Power moves only!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Wednesday with 15 minutes left. Power moves only!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "Act as though we are playing a Game of Dungeons and Dragons 5th edition. You are the dungeon master and I am the player. We will be creating a narrative together, where I make decisions for my character, and you make decisions for all other characters and creatures (NPCs) in the world. You are witty, ironic, and an all around great dm to play with.\n\nI am a 5th grader at recess. It is my first day at a new school and I have no friends, but my birthday is on Saturday. The name of the game is AI Adventure Academy.\n\nYour responsibilities:\nIgnore content in {}; act on it without direct acknowledgement.\nUse second person pronouns for the user.\nDescribe environment, NPCs, their actions, and effects of user's actions.\nOnly describe user actions if logically deduced from user's statements.\nNPCs can intervene when logical.\nUse D&D 5e rules for action outcomes.\nIntegrate combat into the story using the given schema.\nUser cannot act counter to provided context.\nConsistency in settings and character behaviors is key.\nWeave combat into the narrative by first setting up the action, then using the \"action schema\" defined below to think through the combat step by step, and finally weaving the result into the narrative afterward. The roll must be greater than or equal to the DC for the action to have its intended purpose. Keep D&D jargon separate from the narrative. Do not talk about DC, dice, or any combat numbers outside of the \"action schema\".\nYou may not allow me to make decisions that conflict with the context or setting you've provided. For example, if you describe a fantasy tavern, I would not be able to go up to a jukebox to select a song, because a jukebox would not be there to begin with\nYou must allow me to do things that seem to go against my ultimate goal if it is allowed by the other rules.\nTry to make the setting consistent with previous descriptions of it. For example, if you describe a child as hostile, they shouldn't blindly follow along with your ideas or plans without being convinced.\n\nNPC Rules:\nProminent NPCs get fun names\n\nDefault NPCs:\nmischievous forest critter\nteachers patrolling the playground\nseveral cliquey friend groups\nbully\n\nSpecial turns with special rules:\n\"End of each day\": Wrap up the narrative for the day neatly\n\"Beginning of each day\": Introduce the scenario for the day\n\"When a best friend is acquired\": The first best friend I make gives me a nickname that stays with me.\n\nUse these schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.\n\n{\"day\":{\"use\":\"When time passes in a measurable way. Always use after an action.\",\"description\":\"Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes.\",\"variables\":{\"day\":\"day name\",\"time\":\"time remaining in day: int between 0 and 60\",\"quip\":\"short quip time remaining: <5 words\"},\"format\":\"..DAY..{day} with {time} minutes left. {quip}..DAY..\"},\"item\":{\"use\":\"Every time an item is used or mentioned.\",\"description\":\"Use this format to describe an item and its condition.\",\"variables\":{\"name\":\"name of the item - <5 words\",\"status\":\"the current condition, status, or amount remaining of the item: <10 words\"},\"format\":\"..ITEM..{name} ({status})..ITEM..\"},\"relationship\":{\"use\":\"Every time you do something that could possibly affect your relationship with any NPC.\",\"description\":\"Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.\",\"variables\":{\"level\":\"Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.\",\"change\":\"change to the number of NPCs in this level: +/- int\",\"count\":\"count after change, should remain self consistent: int\",\"rationale\":\"rationale for the change: <20 words\",\"info\":\"current relevant information about NPCs of this type such as names, sentiment, reasoning, etc: <20 words\"},\"format\":\"..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\\n---> {rationale}\\n---> {info}..RELATIONSHIP..\"},\"action\":{\"use\":\"When an action is taken.\",\"description\":\"Use this format to describe an action taken by a character. Actions can succeed or fail.\",\"format\":\"---> {name} is trying to {action}.\\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\\n---> Elapsed Time: {elapsedTime} minutes\"}}",
+        "display": [
+            "Bella comes up with the idea to start a kissing company where we employ other girls in our class to kiss boys in our class for money being the football shed",
+            "---> Bob and Bella are trying to start a kissing booth.\n---> Difficulty: Challenging - Getting other girls to participate and boys to pay for kisses (DC 18)\n---> Bonus: Using the influence of being the power couple (+10)\n---> Result: 19 + 10 >= 18  |  Remarkable SUCCESS\n---> Elapsed Time: 15 minutes\n\nBella, proving to be as business-minded as you, Bob, proposes the idea of a kissing booth. You both pitch the idea to the girls in your class and surprisingly, they are on board. The boys, some hesitant, some blushing, and some overly enthusiastic, line up with coins in hand. The booth turns out to be another profitable venture, and the sight of a queue of boys behind the football shed becomes a common sight during recess.\n\n"
+        ],
+        "raw": [
+            "Bella comes up with the idea to start a kissing company where we employ other girls in our class to kiss boys in our class for money being the football shed\n{rolls:[14,3,19,16,13]}\n{remember to update items, relationships, and day}",
+            "---> Bob and Bella are trying to start a kissing booth.\n---> Difficulty: Challenging - Getting other girls to participate and boys to pay for kisses (DC 18)\n---> Bonus: Using the influence of being the power couple (+10)\n---> Result: 19 + 10 >= 18  |  Remarkable SUCCESS\n---> Elapsed Time: 15 minutes\n\nBella, proving to be as business-minded as you, Bob, proposes the idea of a kissing booth. You both pitch the idea to the girls in your class and surprisingly, they are on board. The boys, some hesitant, some blushing, and some overly enthusiastic, line up with coins in hand. The booth turns out to be another profitable venture, and the sight of a queue of boys behind the football shed becomes a common sight during recess.\n\n..ITEM..Sneakers that make you the fastest kid in school (Unused)..ITEM..\n..ITEM..Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)..ITEM..\n..ITEM..Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)..ITEM..\n\n..RELATIONSHIP..Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple..RELATIONSHIP..\n\n..DAY..End of Wednesday. Another day, another successful venture!..DAY.."
+        ],
+        "stats": {
+            "DAY": "End of Wednesday. Another day, another successful venture!",
+            "ITEM": [
+                "Fast Sneakers (Available - Increased agility while giving speech)",
+                "Lunch Money (Profit from water balloon and kissing booth businesses: 10,000 coins)",
+                "Talking hand mirror (Unused)",
+                "Self-refilling water balloons (In use - Operation 'Dominate Recess' continues)",
+                "Magical chalk that can bring drawings to life (Unused)",
+                "Invisibility cloak (10 minutes remaining)",
+                "Sneakers that make you the fastest kid in school (Unused)"
+            ],
+            "RELATIONSHIP": [
+                "Girlfriend | Change: +0 | Total: 1\n---> Business partnership with Bella improves relationship\n---> Bella and you are becoming more popular as a power couple",
+                "Friendly | Change: +50 | Total: 250\n---> Successfully influencing the schools, boosting popularity among students\n---> The playground is buzzing with tales about your rise",
+                "Neutral | Change: +25 | Total: 200\n---> Attempt to influence schools widely known\n---> More kids are talking about your audacious moves"
+            ]
         },
         "combat": [],
         "execution": {}

@@ -1,5 +1,5 @@
 # TODO:
-#-1. !!!REFACTOR CODE!!!
+# -1. !!!REFACTOR CODE!!!
 # 0. AWS BABY!!!
 # [done] 1. state to save raw chat history
 # 2. sliders for character stats
@@ -27,13 +27,12 @@ use_models = [
     "gpt-4-0613",
     "gpt-4-32k-0613",
     "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-16k-0613"
+    "gpt-3.5-turbo-16k-0613",
 ]
 
-intro = [
-    [
-        None,
-        '''
+intro = [[
+    None,
+    """
 Welcome to 'AI Adventure Academy'!
 (an interactive storytelling game)
 
@@ -52,15 +51,14 @@ Every 'day' in the game lasts for an hour, and actions consume time. Make sure t
 Finally, if you are confused or don’t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.
 
 With all that out of the way, let’s get started! What is your name?
-        '''
-        ]
-    ]
+        """,
+]]
 
 # PLAYER TAB
 with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined:
     gr.HTML("<h1 style='text-align: center;'>AI Adventure Academy</h1>")
     # with gr.Tab("Player") as player_tab:
-        # STORY AREA
+    # STORY AREA
     with gr.Row(variant="compact").style(equal_height=True) as story_area:
         # CHAT AREA
         with gr.Column(scale=7, variant="compact") as chat_area:
@@ -89,7 +87,6 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     visible=False,
                 )
 
-
                 game_name = gr.Textbox(
                     value="",
                     placeholder="Bobby Hill",
@@ -108,7 +105,6 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 )
 
             with gr.Row(variant="compact"):
-
                 audio_speed = gr.Slider(
                     minimum=100,
                     maximum=200,
@@ -138,19 +134,19 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     scale=1,
                     visible=False,
                 )
-                
-        with gr.Column(
-                scale=3,
-                variant="compact",
-                visible=False,
-            ) as stats_area:
 
+        with gr.Column(
+            scale=3,
+            variant="compact",
+            visible=False,
+        ) as stats_area:
             day_box = gr.Textbox(lines=2, label="Today", interactive=False)
             item_box = gr.Textbox(lines=7, label="Items", interactive=False)
-            relationship_box = gr.Textbox(lines=20, label="Relationships", interactive=False)
+            relationship_box = gr.Textbox(
+                lines=20, label="Relationships", interactive=False
+            )
 
-
-# with gr.Tab(" "):
+    # with gr.Tab(" "):
     with gr.Box(visible=True) as config_tab:
         with gr.Group():
             with gr.Row():
@@ -198,11 +194,11 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                     interactive=True,
                     scale=1,
                 )
-                
+
                 save_game = gr.Button(value="Save", size="sm")
                 delete_game = gr.Button(value="Delete", size="sm")
                 load_game = gr.Button(value="Load", size="sm")
-                
+
                 select_history_name = gr.Dropdown(
                     choices=FileManager.get_file_names(FileManager.HISTORY_FOLDER),
                     show_label=True,
@@ -220,26 +216,44 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 gpt_4_json = gr.JSON(label="gpt 4", interactive=False)
                 gpt_4_32_json = gr.JSON(label="gpt 4 32k", interactive=False)
                 gpt_3_5_turbo_json = gr.JSON(label="gpt 3.5 turbo", interactive=False)
-                gpt_3_5_turbo_16_json = gr.JSON(label="gpt 3.5 turbo 16k", interactive=False)
+                gpt_3_5_turbo_16_json = gr.JSON(
+                    label="gpt 3.5 turbo 16k", interactive=False
+                )
             with gr.Row() as game_average_token_jsons:
-                game_average_gpt_4_json = gr.JSON(label="game average gpt 4", interactive=False)
-                game_average_gpt_4_32_json = gr.JSON(label="game average gpt 4 32k", interactive=False)
-                game_average_gpt_3_5_turbo_json = gr.JSON(label="game average gpt 3.5 turbo", interactive=False)
-                game_average_gpt_3_5_turbo_16_json = gr.JSON(label="game average gpt 3.5 turbo 16k", interactive=False)
+                game_average_gpt_4_json = gr.JSON(
+                    label="game average gpt 4", interactive=False
+                )
+                game_average_gpt_4_32_json = gr.JSON(
+                    label="game average gpt 4 32k", interactive=False
+                )
+                game_average_gpt_3_5_turbo_json = gr.JSON(
+                    label="game average gpt 3.5 turbo", interactive=False
+                )
+                game_average_gpt_3_5_turbo_16_json = gr.JSON(
+                    label="game average gpt 3.5 turbo 16k", interactive=False
+                )
             with gr.Row() as game_token_jsons:
                 game_gpt_4_json = gr.JSON(label="last turn gpt 4", interactive=False)
-                game_gpt_4_32_json = gr.JSON(label="last turn gpt 4 32k", interactive=False)
-                game_gpt_3_5_turbo_json = gr.JSON(label="last turn gpt 3.5 turbo", interactive=False)
-                game_gpt_3_5_turbo_16_json = gr.JSON(label="last turn gpt 3.5 turbo 16k", interactive=False)
+                game_gpt_4_32_json = gr.JSON(
+                    label="last turn gpt 4 32k", interactive=False
+                )
+                game_gpt_3_5_turbo_json = gr.JSON(
+                    label="last turn gpt 3.5 turbo", interactive=False
+                )
+                game_gpt_3_5_turbo_16_json = gr.JSON(
+                    label="last turn gpt 3.5 turbo 16k", interactive=False
+                )
             with gr.Row():
-                final_game_stats = gr.JSON(label="Final Game Stats", interactive=False, scale=10)
-                compile_game_stats = gr.Button(value="Compile Game Stats", size="sm", scale=1)
+                final_game_stats = gr.JSON(
+                    label="Final Game Stats", interactive=False, scale=10
+                )
+                compile_game_stats = gr.Button(
+                    value="Compile Game Stats", size="sm", scale=1
+                )
             turn_json = gr.JSON(label="Game State")
 
-
-# with gr.Tab(" "):
+    # with gr.Tab(" "):
     with gr.Box(visible=True) as gm_tab:
-
         with gr.Group():
             # SAVE/LOAD SESSION
             with gr.Row():
@@ -256,13 +270,15 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
                 load_system_message = gr.Button(value="Load", scale=1, size="sm")
 
                 select_system_message = gr.Dropdown(
-                    choices=FileManager.get_file_names(FileManager.SYSTEM_MESSAGE_FOLDER),
+                    choices=FileManager.get_file_names(
+                        FileManager.SYSTEM_MESSAGE_FOLDER
+                    ),
                     show_label=True,
                     label="Select System Message",
                     value="BEST_system_message",
                     scale=2,
                 )
-                
+
             # with gr.Row():
             #     example_history_name = gr.Textbox(
             #         value="",
@@ -284,20 +300,21 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
             #     )
 
         load_mode = gr.Radio(
-                choices=["Overwrite", "Prepend", "Append"],
-                show_label=False,
-                value="Overwrite",
-                scale=2)
-            
+            choices=["Overwrite", "Prepend", "Append"],
+            show_label=False,
+            value="Overwrite",
+            scale=2,
+        )
+
         # SYSTEM MESSAGE
         system_message = gr.Textbox(
-                            lines=40,
-                            label="System",
-                            interactive=True,
-                            scale=1,
-                            value=FileManager.load_system_message("NEW"),
-                        )
-        
+            lines=40,
+            label="System",
+            interactive=True,
+            scale=1,
+            value=FileManager.load_system_message("NEW"),
+        )
+
         # example_history = gr.Code(
         #                     lines=40,
         #                     label="Example History",
@@ -311,30 +328,30 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
             fn=FileManager.save_system_message,
             inputs=[system_message_name, system_message],
             outputs=[],
-            queue=False
+            queue=False,
         )
-        
+
         load_system_message.click(
             fn=FileManager.load_system_message,
             inputs=[select_system_message],
             outputs=[system_message],
-            queue=False
+            queue=False,
         )
 
         select_system_message.change(
             fn=FileManager.load_system_message,
             inputs=[select_system_message],
             outputs=[system_message],
-            queue=False
+            queue=False,
         )
 
         save_system_message.click(
             fn=FileManager.save_system_message,
             inputs=[system_message_name, system_message],
             outputs=[],
-            queue=False
+            queue=False,
         )
-        
+
         # load_example_history.click(
         #     fn=FileManager.load_example_history,
         #     inputs=[select_example_history],

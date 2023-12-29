@@ -1,4 +1,4 @@
-import os,json
+import os, json
 from typing import List, Tuple
 from loguru import logger
 from PythonClasses.LLM.LLMModel import LLMModel
@@ -13,7 +13,7 @@ import openai
 # assert api_key is not None and len(api_key) > 0, "API Key not set in environment"
 
 # openai.api_key = api_key
-if os.getenv('AZURE_OPENAI_API_KEY') is not None:
+if os.getenv("AZURE_OPENAI_API_KEY") is not None:
     logger.info("Using Azure OpenAI API")
     use_azure = True
 else:
@@ -23,20 +23,24 @@ else:
 if use_azure:
     openai.api_type = "azure"
     openai.api_version = "2023-05-15"
-    openai.api_key = os.getenv('AZURE_OPENAI_API_KEY')
-    openai.api_base = os.getenv('AZURE_OPENAI_API_BASE')
+    openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
+    openai.api_base = os.getenv("AZURE_OPENAI_API_BASE")
     model_deployment_name_35 = "Q3-dpt-meeting-35"
     model_deployment_name_4 = "Q3-dpt-meeting-4"
 else:
-    openai.api_key = os.getenv('OPENAI_API_KEY')
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 
-assert openai.api_key is not None and len(openai.api_key) > 0, "API Key not set in environment"
+assert (
+    openai.api_key is not None and len(openai.api_key) > 0
+), "API Key not set in environment"
 
 history_length = 50
+
 
 def set_history_length(new_history_length: int):
     global history_length
     history_length = new_history_length
+
 
 # `LLM` is a class that provides methods for interacting with the OpenAI API. It includes
 # methods for generating responses in a chat-like format (`oneshot`), building the history array
@@ -44,15 +48,14 @@ def set_history_length(new_history_length: int):
 # the required OpenAI format (`build_openai_system_message`), predicting the next response based
 # on the model, system message, and history (`predict`), and summarizing text (`summarize`).
 class LLM:
-
     def __init__(self):
         tokens = {
-            "gpt-3.5-turbo-0613" : {
+            "gpt-3.5-turbo-0613": {
                 "prompt": 0,
                 "completion": 0,
                 "tpm": 0,
             },
-            "gpt-3.5-turbo-16k-0613" : {
+            "gpt-3.5-turbo-16k-0613": {
                 "prompt": 0,
                 "completion": 0,
                 "tpm": 0,
@@ -76,11 +79,11 @@ class LLM:
             elif "gpt-3.5" in model:
                 model = model_deployment_name_35
         chat = openai.ChatCompletion.create(
-            engine = model,
+            engine=model,
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message},
-            ]
+            ],
         )
         return chat.choices[0].message["content"]
 
@@ -103,7 +106,8 @@ class LLM:
                 )
 
         logger.trace(
-            f"Successfully built history OpenAI format | Found {len(history_openai_format)} turns"
+            "Successfully built history OpenAI format | Found"
+            f" {len(history_openai_format)} turns"
         )
 
         return history_openai_format
@@ -124,10 +128,11 @@ class LLM:
 
         return system_message_openai_format
 
-
-
     def predict(
-        model: str = None, system_message: str = None, raw_history: List[any] = None, llm_model: LLMModel = None
+        model: str = None,
+        system_message: str = None,
+        raw_history: List[any] = None,
+        llm_model: LLMModel = None,
     ):
         if model == None:
             logger.warning("No model provided. Returning [].")
@@ -181,7 +186,6 @@ class LLM:
                 stream=True,
                 max_tokens=1000,
             )
-
 
     def summarize(self, text: str = None, model: str = "gpt-4"):
         if text == None:

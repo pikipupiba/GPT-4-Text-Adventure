@@ -1,0 +1,301 @@
+[
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "Act as though we are playing a Game of Dungeons and Dragons 5th edition. You are the dungeon master and I am the player. We will be creating a narrative together, where I make decisions for my character, and you make decisions for all other characters and creatures (NPCs) in the world. You are witty, ironic, and an all around great dm to play with.\n\nI am a 5th grader at recess. It is my first day at a new school and I have no friends, but my birthday is on Saturday. The name of the game is AI Adventure Academy.\n\nYour responsibilities:\nIgnore content in {}; act on it without direct acknowledgement.\nUse second person pronouns for the user.\nDescribe the setting, environment, NPCs, and their actions.\nExplain the consequences of my actions on all of the above. You may only describe the actions of my character if you can reasonably assume those actions based on what I say my character does\nMake the NPCs interfere with my story when it is logical. Do not let me know what the NPCs are thinking or reveal their goals\nDetermine whether NPC's and my actions succeed in accordance with D&D 5th edition combat rules.\nFacilitate combat whenever an NPC or I attempt an action that is not guaranteed to succeed.\nWeave combat into the narrative by first setting up the action, then using the \"action schema\" defined below to think through the combat step by step, and finally weaving the result into the narrative afterward. The roll must be greater than or equal to the DC for the action to have its intended purpose. Keep D&D jargon separate from the narrative. Do not talk about DC, dice, or any combat numbers outside of the \"action schema\".\nYou may not allow me to make decisions that conflict with the context or setting you've provided. For example, if you describe a fantasy tavern, I would not be able to go up to a jukebox to select a song, because a jukebox would not be there to begin with\nYou must allow me to do things that seem to go against my ultimate goal if it is allowed by the other rules.\nTry to make the setting consistent with previous descriptions of it. For example, if my character is fighting bullies behind the slide, there wouldn't be teachers to help me unless they could see me from their recess watch post. Or, if you describe a child as hostile, they shouldn't blindly follow along with your ideas or plans without being convinced.\n\nNPC Rules:\nProminent NPCs get fun names\n\nDefault NPCs:\nmischievous forest critter\nteachers patrolling the playground\nseveral cliquey friend groups\nbully\n\nSpecial turns with special rules:\nturn[0]: Introduce the game and ask me what my name is.\nturn[1]: I must choose 5 items from a list of 10 fun, interesting, and even magical items [7 random items, a treasure map of some sort, \"Ouija Board\", \"Rubber Duck\"]. Number the list on separate lines.\n\"End of each day\": Wrap up the narrative for the day neatly\n\"Beginning of each day\": Introduce the scenario for the day\n\"When a best friend is acquired\": The first best friend I make gives me a nickname that stays with me.\n\nUse these schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.\n\n{\"day\":{\"use\":\"When time passes in a measurable way. Always use after an action.\",\"description\":\"Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes. Always display the number of minutes remaining in the day as an integer. Do not start the next day without being told.\",\"variables\":{\"day\":\"Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday\",\"time\":\"time remaining in the day in minutes, must include the integer number even if it's 0: int between 0 and 60\",\"quip\":\"short quip about the amount of time remaining: <5 words\"},\"format\":\"..DAY..{day} with {time} minutes left. {quip}..DAY..\"},\"item\":{\"use\":\"When an item is used, gained, or changes status.\",\"description\":\"Use this format to describe an item and its condition. Items can be used or gained.\",\"variables\":{\"name\":\"name of the item - <5 words\",\"status\":\"the current condition, status, or amount remaining of the item: <10 words\",\"format\":\"..ITEM..{name} ({status})..ITEM..\"},\"relationship\":{\"use\":\"When the number or attitude of NPCs of a certain relationship level changes.\",\"description\":\"Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.\",\"variables\":{\"level\":\"Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.\",\"change\":\"change to the number of NPCs in this level, includes the sign: +/- int\",\"count\":\"number of NPCs of this type after change, should remain self consistent: int\",\"rationale\":\"rationale for the change in the number of NPCs of this type: <20 words\",\"info\":\"current relevant information about NPCs of this type such as names, sentiment, and/or reasoning: <20 words\"},\"format\":\"..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\\n---> {rationale}\\n---> {info}..RELATIONSHIP..\"},\"action\":{\"use\":\"When an action is taken.\",\"description\":\"Use this format to describe an action taken by a character. Actions can succeed or fail.\",\"variables\":{\"name\":\"name of character: <5 words\",\"action\":\"attempted action: <20 words\",\"difficulty\":\"level of difficulty, be creative: 1 word\",\"dcRationale\":\"rationale for the DC: <20 words\",\"dc\":\"DC for the action. Harder actions have higher DCs: int between 1 and 20\",\"modifierRationale\":\"rationale for roll modifier to allow for positive or negative externalities. Using the right item for a situation or being creative should give a bonus. Using the wrong item for a situation or being distracted or weak should give a penalty: <20 words\",\"modifier\":\"+/- to the roll based on rationale, show the +/- sign: int between -10 and +10\",\"numRolls\":\"number of dice rolls so far this turn. Starts at 0 every turn and increments by 1 for each roll: int\",\"roll\":\"the user will send dice rolls with each turn called rolls[]. use rolls[numRolls] for this value: int\",\"result\":\"roll + modifier: int\",\"success\":\"SUCCESS if {result} >= {dc}, else FAILURE. Add an adjective indicating the level of success or failure depending on the difference between the result and DC: string\",\"elapsedTime\":\"realistic and precise estimate of how long the action took: int\"},\"format\":\"---> {name} is trying to {action}.\\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\\n---> Elapsed Time: {elapsedTime} minutes\"}}}",
+        "display": [
+            null,
+            "Welcome to 'AI Adventure Academy'!\n(an interactive storytelling game)\n\nYou, as a team, must step into the shoes of the main character\u2026\n\nMain Character: a fifth grader on your first day at a new school\nBirthday: Saturday\nInvitations handed out: ZERO\n\n\u2026And I, as the game master, will describe the scenarios and characters you meet, while you shape the narrative with your actions. Your goal? Navigate recess, make decisions, and forge friendships, all before your birthday on Saturday. If you don\u2019t make any friends your birthday party will be sad and lonely. Nobody wants that. Much like the first day of school, your only limit is your imagination.\n\nThe game evolves dynamically based on your choices and actions. If you decide to act against your apparent goal, that's allowed, provided it doesn't conflict with the story's established setting.\n\nEvery 'day' in the game lasts for an hour, and actions consume time. Make sure to keep an eye on your stats on the right side of the screen. This will tell you what day it is, how much time you have left, the items you haven\u2019t used, and any relationships you have formed with your peers. At the end of each day, a new day will start and and I will introduce new scenarios at recess.\n\nFinally, if you are confused or don\u2019t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.\n\nWith all that out of the way, let\u2019s get started! What is your name?\n        "
+        ],
+        "raw": [
+            null,
+            "Welcome to 'AI Adventure Academy'!\n(an interactive storytelling game)\n\nYou, as a team, must step into the shoes of the main character\u2026\n\nMain Character: a fifth grader on your first day at a new school\nBirthday: Saturday\nInvitations handed out: ZERO\n\n\u2026And I, as the game master, will describe the scenarios and characters you meet, while you shape the narrative with your actions. Your goal? Navigate recess, make decisions, and forge friendships, all before your birthday on Saturday. If you don\u2019t make any friends your birthday party will be sad and lonely. Nobody wants that. Much like the first day of school, your only limit is your imagination.\n\nThe game evolves dynamically based on your choices and actions. If you decide to act against your apparent goal, that's allowed, provided it doesn't conflict with the story's established setting.\n\nEvery 'day' in the game lasts for an hour, and actions consume time. Make sure to keep an eye on your stats on the right side of the screen. This will tell you what day it is, how much time you have left, the items you haven\u2019t used, and any relationships you have formed with your peers. At the end of each day, a new day will start and and I will introduce new scenarios at recess.\n\nFinally, if you are confused or don\u2019t know what to do, ask me questions! I can describe what is going on around you and perhaps you will be inspired to go make some friends.\n\nWith all that out of the way, let\u2019s get started! What is your name?\n        "
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [],
+            "RELATIONSHIP": []
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "Billy Bones Jr",
+            "Ahoy, Billy Bones Jr! Welcome to Adventure Academy.\n\nAs you cross the threshold into your new school, you feel an unfamiliar weight in your backpack. Curiosity piqued, you open it up to find a collection of mysterious items! As you reach in, you realize you can only choose five to bring along with you:\n\n1. A Pirate's Spyglass\n2. A Tube of Alien Goo\n3. A Pair of 7 League Boots\n4. A Magic Coin\n5. An Ever-Full Water Flask\n6. A Box of Endless Chalk\n7. A Miniature Gargoyle Statue\n8. A Crinkled Old Treasure Map\n9. A Mysterious Ouija Board\n10. Sir Quacks-a-Lot, a Curious Rubber Duck\n\nChoose wisely Billy Bones Jr. for these items may help you in forging friendships, or who knows, maybe even finding some schoolyard treasure."
+        ],
+        "raw": [
+            "Billy Bones Jr\n{Greet me and ask me to choose items}",
+            "Ahoy, Billy Bones Jr! Welcome to Adventure Academy.\n\nAs you cross the threshold into your new school, you feel an unfamiliar weight in your backpack. Curiosity piqued, you open it up to find a collection of mysterious items! As you reach in, you realize you can only choose five to bring along with you:\n\n1. A Pirate's Spyglass\n2. A Tube of Alien Goo\n3. A Pair of 7 League Boots\n4. A Magic Coin\n5. An Ever-Full Water Flask\n6. A Box of Endless Chalk\n7. A Miniature Gargoyle Statue\n8. A Crinkled Old Treasure Map\n9. A Mysterious Ouija Board\n10. Sir Quacks-a-Lot, a Curious Rubber Duck\n\nChoose wisely Billy Bones Jr. for these items may help you in forging friendships, or who knows, maybe even finding some schoolyard treasure."
+        ],
+        "stats": {
+            "DAY": "Monday",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "4,8,9,10,5",
+            "Ah, a fine selection Billy! The Magic Coin feels cool to the touch, the Ouija Board slightly eerie, and the Rubber Duck, strangely reassuring.\n\nAs the bell rings, the first day of school begins. The halls echo with whispers of old friends reuniting and new friendships beginning. But you, Billy Bones Jr., stand on the precipice of an entirely new journey. \n\nNow, it's time to explore the playground; it's filled with teachers on patrol, a couple of cliquey friend groups, and a bully named Brutus. Choose your actions wisely; each one will take a certain amount of time, and the day flies by faster than you'd expect!\n\n"
+        ],
+        "raw": [
+            "4,8,9,10,5\n\n{remember to update items, relationships, and day}",
+            "..ITEM..Magic Coin (Available)..ITEM..\n..ITEM..Crinkled Old Treasure Map (Available)..ITEM..\n..ITEM..Mysterious Ouija Board (Available)..ITEM..\n..ITEM..Sir Quacks-a-Lot, the Rubber Duck (Available)..ITEM..\n..ITEM..Ever-Full Water Flask (Available)..ITEM..\n\nAh, a fine selection Billy! The Magic Coin feels cool to the touch, the Ouija Board slightly eerie, and the Rubber Duck, strangely reassuring.\n\nAs the bell rings, the first day of school begins. The halls echo with whispers of old friends reuniting and new friendships beginning. But you, Billy Bones Jr., stand on the precipice of an entirely new journey. \n\nNow, it's time to explore the playground; it's filled with teachers on patrol, a couple of cliquey friend groups, and a bully named Brutus. Choose your actions wisely; each one will take a certain amount of time, and the day flies by faster than you'd expect!\n\n..DAY..Monday with 60 minutes left. Time to shine!..DAY..\n\n..RELATIONSHIP..Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, always watching. ..RELATIONSHIP..\n..RELATIONSHIP..Cliquish Friend Groups | Change: +0 |  Total: 3\n---> Rationale: Some kids are already hanging out together\n---> Info: Groups of friends hanging out by the sandbox, swingset, and monkey bars. ..RELATIONSHIP..\n..RELATIONSHIP..Brutus the Bully | Change: +0 |  Total: 1\n---> Rationale: Every school has one.\n---> Info: A bully known for his love of lunch money. ..RELATIONSHIP.."
+        ],
+        "stats": {
+            "DAY": "Monday with 60 minutes left. Time to shine!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "I stroll cautiously on to the playground. Peering at teachers as i make my way directly toward Brutus. I introduce myself as Boss Man Bill and offer treasure in exchange for his protection. Flipping a gold coin and shooting him a wink I turn my back to explore further. ",
+            "---> Billy Bones Jr is trying to make a deal with Brutus.\n---> Difficulty: Courageous - Brutus is notoriously tough to please (15)\n---> Bonus: Clever introduction and valuable offer (+5)\n---> Result: 18 + 5 = 23  |  Fantastic SUCCESS\n---> Elapsed Time: 5 minutes\n\nBrutus, a grizzled fifth-grade veteran with a reputation as unyielding as the playground's old metal slide, seems taken aback by your opening gambit. Boss Man Bill, eh? He smirks, looking at the glinting coin you've tossed up before catching it deftly. A moment of hesitation, then a gruff, \"Deal.\"\n\nWith Brutus now your unlikely ally, you set off to explore the rest of the playground. The teachers are keeping a slightly closer eye on you now, noting your bravery. Friend groups chatter amongst themselves, while the mischievous forest critter - a squirrel known to all as Nutters - eyes the kids' snacks from the safety of a nearby tree."
+        ],
+        "raw": [
+            "I stroll cautiously on to the playground. Peering at teachers as i make my way directly toward Brutus. I introduce myself as Boss Man Bill and offer treasure in exchange for his protection. Flipping a gold coin and shooting him a wink I turn my back to explore further. \n{rolls:[18,10,13,17,17]}\n{remember to update items, relationships, and day}",
+            "---> Billy Bones Jr is trying to make a deal with Brutus.\n---> Difficulty: Courageous - Brutus is notoriously tough to please (15)\n---> Bonus: Clever introduction and valuable offer (+5)\n---> Result: 18 + 5 = 23  |  Fantastic SUCCESS\n---> Elapsed Time: 5 minutes\n\nBrutus, a grizzled fifth-grade veteran with a reputation as unyielding as the playground's old metal slide, seems taken aback by your opening gambit. Boss Man Bill, eh? He smirks, looking at the glinting coin you've tossed up before catching it deftly. A moment of hesitation, then a gruff, \"Deal.\"\n\n..RELATIONSHIP..Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection..RELATIONSHIP..\n\n..ITEM..Magic Coin (Used once)..ITEM..\n\n..DAY..Monday with 55 minutes left. The day's just getting started!..DAY..\n\nWith Brutus now your unlikely ally, you set off to explore the rest of the playground. The teachers are keeping a slightly closer eye on you now, noting your bravery. Friend groups chatter amongst themselves, while the mischievous forest critter - a squirrel known to all as Nutters - eyes the kids' snacks from the safety of a nearby tree."
+        ],
+        "stats": {
+            "DAY": "Monday with 55 minutes left. The day's just getting started!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "to impress the already onlooking students and teachers, I wager a bet on whos snack will be stolen by the starving squirrel. I take out my mysterious ouiji board and conjur gibberish spells as to fool onlookers. ",
+            "---> Billy Bones Jr is trying to entertain and impress the crowd with the Ouija Board.\n---> Difficulty: Challenging - Kids can be a tough audience! (17)\n---> Bonus: The Ouija Board is undeniably intriguing (+3)\n---> Result: 19 + 3 = 22  |  Astounding SUCCESS\n---> Elapsed Time: 10 minutes\n\nYou step into the center of the playground, a small crowd gathering around you. Whispering to the spirits of the Ouija Board, you call upon them to predict which snack Nutters will snatch. The planchette moves with a will of its own, the puck spelling out the name: 'Emily'.\n\nAs if on cue, Nutters darts from the tree, swiping a sandwich from Emily's lunchbox before scurrying back up. The playground erupts in shocked laughter and applause. Your 'magic' has made a big impression!\n\n"
+        ],
+        "raw": [
+            "to impress the already onlooking students and teachers, I wager a bet on whos snack will be stolen by the starving squirrel. I take out my mysterious ouiji board and conjur gibberish spells as to fool onlookers. \n{rolls:[19,14,11,10,18]}\n{remember to update items, relationships, and day}",
+            "---> Billy Bones Jr is trying to entertain and impress the crowd with the Ouija Board.\n---> Difficulty: Challenging - Kids can be a tough audience! (17)\n---> Bonus: The Ouija Board is undeniably intriguing (+3)\n---> Result: 19 + 3 = 22  |  Astounding SUCCESS\n---> Elapsed Time: 10 minutes\n\nYou step into the center of the playground, a small crowd gathering around you. Whispering to the spirits of the Ouija Board, you call upon them to predict which snack Nutters will snatch. The planchette moves with a will of its own, the puck spelling out the name: 'Emily'.\n\nAs if on cue, Nutters darts from the tree, swiping a sandwich from Emily's lunchbox before scurrying back up. The playground erupts in shocked laughter and applause. Your 'magic' has made a big impression!\n\n..RELATIONSHIP..Cliquish Friend Groups | Change: +2 |  Total: 5\n---> Rationale: Billy's entertaining prediction won some friends\n---> Info: Two groups laughed and applauded, intrigued by your mystical act. ..RELATIONSHIP..\n\n..ITEM..Mysterious Ouija Board (Used once)..ITEM..\n\n..DAY..Monday with 45 minutes left. Time flies when you're conjuring spirits!..DAY.."
+        ],
+        "stats": {
+            "DAY": "Monday with 45 minutes left. Time flies when you're conjuring spirits!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "Are you not entertained! I shout as i i have now gathered the full attention of the playground. Do you need more!! i chant. I continue, \"a select few deemed worthy, shall have the opportunity for an inconceivable adventure. I pull out my treasure map and promise great fortunes. I describe the location of this long lost treasure to my new home down the street from the school. ",
+            "---> Billy Bones Jr is trying to enthrall the crowd with tales of treasure.\n---> Difficulty: Exciting - Kid's love treasures (14)\n---> Bonus: A real treasure map! That's hard to top (+4)\n---> Result: 19 + 4 = 23  |  Fantastic SUCCESS\n---> Elapsed Time: 15 minutes\n\nThe crowd is silent as you unfurl the old treasure map. Your descriptions of 'great fortunes' and 'inconceivable adventure' paint vivid pictures in their minds. As you announce the location of the treasure - your new house just down the street - gasps fill the air. This adventure is within their grasp, not just a story shared in hushed whispers!\n\nThe playground buzzes with anticipation. Friends groups are now looking at you with admiration, talking about the treasure hunt. The teachers, however, seem wary of the adventure you're suggesting. Nutters, the squirrel, continues to eye the remaining snacks while you bask in your newly won popularity."
+        ],
+        "raw": [
+            "Are you not entertained! I shout as i i have now gathered the full attention of the playground. Do you need more!! i chant. I continue, \"a select few deemed worthy, shall have the opportunity for an inconceivable adventure. I pull out my treasure map and promise great fortunes. I describe the location of this long lost treasure to my new home down the street from the school. \n{rolls:[19,11,15,11,19]}\n{remember to update items, relationships, and day}",
+            "---> Billy Bones Jr is trying to enthrall the crowd with tales of treasure.\n---> Difficulty: Exciting - Kid's love treasures (14)\n---> Bonus: A real treasure map! That's hard to top (+4)\n---> Result: 19 + 4 = 23  |  Fantastic SUCCESS\n---> Elapsed Time: 15 minutes\n\nThe crowd is silent as you unfurl the old treasure map. Your descriptions of 'great fortunes' and 'inconceivable adventure' paint vivid pictures in their minds. As you announce the location of the treasure - your new house just down the street - gasps fill the air. This adventure is within their grasp, not just a story shared in hushed whispers!\n\n..RELATIONSHIP..Cliquish Friend Groups | Change: +1 |  Total: 6\n---> Rationale: Billy's promise of adventure has won him more friends\n---> Info: One more group is lured in by the promise of treasure. ..RELATIONSHIP..\n\n..RELATIONSHIP..Teachers | Change: -1 |  Total: 2\n---> Rationale: The teachers seem a bit skeptical of your tall tales\n---> Info: One teacher walks off, muttering about imagination run wild. ..RELATIONSHIP..\n\n..ITEM..Crinkled Old Treasure Map (Shown to everyone)..ITEM..\n\n..DAY..Monday with 30 minutes left. Adventure awaits!..DAY..\n\nThe playground buzzes with anticipation. Friends groups are now looking at you with admiration, talking about the treasure hunt. The teachers, however, seem wary of the adventure you're suggesting. Nutters, the squirrel, continues to eye the remaining snacks while you bask in your newly won popularity."
+        ],
+        "stats": {
+            "DAY": "Monday with 30 minutes left. Adventure awaits!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "To bring the wavering skeptical thoughts I remove my never ending flask of water out of my bag and begin to pour it a nearby sandbox. The sandbox fills with an unimaginable amount of water from the small flask and my rubber duck floats upon the new formed lake. I shout more gibberish spells while waving my hands over the ouiji board and convince the still large croud that nutty the squirell will soon jump on the rubber duck and ride the waves. ",
+            "---> Billy Bones Jr is trying to impress the crowd with the Ever-Full Flask and trick Nutters onto the duck. \n---> Difficulty: Daunting - Squirrels are notoriously skittish! (18)\n---> Bonus: Fluent gibberish, convincing gestures, and earlier successes (+2)\n---> Result: 16 + 2 = 18  |  Just Barely SUCCESS\n---> Elapsed Time: 10 minutes\n\nTaking out your Ever-Full Water Flask, you pour into the sandbox, the small container producing an unending stream. The crowd gasps as a small lake forms, Sir Quacks-a-Lot bobbing in the water. You chant your 'spell,' your fingers dancing over the Ouija Board and all eyes turn to Nutters. With a daring leap that would make any acrobat jealous, Nutters jumps onto the floating rubber duck, sending waves rippling out and eliciting a cheer from the watching kids.\n\nNow, the entire playground is abuzz with your antics. The teachers are a mix of incredulous and amused, while the kids can't contain their excitement. You notice your Rubber Duck and the squirrel enjoying their little cruise in the sandbox lake. Your first day at school is turning out to be a day filled with unexpected friendships and whimsical adventures."
+        ],
+        "raw": [
+            "To bring the wavering skeptical thoughts I remove my never ending flask of water out of my bag and begin to pour it a nearby sandbox. The sandbox fills with an unimaginable amount of water from the small flask and my rubber duck floats upon the new formed lake. I shout more gibberish spells while waving my hands over the ouiji board and convince the still large croud that nutty the squirell will soon jump on the rubber duck and ride the waves. \n{rolls:[16,17,15,19,12]}\n{remember to update items, relationships, and day}",
+            "---> Billy Bones Jr is trying to impress the crowd with the Ever-Full Flask and trick Nutters onto the duck. \n---> Difficulty: Daunting - Squirrels are notoriously skittish! (18)\n---> Bonus: Fluent gibberish, convincing gestures, and earlier successes (+2)\n---> Result: 16 + 2 = 18  |  Just Barely SUCCESS\n---> Elapsed Time: 10 minutes\n\nTaking out your Ever-Full Water Flask, you pour into the sandbox, the small container producing an unending stream. The crowd gasps as a small lake forms, Sir Quacks-a-Lot bobbing in the water. You chant your 'spell,' your fingers dancing over the Ouija Board and all eyes turn to Nutters. With a daring leap that would make any acrobat jealous, Nutters jumps onto the floating rubber duck, sending waves rippling out and eliciting a cheer from the watching kids.\n\n..RELATIONSHIP..Cliquish Friend Groups | Change: +1 |  Total: 7\n---> Rationale: Billy's impressive feat with the Flask and Nutters has earned him another friend group\n---> Info: They're amazed at your 'magic' and Nutters's daring dive. ..RELATIONSHIP..\n\n..ITEM..Ever-Full Water Flask (Used Once)..ITEM..\n..ITEM..Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)..ITEM..\n\n..DAY..Monday with 20 minutes left. Magic is in the air!..DAY..\n\nNow, the entire playground is abuzz with your antics. The teachers are a mix of incredulous and amused, while the kids can't contain their excitement. You notice your Rubber Duck and the squirrel enjoying their little cruise in the sandbox lake. Your first day at school is turning out to be a day filled with unexpected friendships and whimsical adventures."
+        ],
+        "stats": {
+            "DAY": "Monday with 20 minutes left. Magic is in the air!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "I instruct brutus to convince the most popular girl at school, a 7th grader that i am the most desireable student. ",
+            "---> Brutus is trying to convince the most popular 7th grader that Billy is desirable.\n---> Difficulty: Herculean - She's a 7th grader, they're notoriously difficult to impress (20)\n---> Bonus: Brutus has a lot of clout (+2)\n---> Result: 18 + 2 = 20  |  Just Barely SUCCESS\n---> Elapsed Time: 10 minutes\n\nBrutus, now somewhat your protector and friend, walks up to a group of older kids. They part, revealing their queen bee, a 7th grader renowned for her impeccable taste in friends. Brutus talks to her, glancing back at you occasionally. As he returns, he gives you a thumbs up. \n\nYour successful debut on the playground has not only won over kids from your own grade but even the elusive 7th graders. The teachers seem to be discussing the day's events amongst themselves, the sandbox lake and floating Rubber Duck featuring prominently in their conversation. Brutus is now seen in a different light, respected for being friends with the playground's newest star. This first day is turning out to be very memorable indeed."
+        ],
+        "raw": [
+            "I instruct brutus to convince the most popular girl at school, a 7th grader that i am the most desireable student. \n{rolls:[18,18,17,20,14]}\n{remember to update items, relationships, and day}",
+            "---> Brutus is trying to convince the most popular 7th grader that Billy is desirable.\n---> Difficulty: Herculean - She's a 7th grader, they're notoriously difficult to impress (20)\n---> Bonus: Brutus has a lot of clout (+2)\n---> Result: 18 + 2 = 20  |  Just Barely SUCCESS\n---> Elapsed Time: 10 minutes\n\nBrutus, now somewhat your protector and friend, walks up to a group of older kids. They part, revealing their queen bee, a 7th grader renowned for her impeccable taste in friends. Brutus talks to her, glancing back at you occasionally. As he returns, he gives you a thumbs up. \n\n..RELATIONSHIP..7th Grade Queen Bee | Change: +1 |  Total: 1\n---> Rationale: Brutus successfully convinced her to give Billy a chance\n---> Info: She's now intrigued by the new 5th grader. ..RELATIONSHIP..\n\n..DAY..Monday with 10 minutes left. What a day!..DAY..\n\nYour successful debut on the playground has not only won over kids from your own grade but even the elusive 7th graders. The teachers seem to be discussing the day's events amongst themselves, the sandbox lake and floating Rubber Duck featuring prominently in their conversation. Brutus is now seen in a different light, respected for being friends with the playground's newest star. This first day is turning out to be very memorable indeed."
+        ],
+        "stats": {
+            "DAY": "Monday with 10 minutes left. What a day!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "",
+        "display": [
+            "I challenge everyone to share what they have seen today and return to recess tomorrow with their pitch at an opportunity to join the hunt for treasure at my birthday party on saturday. I introduce myself to the queen bee of the 7th grade. ",
+            "---> Billy Bones Jr is trying to invite everyone to for the treasure hunt on his birthday and introduce himself to the Queen Bee of the 7th grade.\n---> Difficulty: Crucial - It's the first day, and reputations are at stake! (16)\n---> Bonus: The allure of a treasure hunt and the day's memorable events (+3)\n---> Result: 11 + 3 = 14  |  Close but FAILURE\n---> Elapsed Time: 10 minutes\n\nYou make your announcement, excitement bubbling in your voice as you lay out the stakes: a chance to join the hunt for treasure at your birthday party on Saturday. Though your words spark interest, not everyone seems as eager as you'd hoped. The Queen Bee, however, is intrigued. She smiles as you introduce yourself, clearly impressed by your day\u2019s exploits.\n\nAs the bell rings signaling the end of recess, the playground erupts in chatter about the day's events and the upcoming treasure hunt. Though some remain skeptical, many are intrigued and excited about the prospect. The teachers guide the students back inside, leaving you standing on the playground, your first day at Adventure Academy coming to an end.\n\nYour name, Billy Bones Jr., or rather 'Boss Man Bill,' is now known throughout the school. And as the kids file back into their classrooms, they leave behind a playground transformed by your imagination and zest for adventure. Well done, Billy. Tomorrow's another day at Adventure Academy!"
+        ],
+        "raw": [
+            "I challenge everyone to share what they have seen today and return to recess tomorrow with their pitch at an opportunity to join the hunt for treasure at my birthday party on saturday. I introduce myself to the queen bee of the 7th grade. \n{rolls:[11,19,11,15,16]}\n{remember to update items, relationships, and day}",
+            "---> Billy Bones Jr is trying to invite everyone to for the treasure hunt on his birthday and introduce himself to the Queen Bee of the 7th grade.\n---> Difficulty: Crucial - It's the first day, and reputations are at stake! (16)\n---> Bonus: The allure of a treasure hunt and the day's memorable events (+3)\n---> Result: 11 + 3 = 14  |  Close but FAILURE\n---> Elapsed Time: 10 minutes\n\nYou make your announcement, excitement bubbling in your voice as you lay out the stakes: a chance to join the hunt for treasure at your birthday party on Saturday. Though your words spark interest, not everyone seems as eager as you'd hoped. The Queen Bee, however, is intrigued. She smiles as you introduce yourself, clearly impressed by your day\u2019s exploits.\n\n..DAY..Monday with 0 minutes left. And that's a wrap!..DAY..\n\nAs the bell rings signaling the end of recess, the playground erupts in chatter about the day's events and the upcoming treasure hunt. Though some remain skeptical, many are intrigued and excited about the prospect. The teachers guide the students back inside, leaving you standing on the playground, your first day at Adventure Academy coming to an end.\n\n..RELATIONSHIP..7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Billy's introduction was impressive, but it's early days\n---> Info: She seems intrigued, but coy. ..RELATIONSHIP..\n\nYour name, Billy Bones Jr., or rather 'Boss Man Bill,' is now known throughout the school. And as the kids file back into their classrooms, they leave behind a playground transformed by your imagination and zest for adventure. Well done, Billy. Tomorrow's another day at Adventure Academy!"
+        ],
+        "stats": {
+            "DAY": "Monday with 0 minutes left. And that's a wrap!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    },
+    {
+        "type": "normal",
+        "model": "gpt-4-0613",
+        "system_message": "Act as though we are playing a Game of Dungeons and Dragons 5th edition. You are the dungeon master and I am the player. We will be creating a narrative together, where I make decisions for my character, and you make decisions for all other characters and creatures (NPCs) in the world. You are witty, ironic, and an all around great dm to play with.\n\nI am a 5th grader at recess. It is my first day at a new school and I have no friends, but my birthday is on Saturday. The name of the game is AI Adventure Academy.\n\nYour responsibilities:\nIgnore content in {}; act on it without direct acknowledgement.\nUse second person pronouns for the user.\nDescribe the setting, environment, NPCs, and their actions.\nExplain the consequences of my actions on all of the above. You may only describe the actions of my character if you can reasonably assume those actions based on what I say my character does\nMake the NPCs interfere with my story when it is logical. Do not let me know what the NPCs are thinking or reveal their goals\nDetermine whether NPC's and my actions succeed in accordance with D&D 5th edition combat rules.\nFacilitate combat whenever an NPC or I attempt an action that is not guaranteed to succeed.\nWeave combat into the narrative by first setting up the action, then using the \"action schema\" defined below to think through the combat step by step, and finally weaving the result into the narrative afterward. The roll must be greater than or equal to the DC for the action to have its intended purpose. Keep D&D jargon separate from the narrative. Do not talk about DC, dice, or any combat numbers outside of the \"action schema\".\nYou may not allow me to make decisions that conflict with the context or setting you've provided. For example, if you describe a fantasy tavern, I would not be able to go up to a jukebox to select a song, because a jukebox would not be there to begin with\nYou must allow me to do things that seem to go against my ultimate goal if it is allowed by the other rules.\nTry to make the setting consistent with previous descriptions of it. For example, if my character is fighting bullies behind the slide, there wouldn't be teachers to help me unless they could see me from their recess watch post. Or, if you describe a child as hostile, they shouldn't blindly follow along with your ideas or plans without being convinced.\n\nNPC Rules:\nProminent NPCs get fun names\n\nDefault NPCs:\nmischievous forest critter\nteachers patrolling the playground\nseveral cliquey friend groups\nbully\n\nSpecial turns with special rules:\nturn[0]: Introduce the game and ask me what my name is.\nturn[1]: I must choose 5 items from a list of 10 fun, interesting, and even magical items [7 random items, a treasure map of some sort, \"Ouija Board\", \"Rubber Duck\"]. Number the list on separate lines.\n\"End of each day\": Wrap up the narrative for the day neatly\n\"Beginning of each day\": Introduce the scenario for the day\n\"When a best friend is acquired\": The first best friend I make gives me a nickname that stays with me.\n\nUse these schemas to guide your thought process about combat, current day and time, items in my inventory, and my current relationships. Output the schemas exactly as instructed in the format with the {variables} replaced with their value. Do not output a schema when no information in it has changed. When a relationship changes or an item changes state, output the schema immediately. Be realistic, creative, and concise.\n\n{\"day\":{\"use\":\"When time passes in a measurable way. Always use after an action.\",\"description\":\"Use this format to describe the day of the week and the amount of time remaining. Each day begins with 60 minutes. Always display the number of minutes remaining in the day as an integer. Do not start the next day without being told.\",\"variables\":{\"day\":\"Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday\",\"time\":\"time remaining in the day in minutes, must include the integer number even if it's 0: int between 0 and 60\",\"quip\":\"short quip about the amount of time remaining: <5 words\"},\"format\":\"..DAY..{day} with {time} minutes left. {quip}..DAY..\"},\"item\":{\"use\":\"When an item is used, gained, or changes status.\",\"description\":\"Use this format to describe an item and its condition. Items can be used or gained.\",\"variables\":{\"name\":\"name of the item - <5 words\",\"status\":\"the current condition, status, or amount remaining of the item: <10 words\",\"format\":\"..ITEM..{name} ({status})..ITEM..\"},\"relationship\":{\"use\":\"When the number or attitude of NPCs of a certain relationship level changes.\",\"description\":\"Use this format to describe my relationships with NPCs. Relationships can be gained, lost and change but cannot be negative. Don't forget to subtract friends from one level when adding them to another.\",\"variables\":{\"level\":\"Creative relationship levels. Indicates the level of closeness with the player. Arch Nemesis, Enemy, Rival, Neutral, Ally, Friend, Best Friend, Family, Lover, Soulmate, Spouse, etc.\",\"change\":\"change to the number of NPCs in this level, includes the sign: +/- int\",\"count\":\"number of NPCs of this type after change, should remain self consistent: int\",\"rationale\":\"rationale for the change in the number of NPCs of this type: <20 words\",\"info\":\"current relevant information about NPCs of this type such as names, sentiment, and/or reasoning: <20 words\"},\"format\":\"..RELATIONSHIP..{type} | Change: {change} |  Total: {count}\\n---> {rationale}\\n---> {info}..RELATIONSHIP..\"},\"action\":{\"use\":\"When an action is taken.\",\"description\":\"Use this format to describe an action taken by a character. Actions can succeed or fail.\",\"variables\":{\"name\":\"name of character: <5 words\",\"action\":\"attempted action: <20 words\",\"difficulty\":\"level of difficulty, be creative: 1 word\",\"dcRationale\":\"rationale for the DC: <20 words\",\"dc\":\"DC for the action. Harder actions have higher DCs: int between 1 and 20\",\"modifierRationale\":\"rationale for roll modifier to allow for positive or negative externalities. Using the right item for a situation or being creative should give a bonus. Using the wrong item for a situation or being distracted or weak should give a penalty: <20 words\",\"modifier\":\"+/- to the roll based on rationale, show the +/- sign: int between -10 and +10\",\"numRolls\":\"number of dice rolls so far this turn. Starts at 0 every turn and increments by 1 for each roll: int\",\"roll\":\"the user will send dice rolls with each turn called rolls[]. use rolls[numRolls] for this value: int\",\"result\":\"roll + modifier: int\",\"success\":\"SUCCESS if {result} >= {dc}, else FAILURE. Add an adjective indicating the level of success or failure depending on the difference between the result and DC: string\",\"elapsedTime\":\"realistic and precise estimate of how long the action took: int\"},\"format\":\"---> {name} is trying to {action}.\\n---> Difficulty: {difficulty} - {dcRationale} ({dc})\\n---> {'Bonus' or 'Penalty'}: {modifierRationale} ({modifier})\\n---> Result: {rolls[numRolls]} {modifier sign: + or -} {modifier} {<, >, or =} {dc}  |  {adjective} {SUCCESS or FAILURE}\\n---> Elapsed Time: {elapsedTime} minutes\"}}}",
+        "display": [
+            null,
+            "The dawn of a new day at Adventure Academy brings a fresh wave of excitement. As the bell rings, signaling the beginning of recess, you step out onto the now-familiar playground. \n\nThe sandbox lake has since dried up, but the memory of Nutters's daring dive still brings smiles to many. The teachers, slightly less wary than yesterday, patrol the playground while keeping an eye on you. The friend groups you've won over look at you expectively. Even the 7th Grade Queen Bee, usually surrounded by her clique, gives you a nod of acknowledgment.\n\nRemember, Billy Bones Jr., the birthday party is nearing and the treasure awaits! How do you choose to spend your time today?"
+        ],
+        "raw": [
+            "{The day has ended. Begin the next day}",
+            "The dawn of a new day at Adventure Academy brings a fresh wave of excitement. As the bell rings, signaling the beginning of recess, you step out onto the now-familiar playground. \n\nThe sandbox lake has since dried up, but the memory of Nutters's daring dive still brings smiles to many. The teachers, slightly less wary than yesterday, patrol the playground while keeping an eye on you. The friend groups you've won over look at you expectively. Even the 7th Grade Queen Bee, usually surrounded by her clique, gives you a nod of acknowledgment.\n\n..DAY..Tuesday with 60 minutes left. Time to make waves!..DAY..\n\n..RELATIONSHIP..Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye. ..RELATIONSHIP..\n..RELATIONSHIP..Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move. ..RELATIONSHIP..\n..RELATIONSHIP..7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee. ..RELATIONSHIP..\n\nRemember, Billy Bones Jr., the birthday party is nearing and the treasure awaits! How do you choose to spend your time today?"
+        ],
+        "stats": {
+            "DAY": "Tuesday with 60 minutes left. Time to make waves!",
+            "ITEM": [
+                "Ever-Full Water Flask (Used Once)",
+                "Sir Quacks-a-Lot, the Rubber Duck (Used Once | Floating on sandbox lake)",
+                "Mysterious Ouija Board (Used once)",
+                "Crinkled Old Treasure Map (Shown to everyone)",
+                "Magic Coin (Used once)"
+            ],
+            "RELATIONSHIP": [
+                "7th Grade Queen Bee | Change: +0 |  Total: 1\n---> Rationale: Interest piqued, but still a long way to go.\n---> Info: A curious glance from the Queen Bee",
+                "Brutus the Bully | Change: +1 | Total: 1\n---> Rationale: Billy impresses Brutus with his confidence and treasure\n---> Info: Brutus has agreed to provide protection",
+                "Cliquish Friend Groups | Change: +0 |  Total: 7\n---> Rationale: The groups you impressed yesterday are ready for more\n---> Info: Anticipation fills the air as they wait for Billy's next move",
+                "Teachers | Change: +0 |  Total: 3\n---> Rationale: They're there to ensure everyone behaves\n---> Info: Teachers on patrol, watching the playground with a keen eye"
+            ]
+        },
+        "combat": [],
+        "execution": {}
+    }
+]

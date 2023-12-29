@@ -38,11 +38,11 @@
 #                     interactive=True,
 #                     scale=1,
 #                 )
-                
+
 #                 save_game = gr.Button(value="Save", size="sm")
 #                 delete_game = gr.Button(value="Delete", size="sm")
 #                 load_game = gr.Button(value="Load", size="sm")
-                
+
 #                 select_history_name = gr.Dropdown(
 #                     choices=FileManager.get_file_names(FileManager.HISTORY_FOLDER),
 #                     show_label=True,
@@ -58,7 +58,6 @@
 #             #         token_jsons.append(gr.JSON(label=f"{model_name} Token Tracker", interactive=False))
 #             execution_json = gr.JSON(label="Execution Info")
 #             turn_json = gr.JSON(label="Game State")
-
 
 
 #         config_render_array = [

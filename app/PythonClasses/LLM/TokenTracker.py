@@ -5,8 +5,6 @@ from loguru import logger
 from PythonClasses.LLM.LLMModel import LLMModel
 
 
-
-
 class LilToken:
     def __init__(self, model: str, prompt: int = None, completion: int = None):
         self.model = LLMModel(model)
@@ -24,13 +22,13 @@ class LilToken:
 
     def tokens(self):
         return self.prompt, self.completion
-    
+
     def total_tokens(self):
         return self.prompt + self.completion
 
     def cost(self):
         return self.model.cost(self.prompt, self.completion)
-    
+
     def total_cost(self):
         prompt_cost, completion_cost = self.model.cost(self.prompt, self.completion)
         return prompt_cost + completion_cost
@@ -40,34 +38,35 @@ class LilToken:
         if self.model != other.model:
             logger.error("Cannot add tokens from different models.")
             return None
-        
+
         return LilToken(
             self.model.name,
             self.prompt + other.prompt,
-            self.completion + other.completion
+            self.completion + other.completion,
         )
-    
+
     def __truediv__(self, number):
-        return LilToken(
-            self.model.name,
-            self.prompt / number,
-            self.completion / number
-        )
+        return LilToken(self.model.name, self.prompt / number, self.completion / number)
+
 
 class TokenTracker(LilToken):
-
-
-    def __init__(self, model: str, prompt: int = None, completion: int = None, start: datetime = None, end: datetime = None):
-
+    def __init__(
+        self,
+        model: str,
+        prompt: int = None,
+        completion: int = None,
+        start: datetime = None,
+        end: datetime = None,
+    ):
         super().__init__(model, prompt, completion)
 
         if start is None:
             self.start = datetime.now()
-   
+
         self.end = end
 
         self.tokens = LilToken(model, prompt, completion)
-    
+
     def tpm(self):
         return self.tokens / self.elapsed_time()
 
@@ -77,13 +76,13 @@ class TokenTracker(LilToken):
             return None
 
         return TokenTracker(
-            model = self.model.name,
-            prompt = self.prompt + other.prompt,
-            completion = self.completion + other.completion,
-            start = min(self.start, other.start),
-            end = max(self.end, other.end)
+            model=self.model.name,
+            prompt=self.prompt + other.prompt,
+            completion=self.completion + other.completion,
+            start=min(self.start, other.start),
+            end=max(self.end, other.end),
         )
-    
+
     def stop(self):
         self.end = datetime.now()
 

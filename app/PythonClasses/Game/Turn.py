@@ -2,11 +2,12 @@ from typing import List, Tuple, Dict
 
 from loguru import logger
 
+
 class Turn:
-# The `Turn` class represents the state of a game turn. It includes attributes such as the
-# model, user message, system message, type, display, raw, stats, combat, and execution. The
-# class provides methods to initialize a turn object, check if it has stats, and convert the
-# object to a dictionary.
+    # The `Turn` class represents the state of a game turn. It includes attributes such as the
+    # model, user message, system message, type, display, raw, stats, combat, and execution. The
+    # class provides methods to initialize a turn object, check if it has stats, and convert the
+    # object to a dictionary.
     """
     This class represents the state of a game, including the message, history, raw history, stats, combat, and team name.
     """
@@ -20,7 +21,7 @@ class Turn:
     #     "stats": None,          # dict
     #     "combat": None,         # array of dicts
     #     "execution":
-    #     {  
+    #     {
     #         "model": None,
     #         "time": {
     #             "start": None,      # datetime
@@ -51,8 +52,7 @@ class Turn:
     # }
 
     # def __init__(self, model: str = None, user_message = None, system_message: str = None, type: str = "normal"):
-    def __init__(self, load_obj = {}, *args):
-
+    def __init__(self, load_obj={}, *args):
         if load_obj != {}:
             for key, value in load_obj.items():
                 if key == "display" or key == "raw":
@@ -87,7 +87,10 @@ class Turn:
                 self.display = [self.user_message, None]
                 self.raw = [self.user_message, None]
             else:
-                logger.warning(f"User message is neither list, tuple, or string. Setting to [None, None].")
+                logger.warning(
+                    f"User message is neither list, tuple, or string. Setting to [None,"
+                    f" None]."
+                )
                 self.display = [None, None]
                 self.raw = [None, None]
         elif self.type == "example":
@@ -103,14 +106,13 @@ class Turn:
             self.display[0] = None
         if len(self.raw[0]) == 0:
             self.raw[0] = None
-        
+
         self.combat = []
         self.execution = {}
         # Fill in stats, combat, and execution after response
 
     def has_stats(self):
         return (self.stats is not None) and (self.stats != {})
-        
 
     def __dict__(self):
         return {

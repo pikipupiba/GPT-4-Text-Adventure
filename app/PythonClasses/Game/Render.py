@@ -56,7 +56,7 @@
 #                 "???",
 #                 "???",
 #             ]
-        
+
 #         logger.trace("RENDERING THE STATS!!!")
 
 #         # DAY/TIME LEFT
@@ -71,7 +71,7 @@
 #             name = item.get("name", "???")
 #             status = item.get("status", "???")
 #             items_string += f'{name} ({status})\n'
-        
+
 #         # RELATIONSHIPS
 #         r_array = stats.get("relationships", [])
 #         relationships_string = ""
@@ -89,12 +89,12 @@
 #             items_string,
 #             relationships_string,
 #         ]
-    
+
 #     def render_combat(combat: {}):
 #         logger.trace("RENDERING COMBAT!!!")
 
 #         combat_string=""
-        
+
 #         if "name" in combat:
 #             combat_string += f'---> {combat["name"]}'
 #         if "action" in combat:
@@ -116,7 +116,7 @@
 #         #         combat_string += f'\n---> | Success! |'
 #         #     else:
 #         #         combat_string += f'\n---> | Failure! |'
-        
+
 
 #         logger.trace("DONE RENDERING COMBAT!!!")
 

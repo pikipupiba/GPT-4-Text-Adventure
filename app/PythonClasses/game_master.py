@@ -28,7 +28,7 @@
 #                     value="BEST_system_message",
 #                     scale=2,
 #                 )
-                
+
 #             # with gr.Row():
 #             #     example_history_name = gr.Textbox(
 #             #         value="",
@@ -54,7 +54,7 @@
 #                 show_label=False,
 #                 value="Overwrite",
 #                 scale=2)
-            
+
 #         # SYSTEM MESSAGE
 #         system_message = gr.Textbox(
 #                             lines=40,
@@ -63,7 +63,7 @@
 #                             scale=1,
 #                             value=FileManager.load_system_message("NEW"),
 #                         )
-        
+
 #         # example_history = gr.Code(
 #         #                     lines=40,
 #         #                     label="Example History",
@@ -79,7 +79,7 @@
 #             outputs=[],
 #             queue=False
 #         )
-        
+
 #         load_system_message.click(
 #             fn=FileManager.load_system_message,
 #             inputs=[select_system_message],
@@ -100,7 +100,7 @@
 #             outputs=[],
 #             queue=False
 #         )
-        
+
 #         # load_example_history.click(
 #         #     fn=FileManager.load_example_history,
 #         #     inputs=[select_example_history],

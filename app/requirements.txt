@@ -2,4 +2,4 @@ openai==0.28
 gradio==3.48.0
 loguru
 tiktoken
-boto3
+boto3==1.28.57

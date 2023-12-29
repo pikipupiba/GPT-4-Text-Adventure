@@ -3,12 +3,14 @@ from loguru import logger
 
 from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.Game import Game
+
+
 class FileManager:
-# The `FileManager` class is responsible for managing file operations such as saving, loading,
-# and deleting files. It provides methods for saving system messages, saving and loading game
-# history, and performing general file operations like getting file names, building file paths,
-# and deleting files. The class uses the `os` and `json` modules for file operations and the
-# `loguru` module for logging.
+    # The `FileManager` class is responsible for managing file operations such as saving, loading,
+    # and deleting files. It provides methods for saving system messages, saving and loading game
+    # history, and performing general file operations like getting file names, building file paths,
+    # and deleting files. The class uses the `os` and `json` modules for file operations and the
+    # `loguru` module for logging.
 
     DATA_FOLDER = os.path.join(os.getcwd(), "data")
     HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "history")
@@ -18,40 +20,56 @@ class FileManager:
 
     def save_system_message(system_message_name: str, system_message: str):
         logger.info(f"Saving system message | {system_message_name}")
-        FileManager.save_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", system_message)
+        FileManager.save_file(
+            FileManager.SYSTEM_MESSAGE_FOLDER,
+            f"{system_message_name}.txt",
+            system_message,
+        )
 
     def load_system_message(system_message_name: str):
         logger.info(f"Loading system message | {system_message_name}")
-        system_message = FileManager.load_file(FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", default="")
+        system_message = FileManager.load_file(
+            FileManager.SYSTEM_MESSAGE_FOLDER, f"{system_message_name}.txt", default=""
+        )
         return system_message
-    
+
     def save_history(game_name: str, history_name: str):
         logger.info(f"Saving history | {game_name} -> {history_name}")
         history_dict = Game._history_to_dict(game_name)
         for turn in history_dict[1:]:
             if hasattr(turn, "system_message"):
-                del turn["system_message"] 
-        FileManager.save_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", Game._history_to_dict(game_name))
-    
+                del turn["system_message"]
+        FileManager.save_file(
+            FileManager.HISTORY_FOLDER,
+            f"{history_name}.json",
+            Game._history_to_dict(game_name),
+        )
+
     def load_history(history_name: str):
         logger.info(f"Loading history | {history_name}")
-        history_dict_array = FileManager.load_file(FileManager.HISTORY_FOLDER, f"{history_name}.json", default=[])
+        history_dict_array = FileManager.load_file(
+            FileManager.HISTORY_FOLDER, f"{history_name}.json", default=[]
+        )
         history = [Turn(turn) for turn in history_dict_array]
         return history
-    
+
     def delete_history(history_name: str):
-        if history_name is None: return
+        if history_name is None:
+            return
         logger.info(f"Deleting history | {history_name}")
         FileManager.delete_file(FileManager.HISTORY_FOLDER, f"{history_name}.json")
 
     def get_file_names(folder: str = None):
-        return [file_name.split(".")[0] for file_name in os.listdir(folder) if file_name != ""]
+        return [
+            file_name.split(".")[0]
+            for file_name in os.listdir(folder)
+            if file_name != ""
+        ]
 
     def build_path(folder: str, file_name: str):
         return os.path.abspath(os.path.join(folder, file_name))
 
-    def load_file(folder: str, file_name: str, default = ""):
-
+    def load_file(folder: str, file_name: str, default=""):
         if (folder is None) or (file_name is None):
             return default
 
@@ -74,7 +92,7 @@ class FileManager:
             logger.error(f"JSONDecodeError: {e}")
             return default
 
-    def save_file(folder: str, file_name: str, file_contents = ""):
+    def save_file(folder: str, file_name: str, file_contents=""):
         if (folder is None) or (file_name is None):
             return
 
@@ -86,17 +104,20 @@ class FileManager:
                 os.makedirs(folder)
 
             with open(full_path, "w") as f:
-                if (file_name.split(".")[-1] == "json") and (type(file_contents) != str):
+                if (file_name.split(".")[-1] == "json") and (
+                    type(file_contents) != str
+                ):
                     f.write(json.dumps(file_contents, indent=4))
-                elif (file_name.split(".")[-1] == "txt") and (type(file_contents) == str):
+                elif (file_name.split(".")[-1] == "txt") and (
+                    type(file_contents) == str
+                ):
                     f.write(file_contents)
         except IOError as e:
             logger.error(f"IOError: {e}")
         except json.decoder.JSONDecodeError as e:
             logger.error(f"JSONDecodeError: {e}")
-        
-    def delete_file(folder: str, file_name: str):
 
+    def delete_file(folder: str, file_name: str):
         if (folder is None) or (file_name is None):
             return
 
