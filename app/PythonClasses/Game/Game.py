@@ -130,45 +130,58 @@ class Game:
     #     return Game._audio(game_name).get_next_audio()
 
     # Access the game history by name
+    @staticmethod
     def _history(game_name: str):
         return Game.GAMES[game_name].history
 
+    @staticmethod
     def _history_to_dict(game_name: str):
         return [turn.__dict__() for turn in Game.GAMES[game_name].history]
 
+    @staticmethod
     def _dict_to_history(game_name: str, history_dict_array: []):
         Game.GAMES[game_name].history = [Turn(turn) for turn in history_dict_array]
 
+    @staticmethod
     def _num_turns(game_name: str):
         return len(Game.GAMES[game_name].history)
 
     # Chatbot history to display to the player
+    @staticmethod
     def _display_history(game_name: str):
         return [turn.display for turn in Game.GAMES[game_name].history]
 
     # OpenAI history for the language model
+    @staticmethod
     def _raw_history(game_name: str):
         return [turn.raw for turn in Game.GAMES[game_name].history]
 
     # Access the last turn by name
+    @staticmethod
     def _last_turn(game_name: str):
         return Game.GAMES[game_name].history[-1]
 
+    @staticmethod
     def _prev_turn(game_name: str):
         return Game.GAMES[game_name].history[-2]
 
+    @staticmethod
     def _last_display(game_name: str):
         return Game.GAMES[game_name].history[-1].display
 
+    @staticmethod
     def _last_raw(game_name: str):
         return Game.GAMES[game_name].history[-1].raw
 
+    @staticmethod
     def _stats(game_name: str):
         return Game.GAMES[game_name].history[-1].stats
 
+    @staticmethod
     def _combat(game_name: str):
         return Game.GAMES[game_name].history[-1].combat
 
+    @staticmethod
     # Update the interface
     def render_story(game_name: str):
         display_history = Game._display_history(game_name)
@@ -276,12 +289,14 @@ class Game:
             Game._(game_name).audio_file,
         ]
 
+    @staticmethod
     def undo(game_name: str):
         logger.info(f"Undoing last turn: {game_name}")
         if len(Game._history(game_name)) > 0:
             del Game._history(game_name)[-1]
         return Game.render_story(game_name)
 
+    @staticmethod
     def retry(game_name: str):
         logger.info("Retrying turn")
         Game._last_display(game_name)[1] = None
@@ -291,17 +306,20 @@ class Game:
         Game._last_turn(game_name).execution = {}
         return Game.render_story(game_name)
 
+    @staticmethod
     def clear(game_name: str):
         logger.info("Clearing history")
         for turn in Game._history(game_name):
             del turn
         return Game.render_story(game_name)
 
+    @staticmethod
     def restart(game_name: str):
         logger.info("Restarting game")
         Game.clear(game_name)
         return Game.start(game_name)
 
+    @staticmethod
     def submit(
         game_name: str,
         message: str = "",
@@ -357,6 +375,7 @@ class Game:
 
         return [""] + Game.render_story(game_name)
 
+    @staticmethod
     def stream_prediction(game_name: str, audio_speed: int = 125):
         try:
             new_day = True
