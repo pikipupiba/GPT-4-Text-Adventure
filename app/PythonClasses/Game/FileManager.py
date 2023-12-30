@@ -77,7 +77,7 @@ class FileManager:
         full_path = FileManager.build_path(folder, file_name)
 
         try:
-            with open(full_path, "r") as f:
+            with open(full_path) as f:
                 file = f.read()
             try:
                 return json.loads(file)
@@ -86,7 +86,7 @@ class FileManager:
         except FileNotFoundError as e:
             logger.error(f"File not found: {e}")
             return default
-        except IOError as e:
+        except OSError as e:
             logger.error(f"IOError: {e}")
             return default
         except json.decoder.JSONDecodeError as e:
@@ -113,7 +113,7 @@ class FileManager:
                     type(file_contents) == str
                 ):
                     f.write(file_contents)
-        except IOError as e:
+        except OSError as e:
             logger.error(f"IOError: {e}")
         except json.decoder.JSONDecodeError as e:
             logger.error(f"JSONDecodeError: {e}")
@@ -128,5 +128,5 @@ class FileManager:
             os.remove(full_path)
         except FileNotFoundError as e:
             logger.error(f"{full_path} | File not found error: {e}")
-        except IOError as e:
+        except OSError as e:
             logger.error(f"{full_path} | IOError: {e}")

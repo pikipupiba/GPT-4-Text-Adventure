@@ -231,7 +231,7 @@ class SystemMessage:
 
         if turn_num > 15:
             with open(
-                os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "medium.txt"), "r"
+                os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "medium.txt")
             ) as f:
                 system_message = f.read()
                 complete_system_message = (
@@ -239,9 +239,7 @@ class SystemMessage:
                 )
         else:
             # load full.txt from folder
-            with open(
-                os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "long.txt"), "r"
-            ) as f:
+            with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "long.txt")) as f:
                 system_message = f.read()
                 complete_system_message = (
                     f"{system_message}\n\n{json.dumps(schemas_full, separators=(',', ':'))}"
