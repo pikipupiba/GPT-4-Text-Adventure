@@ -1,12 +1,13 @@
 import os
-
-# import asyncio
-# import aioboto3
-import boto3
 from contextlib import closing
+
+import boto3
 from botocore.config import Config
 from loguru import logger
 from PythonClasses.LLM.LLM import LLM
+
+# import asyncio
+# import aioboto3
 
 
 class LLMStreamProcessor:

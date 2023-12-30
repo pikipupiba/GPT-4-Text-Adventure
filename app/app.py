@@ -1,15 +1,17 @@
-import os, uuid, sys, signal
-from loguru import logger
-
-from PythonClasses.Game.Game import Game
-from PythonClasses.Game.FileManager import FileManager
-from PythonClasses.LLM.LLM import set_history_length
-from PythonClasses.LLM.LLMModel import reset_time
+import os
+import signal
+import sys
+import uuid
 
 import gradio as gr
-from PythonClasses.player import *
-from PythonClasses.game_master import *
+from loguru import logger
 from PythonClasses.config import *
+from PythonClasses.Game.FileManager import FileManager
+from PythonClasses.Game.Game import Game
+from PythonClasses.game_master import *
+from PythonClasses.LLM.LLM import set_history_length
+from PythonClasses.LLM.LLMModel import reset_time
+from PythonClasses.player import *
 
 
 def shutdown(signal, frame):

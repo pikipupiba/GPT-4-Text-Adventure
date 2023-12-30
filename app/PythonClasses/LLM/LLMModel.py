@@ -1,8 +1,8 @@
-import tiktoken
-from loguru import logger
+from datetime import datetime
 from typing import List
 
-from datetime import datetime
+import tiktoken
+from loguru import logger
 
 total_start_time = None
 

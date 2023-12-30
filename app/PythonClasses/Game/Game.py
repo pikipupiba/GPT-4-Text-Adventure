@@ -5,25 +5,27 @@
 # 4. Output combat and stats in real time. (use a schema for this yeehaw)
 # 5. Add a little text spinner to the chatbot while it's thinking
 #    - Can use emojis! :D
-import json, re, os, time
+import json
+import os
+import re
+import time
 from datetime import datetime
 
 import gradio as gr
 import openai
 from loguru import logger
-from PythonClasses.Helpers.helpers import randomish_words
-from PythonClasses.Helpers.helpers import generate_dice_string
-
-from PythonClasses.Game.Turn import Turn
+from PythonClasses.Game.CompleteJson import CompleteJson
+from PythonClasses.Game.Speech import LLMChunker
 from PythonClasses.Game.SystemMessage import SystemMessage
+from PythonClasses.Game.Turn import Turn
 from PythonClasses.Game.UserMessage import UserMessage
+from PythonClasses.Helpers.helpers import generate_dice_string
+from PythonClasses.Helpers.helpers import randomish_words
+from PythonClasses.LLM.LLM import LLM
+from PythonClasses.LLM.LLMModel import LLMModel
+from PythonClasses.LLM.LLMModel import total_tokens
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
-
-from PythonClasses.LLM.LLM import LLM
-from PythonClasses.LLM.LLMModel import LLMModel, total_tokens
-from PythonClasses.Game.Speech import LLMChunker
-from PythonClasses.Game.CompleteJson import CompleteJson
 
 
 class Game:

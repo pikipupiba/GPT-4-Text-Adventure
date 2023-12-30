@@ -1,7 +1,9 @@
-import re, json, os
+import json
+import os
+import re
 from typing import List
-from loguru import logger
 
+from loguru import logger
 from PythonClasses.Schemas import schema_strings
 
 schemas_full = {

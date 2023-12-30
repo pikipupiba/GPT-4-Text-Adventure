@@ -1,8 +1,9 @@
-import os, json
-from loguru import logger
+import json
+import os
 
-from PythonClasses.Game.Turn import Turn
+from loguru import logger
 from PythonClasses.Game.Game import Game
+from PythonClasses.Game.Turn import Turn
 
 
 class FileManager:

@@ -1,10 +1,10 @@
 import json
-from .stats_schema import stats_schema
-from .combat_schema import combat_schema
 
+from .combat_schema import combat_schema
 from .day_schema import day_schema
 from .item_schema import item_schema
 from .relationship_schema import relationship_schema
+from .stats_schema import stats_schema
 
 stats_schema_string = json.dumps(stats_schema, separators=(",", ":"))
 combat_schema_string = json.dumps(combat_schema, separators=(",", ":"))

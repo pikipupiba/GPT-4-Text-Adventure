@@ -1,9 +1,11 @@
-import os, json
-from typing import List, Tuple
-from loguru import logger
-from PythonClasses.LLM.LLMModel import LLMModel
+import json
+import os
+from typing import List
+from typing import Tuple
 
 import openai
+from loguru import logger
+from PythonClasses.LLM.LLMModel import LLMModel
 
 # set Open AI API Key
 # api_key = os.getenv('OPENAI_API_KEY')

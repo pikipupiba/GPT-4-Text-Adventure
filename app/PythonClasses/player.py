@@ -18,9 +18,9 @@
 # 12a. ABOVE IDEA IS AN ABSOLUTE GAME CHANGER
 # 12b. Sometimes the timer will be short and it will single someone out to respond quickly
 import os
+
 import gradio as gr
 from PythonClasses.Game.FileManager import FileManager
-
 from PythonClasses.Game.Game import Game
 
 use_models = [
