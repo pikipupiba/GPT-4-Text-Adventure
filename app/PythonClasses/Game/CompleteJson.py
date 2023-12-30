@@ -14,7 +14,7 @@ class CompleteJson:
         try:
             data_json = json.loads(data.strip())
             return data_json, True
-        except:
+        except Exception:
             pass
 
         # FSM states
@@ -197,7 +197,7 @@ class CompleteJson:
         try:
             final_json = json.loads("".join(output))
             return final_json, False
-        except:
+        except Exception:
             logger.error("Error loading json")
             logger.error(f"Input string: {data}")
             logger.error(f'Completed json: {"".join(output)}')

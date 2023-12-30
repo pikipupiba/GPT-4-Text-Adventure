@@ -19,6 +19,7 @@ class FileManager:
     SYSTEM_MESSAGE_FOLDER = os.path.join(os.getcwd(), "data", "system_message")
     EXAMPLE_HISTORY_FOLDER = os.path.join(os.getcwd(), "data", "example_history")
 
+    @staticmethod
     def save_system_message(system_message_name: str, system_message: str):
         logger.info(f"Saving system message | {system_message_name}")
         FileManager.save_file(
@@ -27,6 +28,7 @@ class FileManager:
             system_message,
         )
 
+    @staticmethod
     def load_system_message(system_message_name: str):
         logger.info(f"Loading system message | {system_message_name}")
         system_message = FileManager.load_file(
@@ -34,6 +36,7 @@ class FileManager:
         )
         return system_message
 
+    @staticmethod
     def save_history(game_name: str, history_name: str):
         logger.info(f"Saving history | {game_name} -> {history_name}")
         history_dict = Game._history_to_dict(game_name)
@@ -46,6 +49,7 @@ class FileManager:
             Game._history_to_dict(game_name),
         )
 
+    @staticmethod
     def load_history(history_name: str):
         logger.info(f"Loading history | {history_name}")
         history_dict_array = FileManager.load_file(
@@ -54,12 +58,14 @@ class FileManager:
         history = [Turn(turn) for turn in history_dict_array]
         return history
 
+    @staticmethod
     def delete_history(history_name: str):
         if history_name is None:
             return
         logger.info(f"Deleting history | {history_name}")
         FileManager.delete_file(FileManager.HISTORY_FOLDER, f"{history_name}.json")
 
+    @staticmethod
     def get_file_names(folder: str = None):
         return [
             file_name.split(".")[0]
@@ -67,9 +73,11 @@ class FileManager:
             if file_name != ""
         ]
 
+    @staticmethod
     def build_path(folder: str, file_name: str):
         return os.path.abspath(os.path.join(folder, file_name))
 
+    @staticmethod
     def load_file(folder: str, file_name: str, default=""):
         if (folder is None) or (file_name is None):
             return default
@@ -81,7 +89,7 @@ class FileManager:
                 file = f.read()
             try:
                 return json.loads(file)
-            except:
+            except Exception:
                 return file
         except FileNotFoundError as e:
             logger.error(f"File not found: {e}")
@@ -93,6 +101,7 @@ class FileManager:
             logger.error(f"JSONDecodeError: {e}")
             return default
 
+    @staticmethod
     def save_file(folder: str, file_name: str, file_contents=""):
         if (folder is None) or (file_name is None):
             return
@@ -105,19 +114,18 @@ class FileManager:
                 os.makedirs(folder)
 
             with open(full_path, "w") as f:
-                if (file_name.split(".")[-1] == "json") and (
-                    type(file_contents) != str
-                ):
+                file_extension = file_name.split(".")[-1]
+                if file_extension == "json" and not isinstance(file_contents, str):
                     f.write(json.dumps(file_contents, indent=4))
-                elif (file_name.split(".")[-1] == "txt") and (
-                    type(file_contents) == str
-                ):
+                elif file_extension == "txt" and isinstance(file_contents, str):
                     f.write(file_contents)
+
         except OSError as e:
             logger.error(f"IOError: {e}")
         except json.decoder.JSONDecodeError as e:
             logger.error(f"JSONDecodeError: {e}")
 
+    @staticmethod
     def delete_file(folder: str, file_name: str):
         if (folder is None) or (file_name is None):
             return
