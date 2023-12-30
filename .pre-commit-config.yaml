@@ -33,12 +33,6 @@ repos:
         language_version: python3
         args: [--max-line-length=500]
 
-# -   repo: https://github.com/asottile/reorder_python_imports
-#     rev: v3.12.0
-#     hooks:
-#     -   id: reorder-python-imports
-#         args: [--application-directories=.:src, --py38-plus]
-
 -   repo: https://github.com/asottile/pyupgrade
     rev: v3.15.0
     hooks:
@@ -50,9 +44,9 @@ repos:
 #     hooks:
 #     -   id: checkov_secrets
 
-# -   repo: https://github.com/bridgecrewio/checkov.git
-#     rev: 3.1.46
-#     hooks:
-#     -   id: checkov
-#         entry: checkov -d .
-#         files: ./
+-   repo: https://github.com/bridgecrewio/checkov.git
+    rev: 3.1.46
+    hooks:
+    -   id: checkov
+        entry: checkov -d .
+        files: ./

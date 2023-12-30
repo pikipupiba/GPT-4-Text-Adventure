@@ -10,6 +10,7 @@ class CompleteJson:
     # the incomplete JSON structures. It then adds the necessary closing brackets or quotes to
     # complete the structures.
 
+    @staticmethod
     def complete_json(data):
         try:
             data_json = json.loads(data.strip())
