@@ -5,9 +5,8 @@ yum update
 yum install -y git awscli jq
 
 # Fetch the OPENAI_API_KEY from AWS Secrets Manager
-SECRET_NAME="OPENAI_API_KEY"
 REGION="us-east-1"
-OPENAI_API_KEY_SECRET=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --region "$REGION" | jq -r '.SecretString')
+OPENAI_API_KEY_SECRET=$(aws secretsmanager get-secret-value --secret-id "OPENAI_API_KEY" --region "$REGION" | jq -r '.SecretString')
 OPENAI_API_KEY=$(echo "$OPENAI_API_KEY_SECRET" | jq -r '.OPENAI_API_KEY')
 # Export OPENAI_API_KEY as an environment variable (this will only set it for the duration of the script)
 export OPENAI_API_KEY="$OPENAI_API_KEY"

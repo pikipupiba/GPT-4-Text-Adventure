@@ -27,9 +27,23 @@ repos:
     -   id: detect-private-key
     # -   id: pretty-format-json
 
+-   repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+    -   id: detect-secrets
+        # args: ['--baseline', '.secrets.baseline']
+        # exclude: package.lock.json
+
 # -   repo: https://github.com/bridgecrewio/checkov.git
 #     rev: 3.1.46
 #     hooks:
 #     -   id: checkov_secrets
 #     -   id: checkov
 #         files: ./
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        types: [python]
+        args: [--strict]
