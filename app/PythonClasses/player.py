@@ -21,7 +21,6 @@ import os
 
 import gradio as gr
 from PythonClasses.Game.FileManager import FileManager
-from PythonClasses.Game.Game import Game
 
 use_models = [
     "gpt-4-0613",
@@ -30,9 +29,10 @@ use_models = [
     "gpt-3.5-turbo-16k-0613",
 ]
 
-intro = [[
-    None,
-    """
+intro = [
+    [
+        None,
+        """
 Welcome to 'AI Adventure Academy'!
 (an interactive storytelling game)
 
@@ -52,7 +52,8 @@ Finally, if you are confused or don’t know what to do, ask me questions! I can
 
 With all that out of the way, let’s get started! What is your name?
         """,
-]]
+    ]
+]
 
 # PLAYER TAB
 with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined:

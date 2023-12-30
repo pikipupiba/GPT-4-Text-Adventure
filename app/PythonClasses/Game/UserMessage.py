@@ -1,5 +1,4 @@
 import re
-from typing import List
 
 from loguru import logger
 from PythonClasses.Helpers.helpers import generate_dice_string

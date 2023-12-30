@@ -1,10 +1,7 @@
 import json
 import os
-import re
-from typing import List
 
 from loguru import logger
-from PythonClasses.Schemas import schema_strings
 
 schemas_full = {
     "day": {
@@ -234,16 +231,12 @@ class SystemMessage:
                 os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "medium.txt")
             ) as f:
                 system_message = f.read()
-                complete_system_message = (
-                    f"{system_message}\n\n{json.dumps(schemas_short, separators=(',', ':'))}"
-                )
+                complete_system_message = f"{system_message}\n\n{json.dumps(schemas_short, separators=(',', ':'))}"
         else:
             # load full.txt from folder
             with open(os.path.join(FileManager.SYSTEM_MESSAGE_FOLDER, "long.txt")) as f:
                 system_message = f.read()
-                complete_system_message = (
-                    f"{system_message}\n\n{json.dumps(schemas_full, separators=(',', ':'))}"
-                )
+                complete_system_message = f"{system_message}\n\n{json.dumps(schemas_full, separators=(',', ':'))}"
 
         # # Function to replace matched pattern with schema string
         # num_found_schemas = 0

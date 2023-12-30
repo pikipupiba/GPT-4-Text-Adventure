@@ -1,7 +1,5 @@
-import json
 import os
 from typing import List
-from typing import Tuple
 
 import openai
 from loguru import logger

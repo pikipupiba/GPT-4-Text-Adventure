@@ -9,21 +9,15 @@ import json
 import os
 import re
 import time
-from datetime import datetime
 
 import gradio as gr
-import openai
 from loguru import logger
-from PythonClasses.Game.CompleteJson import CompleteJson
 from PythonClasses.Game.Speech import LLMChunker
 from PythonClasses.Game.SystemMessage import SystemMessage
 from PythonClasses.Game.Turn import Turn
-from PythonClasses.Game.UserMessage import UserMessage
 from PythonClasses.Helpers.helpers import generate_dice_string
-from PythonClasses.Helpers.helpers import randomish_words
 from PythonClasses.LLM.LLM import LLM
-from PythonClasses.LLM.LLMModel import LLMModel
-from PythonClasses.LLM.LLMModel import total_tokens
+from PythonClasses.LLM.LLMModel import LLMModel, total_tokens
 
 # from PythonClasses.Game.Speech import LLMStreamProcessor
 
@@ -238,17 +232,21 @@ class Game:
                     "count": total_tokens[version][category]["count"] / num_games,
                     "cost": total_tokens[version][category]["cost"] / num_games,
                     "tpm": (
-                        sum([
-                            game.llm_model.tokens[version][category]["tpm"]
-                            for game_name, game in Game.GAMES.items()
-                        ])
+                        sum(
+                            [
+                                game.llm_model.tokens[version][category]["tpm"]
+                                for game_name, game in Game.GAMES.items()
+                            ]
+                        )
                         / num_games
                     ),
                     "cpm": (
-                        sum([
-                            game.llm_model.tokens[version][category]["cpm"]
-                            for game_name, game in Game.GAMES.items()
-                        ])
+                        sum(
+                            [
+                                game.llm_model.tokens[version][category]["cpm"]
+                                for game_name, game in Game.GAMES.items()
+                            ]
+                        )
                         / num_games
                     ),
                 }
@@ -553,11 +551,13 @@ class Game:
 
                 FileManager.save_history(game_name, game_name)
 
-                stripped_string = "\n".join([
-                    line
-                    for line in Game._last_display(game_name)[1].split("\n")
-                    if not line.startswith("--->")
-                ]).strip(" .\n")
+                stripped_string = "\n".join(
+                    [
+                        line
+                        for line in Game._last_display(game_name)[1].split("\n")
+                        if not line.startswith("--->")
+                    ]
+                ).strip(" .\n")
                 Game._(game_name).audio_file = Game._(game_name).audio.no_ssml(
                     stripped_string, rate=audio_speed
                 )

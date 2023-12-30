@@ -2,51 +2,53 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 repos:
--   repo: https://github.com/psf/black
-    rev: 23.12.0
+-   repo: https://github.com/Zac-HD/shed
+    rev: 2023.6.1
     hooks:
-    -   id: black
-        args: [--safe, --preview]
+    -   id: shed
+        # args: [--refactor, --py311-plus]
+        types_or: [python, pyi, markdown, rst]
 
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-    -   id: trailing-whitespace
-    -   id: mixed-line-ending
-    -   id: end-of-file-fixer
-    -   id: requirements-txt-fixer
-    -   id: check-ast
-    -   id: check-yaml
-    -   id: check-json
-    # -   id: pretty-format-json
-    -   id: check-added-large-files
-    -   id: debug-statements
-    -   id: check-merge-conflict
-    -   id: detect-aws-credentials
-    -   id: detect-private-key
-        language_version: python3
+# -   repo: https://github.com/psf/black
+#     rev: 23.12.0
+#     hooks:
+#     -   id: black
+#         args: [--safe, --preview]
 
--   repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
-    hooks:
-    -   id: flake8
-        language_version: python3
-        args: [--max-line-length=500]
+# -   repo: https://github.com/pre-commit/pre-commit-hooks
+#     rev: v4.5.0
+#     hooks:
+#     -   id: trailing-whitespace
+#     -   id: mixed-line-ending
+#     -   id: end-of-file-fixer
+#     -   id: requirements-txt-fixer
+#     -   id: check-ast
+#     -   id: check-yaml
+#     -   id: check-json
+#     -   id: check-added-large-files
+#     -   id: debug-statements
+#     -   id: check-merge-conflict
+#     -   id: detect-aws-credentials
+#     -   id: detect-private-key
+#     -   id: pretty-format-json
+#         language_version: python3
 
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
-    hooks:
-    -   id: pyupgrade
-        args: [--py38-plus]
+# -   repo: https://github.com/PyCQA/flake8
+#     rev: 6.1.0
+#     hooks:
+#     -   id: flake8
+#         language_version: python3
+#         args: [--max-line-length=500]
+
+# -   repo: https://github.com/asottile/pyupgrade
+#     rev: v3.15.0
+#     hooks:
+#     -   id: pyupgrade
+#         args: [--py38-plus]
 
 # -   repo: https://github.com/bridgecrewio/checkov.git
-#     rev: 3.1.44
+#     rev: 3.1.46
 #     hooks:
 #     -   id: checkov_secrets
-
--   repo: https://github.com/bridgecrewio/checkov.git
-    rev: 3.1.46
-    hooks:
-    -   id: checkov
-        entry: checkov -d .
-        files: ./
+#     -   id: checkov
+#         files: ./

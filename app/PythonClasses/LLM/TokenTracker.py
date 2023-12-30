@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from loguru import logger
 from PythonClasses.LLM.LLMModel import LLMModel
