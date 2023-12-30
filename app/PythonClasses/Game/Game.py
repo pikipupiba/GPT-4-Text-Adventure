@@ -445,12 +445,12 @@ class Game:
                             if schema_name == "DAY":
                                 Game._last_turn(game_name).stats["DAY"] = ""
                             elif schema_name == "ITEM":
-                                if not "ITEM" in Game._last_turn(game_name).stats:
+                                if "ITEM" not in Game._last_turn(game_name).stats:
                                     Game._last_turn(game_name).stats["ITEM"] = []
                             elif schema_name == "RELATIONSHIP":
                                 if (
-                                    not "RELATIONSHIP"
-                                    in Game._last_turn(game_name).stats
+                                    "RELATIONSHIP"
+                                    not in Game._last_turn(game_name).stats
                                 ):
                                     Game._last_turn(game_name).stats[
                                         "RELATIONSHIP"

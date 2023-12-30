@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 import openai
 from loguru import logger
@@ -90,7 +89,7 @@ class LLM:
     def build_openai_history_array(raw_history):
         logger.debug("Building history OpenAI format")
 
-        if raw_history == None:
+        if raw_history is None:
             logger.warning("No history provided. Returning None.")
             return None
 
@@ -115,7 +114,7 @@ class LLM:
     def build_openai_system_message(system_message: str = None, model: str = "gpt-4"):
         logger.debug("Building system message OpenAI format")
 
-        if system_message == None:
+        if system_message is None:
             logger.warning("No system message provided. Returning None.")
             return None
 
@@ -131,18 +130,18 @@ class LLM:
     def predict(
         model: str = None,
         system_message: str = None,
-        raw_history: List[any] = None,
+        raw_history: list[any] = None,
         llm_model: LLMModel = None,
     ):
-        if model == None:
+        if model is None:
             logger.warning("No model provided. Returning [].")
             return []
 
-        if system_message == None:
+        if system_message is None:
             logger.warning("No system message provided. Returning [].")
             return []
 
-        if raw_history == None:
+        if raw_history is None:
             logger.warning("No history provided. Returning [].")
             return []
 
@@ -188,7 +187,7 @@ class LLM:
             )
 
     def summarize(self, text: str = None, model: str = "gpt-4"):
-        if text == None:
+        if text is None:
             logger.warning("No text provided. Returning [].")
             return []
 

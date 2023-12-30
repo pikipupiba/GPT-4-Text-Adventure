@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 import tiktoken
 from loguru import logger
@@ -297,6 +296,7 @@ class LLMModel:
             },
         }
 
+    @staticmethod
     def get_price(model: str):
         logger.trace(f"Getting price for model {model}")
 
@@ -308,6 +308,7 @@ class LLMModel:
         logger.error(f"Model {model} not found in price list.")
         return None
 
+    @staticmethod
     def get_model_info(model: str):
         logger.trace(f"Getting model info for model {model}")
         if model is None:
@@ -451,7 +452,7 @@ class LLMModel:
 
         return num_tokens
 
-    def num_tokens_from_messages(self, model: str, messages: List):
+    def num_tokens_from_messages(self, model: str, messages: list):
         """Return the number of tokens used by a list of messages."""
 
         global total_start_time

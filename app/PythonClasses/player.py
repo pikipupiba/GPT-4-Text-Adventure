@@ -149,41 +149,40 @@ with gr.Blocks(title="AI Adventure Academy", theme=gr.themes.Soft()) as combined
 
     # with gr.Tab(" "):
     with gr.Box(visible=True) as config_tab:
-        with gr.Group():
-            with gr.Row():
-                # SELECT MODEL
-                select_model = gr.Radio(
-                    choices=use_models,
-                    label="Select Model",
-                    value=use_models[0],
-                    scale=1,
+        with gr.Group(), gr.Row():
+            # SELECT MODEL
+            select_model = gr.Radio(
+                choices=use_models,
+                label="Select Model",
+                value=use_models[0],
+                scale=1,
+            )
+            with gr.Column():
+                system_select = gr.Radio(
+                    choices=["full", "short", "none"],
+                    label="System Select",
+                    value="full",
                 )
-                with gr.Column():
-                    system_select = gr.Radio(
-                        choices=["full", "short", "none"],
-                        label="System Select",
-                        value="full",
-                    )
-                    schema_select = gr.Radio(
-                        choices=["full", "short", "none"],
-                        label="Schema Select",
-                        value="full",
-                    )
-                    history_length = gr.Slider(
-                        minimum=10,
-                        maximum=100,
-                        step=1,
-                        value=50,
-                        label="History Length",
-                        visible=True,
-                    )
+                schema_select = gr.Radio(
+                    choices=["full", "short", "none"],
+                    label="Schema Select",
+                    value="full",
+                )
+                history_length = gr.Slider(
+                    minimum=10,
+                    maximum=100,
+                    step=1,
+                    value=50,
+                    label="History Length",
+                    visible=True,
+                )
 
-                retry = gr.Button(value="Retry", size="sm")
-                undo = gr.Button(value="Undo", size="sm")
-                clear = gr.Button(value="Clear", size="sm")
-                restart = gr.Button(value="Restart", size="sm")
-                render = gr.Button(value="Render", size="sm")
-                # reset_time_and_games = gr.Button(value="Reset Time and Games", size="sm")
+            retry = gr.Button(value="Retry", size="sm")
+            undo = gr.Button(value="Undo", size="sm")
+            clear = gr.Button(value="Clear", size="sm")
+            restart = gr.Button(value="Restart", size="sm")
+            render = gr.Button(value="Render", size="sm")
+            # reset_time_and_games = gr.Button(value="Reset Time and Games", size="sm")
 
         # GAME NAME
         with gr.Group():
